@@ -1,0 +1,26 @@
+#!/bin/bash
+# Gets a fresh Pharo 3.0 image and VM
+
+# Load Pharo 3.0 image (without dependency on mktemp)
+
+# stop the script if a single command fails
+set -e
+# DOWNLOADING THE LATEST PHARO 30 IMAGE =========================================
+IMAGE_URL="http://files.pharo.org/image/30/latest.zip"
+echo "Downloading the latest 30 Image:"
+echo "    $IMAGE_URL"
+
+rm -rf fresh.zip
+rm -rf worker.*
+
+curl $IMAGE_URL -o "fresh.zip" 
+
+unzip -q fresh.zip -d .
+rm -rf fresh fresh.zip
+
+# Rename the default image name to worker.*
+mv Pharo*.image worker.image
+mv Pharo*.changes worker.changes
+
+# Load VM
+curl get.pharo.org/vm | bash

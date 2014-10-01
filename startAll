@@ -1,0 +1,22 @@
+#!/bin/bash
+#
+# Starts the services needed to have a developing session with a flow-based app
+# This is a friendly strategy method. 
+# Detects the OS and delegates to the right set of scripts to actually do it.
+
+platform='unknown'
+unamestr=`uname`
+if [[ "$unamestr" == Darwin ]]; then
+	.hood/platform/osx/startAll
+	exit 0
+elif [[ "$unamestr" == Linux* ]]; then
+	.hood/platform/linux/startAll
+	exit 0
+elif [[ "$unamestr" == MINGW* ]]; then
+	.hood/platform/windows/startAll
+	exit 0
+fi
+
+echo "Oh noes! it seems you're running in an unsupported platform :("
+echo "Prefered platforms are OS X and Linux. In Windows might work too."
+exit 0

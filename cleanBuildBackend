@@ -1,0 +1,11 @@
+#!/bin/bash
+# Removes old backend build (if any) and builds a fresh one
+
+echo "Building backend..."
+cd $PWD/backend
+./load
+cd ..
+
+echo
+echo "Enjoy your fresh backend!"
+echo

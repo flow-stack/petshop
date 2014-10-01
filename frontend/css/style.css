@@ -1,0 +1,15 @@
+body {
+	color: #333;
+}
+
+img.logo {
+	width: 200px;
+}
+
+.headerCart, .searchBox {
+	margin-top: 40px; 
+}
+
+.headerCart {
+	margin-right: 40px;
+}
