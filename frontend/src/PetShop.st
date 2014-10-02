@@ -17,7 +17,7 @@ onProducts: someProducts
 
 	'#loaderBar'asJQuery remove.
 	
-	model products: someProducts
+	model products: someProducts.
 !
 
 onTemplate: data

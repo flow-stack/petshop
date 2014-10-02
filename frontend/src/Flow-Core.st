@@ -220,6 +220,14 @@ on: aParentControllerOrNil appendingTo: aHtmlElement
 	^ self for: self defaultModel on: aParentControllerOrNil appendingTo: aHtmlElement
 ! !
 
+Controller subclass: #ListController
+	instanceVariableNames: ''
+	package: 'Flow-Core'!
+!ListController commentStamp!
+## ListController
+
+ListControllers know how to deal with lists of things. It needs to know how you want to create subcontrollers for its items and it needs to know how to get those items. It will also allow you to customize the subcontrollers with a callback when they are instantiated.!
+
 Controller subclass: #RouteableController
 	instanceVariableNames: ''
 	package: 'Flow-Core'!

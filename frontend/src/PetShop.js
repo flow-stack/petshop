@@ -21,7 +21,7 @@ _st("#loaderBar"._asJQuery())._remove();
 _st(self["@model"])._products_(someProducts);
 return self}, function($ctx1) {$ctx1.fill(self,"onProducts:",{someProducts:someProducts},globals.CatalogController)})},
 args: ["someProducts"],
-source: "onProducts: someProducts\x0a\x0a\x09'#loaderBar'asJQuery remove.\x0a\x09\x0a\x09model products: someProducts",
+source: "onProducts: someProducts\x0a\x0a\x09'#loaderBar'asJQuery remove.\x0a\x09\x0a\x09model products: someProducts.\x0a\x09",
 messageSends: ["remove", "asJQuery", "products:"],
 referencedClasses: []
 }),

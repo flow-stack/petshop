@@ -560,6 +560,10 @@ referencedClasses: []
 globals.Controller.klass);
 
 
+smalltalk.addClass('ListController', globals.Controller, [], 'Flow-Core');
+globals.ListController.comment="## ListController\x0a\x0aListControllers know how to deal with lists of things. It needs to know how you want to create subcontrollers for its items and it needs to know how to get those items. It will also allow you to customize the subcontrollers with a callback when they are instantiated.";
+
+
 smalltalk.addClass('RouteableController', globals.Controller, [], 'Flow-Core');
 globals.RouteableController.comment="## This is an abstraction. \x0a\x0a*Concrete subclasses know* if they are valid for a given URI so the app can be routed to them.\x0a\x0aA typical web app might have:\x0a1. home\x0a2. sign up\x0a3. sign in\x0a4. many other app-specific controllers";
 smalltalk.addMethod(
