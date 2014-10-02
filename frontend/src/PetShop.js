@@ -61,6 +61,23 @@ smalltalk.addClass('PetShopController', globals.BindingController, ['session'], 
 globals.PetShopController.comment="##AppController\x0a\x0aThe AppController is the main/root controller of your flow-based application.\x0a";
 smalltalk.addMethod(
 smalltalk.method({
+selector: "initialize",
+protocol: 'reactions',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+($ctx1.supercall = true, globals.PetShopController.superclass.fn.prototype._initialize.apply(_st(self), []));
+$ctx1.supercall = false;
+return self}, function($ctx1) {$ctx1.fill(self,"initialize",{},globals.PetShopController)})},
+args: [],
+source: "initialize\x0a\x0a\x09super initialize.\x0a",
+messageSends: ["initialize"],
+referencedClasses: []
+}),
+globals.PetShopController);
+
+smalltalk.addMethod(
+smalltalk.method({
 selector: "onOpen",
 protocol: 'reactions',
 fn: function (){
@@ -74,6 +91,7 @@ self._model_(_st(self._class())._defaultModel());
 _st($Router())._observeHash();
 self["@session"]=_st($Session())._new();
 _st(window)._at_put_("app",self);
+self._refresh();
 $1=_st(_st(self._session())._api())._ws();
 _st($1)._publish_at_(_st(window)._app(),"app");
 $ctx1.sendIdx["publish:at:"]=1;
@@ -96,8 +114,8 @@ return _st(a).__plus(b);
 $2=_st($1)._yourself();
 return self}, function($ctx1) {$ctx1.fill(self,"onOpen",{},globals.PetShopController)})},
 args: [],
-source: "onOpen\x0a\x09\x22All is loaded, ready to pet!\x22\x0a\x09\x0a\x09\x22Time for the app to do its own particular thigns...\x22\x0a\x09\x0a\x09\x22do this\x0a\x09and\x0a\x09that..\x0a\x09\x0a\x09also this\x22\x0a\x0a\x09self model: self class defaultModel.\x0a\x0a\x09\x22Make the router be sensible to URI changes\x22\x0a\x09Router observeHash.\x0a\x0a\x09\x22Let's have a sesion\x22\x0a\x09session := Session new.\x0a\x0a\x09\x22Handy reference\x22\x0a\x09window at: 'app' put: self.\x0a\x09\x0a\x09\x22Publish some local objects to be reached from server\x22\x0a\x09self session api ws\x0a\x09\x09publish: window app at: 'app';\x0a\x09\x09publish: Transcript current at: 'Transcript';\x0a\x09\x09publish: console at: 'console';\x0a\x09\x09publish: [ :sent | sent ] at: 'echo';\x0a\x09\x09publish: [ :ping | #pong ] at: 'ping';\x09\x09\x0a\x09\x09publish: [ :a :b | a + b ] at: 'sum';\x09\x0a\x09\x09yourself",
-messageSends: ["model:", "defaultModel", "class", "observeHash", "new", "at:put:", "publish:at:", "ws", "api", "session", "app", "current", "+", "yourself"],
+source: "onOpen\x0a\x09\x22All is loaded, ready to pet!\x22\x0a\x09\x0a\x09\x22Time for the app to do its own particular thigns...\x22\x0a\x09\x0a\x09\x22do this\x0a\x09and\x0a\x09that..\x0a\x09\x0a\x09also this\x22\x0a\x0a\x09self model: self class defaultModel.\x0a\x0a\x09\x22Make the router be sensible to URI changes\x22\x0a\x09Router observeHash.\x0a\x0a\x09\x22Let's have a sesion\x22\x0a\x09session := Session new.\x0a\x0a\x09\x22Handy reference\x22\x0a\x09window at: 'app' put: self.\x0a\x0a\x09\x22As we just opened, it probably needs rendering..\x22\x0a\x09self refresh.\x0a\x0a\x09\x22Publish some local objects to be reached from server\x22\x0a\x09self session api ws\x0a\x09\x09publish: window app at: 'app';\x0a\x09\x09publish: Transcript current at: 'Transcript';\x0a\x09\x09publish: console at: 'console';\x0a\x09\x09publish: [ :sent | sent ] at: 'echo';\x0a\x09\x09publish: [ :ping | #pong ] at: 'ping';\x09\x09\x0a\x09\x09publish: [ :a :b | a + b ] at: 'sum';\x09\x0a\x09\x09yourself\x0a\x09\x09",
+messageSends: ["model:", "defaultModel", "class", "observeHash", "new", "at:put:", "refresh", "publish:at:", "ws", "api", "session", "app", "current", "+", "yourself"],
 referencedClasses: ["Router", "Session", "Transcript"]
 }),
 globals.PetShopController);
@@ -129,16 +147,16 @@ return _st($CatalogController())._for_on_appendingTo_($3,self,$4);
 $ctx2.sendIdx["for:on:appendingTo:"]=1;
 }, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)})}));
 $ctx1.sendIdx["controllersAt:ifAbsentPut:"]=1;
-_st($2)._refesh();
-$ctx1.sendIdx["refesh"]=1;
+_st($2)._refresh();
+$ctx1.sendIdx["refresh"]=1;
 _st(self._controllersAt_ifAbsentPut_("footer",(function(){
 return smalltalk.withContext(function($ctx2) {
 return _st($FooterController())._for_on_appendingTo_(_st($Footer())._new(),self,"#footer"._asJQuery());
-}, function($ctx2) {$ctx2.fillBlock({},$ctx1,2)})})))._refesh();
+}, function($ctx2) {$ctx2.fillBlock({},$ctx1,2)})})))._refresh();
 return self}, function($ctx1) {$ctx1.fill(self,"onTemplate:",{data:data},globals.PetShopController)})},
 args: ["data"],
-source: "onTemplate: data\x0a\x09\x22Receives the template's data after requirejs \x0a\x09have received it from the server (or cache).\x22\x0a\x0a\x09super onTemplate: data.\x0a\x09\x0a\x09\x22Lets make sure we load the catalog using the #catalog div as its root\x0a\x09and refresh if already there\x22\x0a\x09'#loaderBar'asJQuery show.\x0a\x09(self controllersAt: 'catalog' ifAbsentPut:[ \x0a\x09\x09CatalogController for: Catalog new on: self appendingTo: '#catalog' asJQuery ]) refesh.\x0a\x0a\x09(self controllersAt: 'footer' ifAbsentPut:[ \x0a\x09\x09FooterController for: Footer new on: self appendingTo: '#footer' asJQuery ]) refesh.\x0a\x0a\x09",
-messageSends: ["onTemplate:", "show", "asJQuery", "refesh", "controllersAt:ifAbsentPut:", "for:on:appendingTo:", "new"],
+source: "onTemplate: data\x0a\x09\x22Receives the template's data after requirejs \x0a\x09have received it from the server (or cache).\x22\x0a\x0a\x09super onTemplate: data.\x0a\x0a\x09\x22Lets make sure we load the catalog using the #catalog div as its root\x0a\x09and refresh if already there\x22\x0a\x09'#loaderBar'asJQuery show.\x0a\x09(self controllersAt: 'catalog' ifAbsentPut:[ \x0a\x09\x09CatalogController for: Catalog new on: self appendingTo: '#catalog' asJQuery ]) refresh.\x0a\x0a\x09(self controllersAt: 'footer' ifAbsentPut:[ \x0a\x09\x09FooterController for: Footer new on: self appendingTo: '#footer' asJQuery ]) refresh.\x0a\x09\x09",
+messageSends: ["onTemplate:", "show", "asJQuery", "refresh", "controllersAt:ifAbsentPut:", "for:on:appendingTo:", "new"],
 referencedClasses: ["CatalogController", "Catalog", "FooterController", "Footer"]
 }),
 globals.PetShopController);

@@ -93,7 +93,7 @@ view: aHtmlElement
 
 !Controller methodsFor: 'actions'!
 
-refesh
+refresh
 
 	self isRendered 
 		ifFalse:[ self render ]
@@ -205,7 +205,7 @@ for: aModel on: aParentControllerOrNil
 for: aModel on: aParentControllerOrNil appendingTo: aHtmlElement
 	"Answers a new instance of this controller dedicated to aModel,
 	child of aParentControllerOrNil and meant to be appended to aHtmlElement."
-	
+
 	^ self new
 		model: aModel;
 		parent: aParentControllerOrNil;
@@ -410,7 +410,6 @@ uri
 observeHash
 
 	window onhashchange:[ self onHashChanged ].
-	self onHashChanged
 ! !
 
 !Router class methodsFor: 'reactions'!

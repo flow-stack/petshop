@@ -308,7 +308,7 @@ globals.Controller);
 
 smalltalk.addMethod(
 smalltalk.method({
-selector: "refesh",
+selector: "refresh",
 protocol: 'actions',
 fn: function (){
 var self=this;
@@ -321,9 +321,9 @@ _st(self._empty())._render();
 self._render();
 $ctx1.sendIdx["render"]=1;
 };
-return self}, function($ctx1) {$ctx1.fill(self,"refesh",{},globals.Controller)})},
+return self}, function($ctx1) {$ctx1.fill(self,"refresh",{},globals.Controller)})},
 args: [],
-source: "refesh\x0a\x0a\x09self isRendered \x0a\x09\x09ifFalse:[ self render ]\x0a\x09\x09ifTrue:[ self empty render ]",
+source: "refresh\x0a\x0a\x09self isRendered \x0a\x09\x09ifFalse:[ self render ]\x0a\x09\x09ifTrue:[ self empty render ]",
 messageSends: ["ifFalse:ifTrue:", "isRendered", "render", "empty"],
 referencedClasses: []
 }),
@@ -535,7 +535,7 @@ $1=$3;
 return $1;
 }, function($ctx1) {$ctx1.fill(self,"for:on:appendingTo:",{aModel:aModel,aParentControllerOrNil:aParentControllerOrNil,aHtmlElement:aHtmlElement},globals.Controller.klass)})},
 args: ["aModel", "aParentControllerOrNil", "aHtmlElement"],
-source: "for: aModel on: aParentControllerOrNil appendingTo: aHtmlElement\x0a\x09\x22Answers a new instance of this controller dedicated to aModel,\x0a\x09child of aParentControllerOrNil and meant to be appended to aHtmlElement.\x22\x0a\x09\x0a\x09^ self new\x0a\x09\x09model: aModel;\x0a\x09\x09parent: aParentControllerOrNil;\x0a\x09\x09parentElement: aHtmlElement;\x0a\x09\x09yourself\x0a\x09",
+source: "for: aModel on: aParentControllerOrNil appendingTo: aHtmlElement\x0a\x09\x22Answers a new instance of this controller dedicated to aModel,\x0a\x09child of aParentControllerOrNil and meant to be appended to aHtmlElement.\x22\x0a\x0a\x09^ self new\x0a\x09\x09model: aModel;\x0a\x09\x09parent: aParentControllerOrNil;\x0a\x09\x09parentElement: aHtmlElement;\x0a\x09\x09yourself\x0a\x09",
 messageSends: ["model:", "new", "parent:", "parentElement:", "yourself"],
 referencedClasses: []
 }),
@@ -900,12 +900,10 @@ return smalltalk.withContext(function($ctx1) {
 _st(window)._onhashchange_((function(){
 return smalltalk.withContext(function($ctx2) {
 return self._onHashChanged();
-$ctx2.sendIdx["onHashChanged"]=1;
 }, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)})}));
-self._onHashChanged();
 return self}, function($ctx1) {$ctx1.fill(self,"observeHash",{},globals.Router.klass)})},
 args: [],
-source: "observeHash\x0a\x0a\x09window onhashchange:[ self onHashChanged ].\x0a\x09self onHashChanged",
+source: "observeHash\x0a\x0a\x09window onhashchange:[ self onHashChanged ].",
 messageSends: ["onhashchange:", "onHashChanged"],
 referencedClasses: []
 }),

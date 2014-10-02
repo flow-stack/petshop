@@ -55,6 +55,11 @@ session
 
 !PetShopController methodsFor: 'reactions'!
 
+initialize
+
+	super initialize.
+!
+
 onOpen
 	"All is loaded, ready to pet!!"
 	
@@ -76,7 +81,10 @@ onOpen
 
 	"Handy reference"
 	window at: 'app' put: self.
-	
+
+	"As we just opened, it probably needs rendering.."
+	self refresh.
+
 	"Publish some local objects to be reached from server"
 	self session api ws
 		publish: window app at: 'app';
@@ -93,15 +101,15 @@ onTemplate: data
 	have received it from the server (or cache)."
 
 	super onTemplate: data.
-	
+
 	"Lets make sure we load the catalog using the #catalog div as its root
 	and refresh if already there"
 	'#loaderBar'asJQuery show.
 	(self controllersAt: 'catalog' ifAbsentPut:[ 
-		CatalogController for: Catalog new on: self appendingTo: '#catalog' asJQuery ]) refesh.
+		CatalogController for: Catalog new on: self appendingTo: '#catalog' asJQuery ]) refresh.
 
 	(self controllersAt: 'footer' ifAbsentPut:[ 
-		FooterController for: Footer new on: self appendingTo: '#footer' asJQuery ]) refesh.
+		FooterController for: Footer new on: self appendingTo: '#footer' asJQuery ]) refresh.
 ! !
 
 !PetShopController class methodsFor: 'actions'!
