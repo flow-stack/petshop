@@ -10,6 +10,10 @@ Model subclass: #Catalog
 BindingController subclass: #CatalogController
 	instanceVariableNames: ''
 	package: 'PetShop'!
+!CatalogController commentStamp!
+The `CatalogController` has the model with the list of `products`. It also has a `ListController` that is going to present and maintain a thumbnail for each product.
+
+This controller uses the timely `onTemplate:` reaction to load Products from the backend and, once the answer arrives, react again in `onProducts:` to lazily create the list controller of those fresh products!
 
 !CatalogController methodsFor: 'reactions'!
 
@@ -52,9 +56,19 @@ BindingController subclass: #PetShopController
 	instanceVariableNames: 'session'
 	package: 'PetShop'!
 !PetShopController commentStamp!
-##AppController
+The `PetShopController` is the main controller in this PetShop sample application.
 
-The AppController is the main/root controller of your flow-based application.!
+As you can see in class side `isValidFor: anURI`, it's going to be routed when the `URI` is at `/`.
+
+It uses the default model, which is `aShopVisitor`, either loaded from localStorage using MiniMapless or, lazily, creating a brand new one.
+
+If you take a look into `onOpen` you'll see that:
+
+- sets the model
+- activates the Router
+- creates a session
+- puts the instance in window.app (so you can reach it from the console)
+- and publishes some objects to be remotely reached by the backend!
 
 !PetShopController methodsFor: 'accessing'!
 
@@ -115,10 +129,10 @@ onTemplate: data
 	"Lets make sure we load the catalog using the #catalog div as its root
 	and refresh if already there"
 	'#loaderBar'asJQuery show.
-	(self controllersAt: 'catalog' ifAbsentPut:[ 
+	(self controllerAt: 'catalog' ifAbsentPut:[ 
 		CatalogController for: Catalog new on: self appendingTo: '#catalog' asJQuery ]) refresh.
 
-	(self controllersAt: 'footer' ifAbsentPut:[ 
+	(self controllerAt: 'footer' ifAbsentPut:[ 
 		FooterController for: Footer new on: self appendingTo: '#footer' asJQuery ]) refresh.
 ! !
 

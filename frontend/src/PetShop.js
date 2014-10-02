@@ -10,6 +10,7 @@ smalltalk.addClass('Catalog', globals.Model, [], 'PetShop');
 
 
 smalltalk.addClass('CatalogController', globals.BindingController, [], 'PetShop');
+globals.CatalogController.comment="The `CatalogController` has the model with the list of `products`. It also has a `ListController` that is going to present and maintain a thumbnail for each product.\x0a\x0aThis controller uses the timely `onTemplate:` reaction to load Products from the backend and, once the answer arrives, react again in `onProducts:` to lazily create the list controller of those fresh products";
 smalltalk.addMethod(
 smalltalk.method({
 selector: "onProducts:",
@@ -74,7 +75,7 @@ smalltalk.addClass('FooterController', globals.BindingController, [], 'PetShop')
 
 
 smalltalk.addClass('PetShopController', globals.BindingController, ['session'], 'PetShop');
-globals.PetShopController.comment="##AppController\x0a\x0aThe AppController is the main/root controller of your flow-based application.\x0a";
+globals.PetShopController.comment="The `PetShopController` is the main controller in this PetShop sample application.\x0a\x0aAs you can see in class side `isValidFor: anURI`, it's going to be routed when the `URI` is at `/`.\x0a\x0aIt uses the default model, which is `aShopVisitor`, either loaded from localStorage using MiniMapless or, lazily, creating a brand new one.\x0a\x0aIf you take a look into `onOpen` you'll see that:\x0a\x0a- sets the model\x0a- activates the Router\x0a- creates a session\x0a- puts the instance in window.app (so you can reach it from the console)\x0a- and publishes some objects to be remotely reached by the backend";
 smalltalk.addMethod(
 smalltalk.method({
 selector: "initialize",
@@ -153,7 +154,7 @@ $ctx1.supercall = false;
 $1="#loaderBar"._asJQuery();
 $ctx1.sendIdx["asJQuery"]=1;
 _st($1)._show();
-$2=self._controllersAt_ifAbsentPut_("catalog",(function(){
+$2=self._controllerAt_ifAbsentPut_("catalog",(function(){
 return smalltalk.withContext(function($ctx2) {
 $3=_st($Catalog())._new();
 $ctx2.sendIdx["new"]=1;
@@ -162,17 +163,17 @@ $ctx2.sendIdx["asJQuery"]=2;
 return _st($CatalogController())._for_on_appendingTo_($3,self,$4);
 $ctx2.sendIdx["for:on:appendingTo:"]=1;
 }, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)})}));
-$ctx1.sendIdx["controllersAt:ifAbsentPut:"]=1;
+$ctx1.sendIdx["controllerAt:ifAbsentPut:"]=1;
 _st($2)._refresh();
 $ctx1.sendIdx["refresh"]=1;
-_st(self._controllersAt_ifAbsentPut_("footer",(function(){
+_st(self._controllerAt_ifAbsentPut_("footer",(function(){
 return smalltalk.withContext(function($ctx2) {
 return _st($FooterController())._for_on_appendingTo_(_st($Footer())._new(),self,"#footer"._asJQuery());
 }, function($ctx2) {$ctx2.fillBlock({},$ctx1,2)})})))._refresh();
 return self}, function($ctx1) {$ctx1.fill(self,"onTemplate:",{data:data},globals.PetShopController)})},
 args: ["data"],
-source: "onTemplate: data\x0a\x09\x22Receives the template's data after requirejs \x0a\x09have received it from the server (or cache).\x22\x0a\x0a\x09super onTemplate: data.\x0a\x0a\x09\x22Lets make sure we load the catalog using the #catalog div as its root\x0a\x09and refresh if already there\x22\x0a\x09'#loaderBar'asJQuery show.\x0a\x09(self controllersAt: 'catalog' ifAbsentPut:[ \x0a\x09\x09CatalogController for: Catalog new on: self appendingTo: '#catalog' asJQuery ]) refresh.\x0a\x0a\x09(self controllersAt: 'footer' ifAbsentPut:[ \x0a\x09\x09FooterController for: Footer new on: self appendingTo: '#footer' asJQuery ]) refresh.\x0a\x09\x09",
-messageSends: ["onTemplate:", "show", "asJQuery", "refresh", "controllersAt:ifAbsentPut:", "for:on:appendingTo:", "new"],
+source: "onTemplate: data\x0a\x09\x22Receives the template's data after requirejs \x0a\x09have received it from the server (or cache).\x22\x0a\x0a\x09super onTemplate: data.\x0a\x0a\x09\x22Lets make sure we load the catalog using the #catalog div as its root\x0a\x09and refresh if already there\x22\x0a\x09'#loaderBar'asJQuery show.\x0a\x09(self controllerAt: 'catalog' ifAbsentPut:[ \x0a\x09\x09CatalogController for: Catalog new on: self appendingTo: '#catalog' asJQuery ]) refresh.\x0a\x0a\x09(self controllerAt: 'footer' ifAbsentPut:[ \x0a\x09\x09FooterController for: Footer new on: self appendingTo: '#footer' asJQuery ]) refresh.\x0a\x09\x09",
+messageSends: ["onTemplate:", "show", "asJQuery", "refresh", "controllerAt:ifAbsentPut:", "for:on:appendingTo:", "new"],
 referencedClasses: ["CatalogController", "Catalog", "FooterController", "Footer"]
 }),
 globals.PetShopController);
