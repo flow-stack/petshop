@@ -278,6 +278,27 @@ smalltalk.addClass('ProductController', globals.BindingController, [], 'PetShop'
 
 
 smalltalk.addClass('ProductThumbnailController', globals.BindingController, [], 'PetShop');
+smalltalk.addMethod(
+smalltalk.method({
+selector: "onAfterModel",
+protocol: 'reactions',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1;
+($ctx1.supercall = true, globals.ProductThumbnailController.superclass.fn.prototype._onAfterModel.apply(_st(self), []));
+$ctx1.supercall = false;
+$1=self._model();
+$ctx1.sendIdx["model"]=1;
+_st($1)._imageUrl_("img/products/".__comma(_st(self._model())._image()));
+return self}, function($ctx1) {$ctx1.fill(self,"onAfterModel",{},globals.ProductThumbnailController)})},
+args: [],
+source: "onAfterModel\x0a\x0a\x09super onAfterModel.\x0a\x09\x0a\x09self model imageUrl: 'img/products/', self model image",
+messageSends: ["onAfterModel", "imageUrl:", "model", ",", "image"],
+referencedClasses: []
+}),
+globals.ProductThumbnailController);
+
 
 
 smalltalk.addClass('ShopVisitor', globals.Model, [], 'PetShop');

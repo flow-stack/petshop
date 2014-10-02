@@ -29,3 +29,7 @@ img.logo {
 .footer {
 	padding: 0 15px;
 }
+
+.thumbnail img {
+	max-width: 150px;
+}

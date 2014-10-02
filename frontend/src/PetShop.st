@@ -184,6 +184,15 @@ BindingController subclass: #ProductThumbnailController
 	instanceVariableNames: ''
 	package: 'PetShop'!
 
+!ProductThumbnailController methodsFor: 'reactions'!
+
+onAfterModel
+
+	super onAfterModel.
+	
+	self model imageUrl: 'img/products/', self model image
+! !
+
 Model subclass: #ShopVisitor
 	instanceVariableNames: ''
 	package: 'PetShop'!
