@@ -93,6 +93,13 @@ view: aHtmlElement
 
 !Controller methodsFor: 'actions'!
 
+refesh
+
+	self isRendered 
+		ifFalse:[ self render ]
+		ifTrue:[ self empty render ]
+!
+
 remove
 	
 	self onAboutToRemove.
@@ -161,7 +168,8 @@ hasView
 isRendered
 	"Answers true if this controller is rendered."
 	
-	^ self view children length > 0
+	^ self hasView and:[
+	self view children length > 0 ]
 ! !
 
 !Controller class methodsFor: 'accessing'!

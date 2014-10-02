@@ -152,12 +152,15 @@ fn: function (){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
 var $1;
-$1=_st(_st(_st(self._view())._children())._length()).__gt((0));
+$1=_st(self._hasView())._and_((function(){
+return smalltalk.withContext(function($ctx2) {
+return _st(_st(_st(self._view())._children())._length()).__gt((0));
+}, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)})}));
 return $1;
 }, function($ctx1) {$ctx1.fill(self,"isRendered",{},globals.Controller)})},
 args: [],
-source: "isRendered\x0a\x09\x22Answers true if this controller is rendered.\x22\x0a\x09\x0a\x09^ self view children length > 0\x0a\x09\x0a\x09",
-messageSends: [">", "length", "children", "view"],
+source: "isRendered\x0a\x09\x22Answers true if this controller is rendered.\x22\x0a\x09\x0a\x09^ self hasView and:[\x0a\x09self view children length > 0 ]\x0a\x09\x0a\x09",
+messageSends: ["and:", "hasView", ">", "length", "children", "view"],
 referencedClasses: []
 }),
 globals.Controller);
@@ -299,6 +302,29 @@ return self},
 args: ["aHtmlElement"],
 source: "parentElement: aHtmlElement\x0a\x0a\x09parentElement := aHtmlElement",
 messageSends: [],
+referencedClasses: []
+}),
+globals.Controller);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "refesh",
+protocol: 'actions',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1;
+$1=self._isRendered();
+if(smalltalk.assert($1)){
+_st(self._empty())._render();
+} else {
+self._render();
+$ctx1.sendIdx["render"]=1;
+};
+return self}, function($ctx1) {$ctx1.fill(self,"refesh",{},globals.Controller)})},
+args: [],
+source: "refesh\x0a\x0a\x09self isRendered \x0a\x09\x09ifFalse:[ self render ]\x0a\x09\x09ifTrue:[ self empty render ]",
+messageSends: ["ifFalse:ifTrue:", "isRendered", "render", "empty"],
 referencedClasses: []
 }),
 globals.Controller);
