@@ -18,6 +18,10 @@ onTemplate: data
 	'#loaderBar'asJQuery remove.
 ! !
 
+Model subclass: #Footer
+	instanceVariableNames: ''
+	package: 'PetShop'!
+
 BindingController subclass: #FooterController
 	instanceVariableNames: ''
 	package: 'PetShop'!
@@ -50,6 +54,8 @@ onOpen
 	
 	also this"
 
+	self model: self class defaultModel.
+
 	"Make the router be sensible to URI changes"
 	Router observeHash.
 
@@ -81,6 +87,9 @@ onTemplate: data
 	'#loaderBar'asJQuery show.
 	(self controllersAt: 'catalog' ifAbsentPut:[ 
 		CatalogController for: Catalog new on: self appendingTo: '#catalog' asJQuery ]) refesh.
+
+	(self controllersAt: 'footer' ifAbsentPut:[ 
+		FooterController for: Footer new on: self appendingTo: '#footer' asJQuery ]) refesh.
 ! !
 
 !PetShopController class methodsFor: 'actions'!
@@ -120,6 +129,10 @@ isValidFor: anURI
 ! !
 
 BindingController subclass: #ProductController
+	instanceVariableNames: ''
+	package: 'PetShop'!
+
+BindingController subclass: #ProductThumbnailController
 	instanceVariableNames: ''
 	package: 'PetShop'!
 
