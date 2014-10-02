@@ -3,25 +3,49 @@ var smalltalk=$boot.vm,nil=$boot.nil,_st=$boot.asReceiver,globals=$boot.globals;
 smalltalk.addPackage('PetShop');
 smalltalk.packages["PetShop"].transport = {"type":"amd","amdNamespace":"app"};
 
+smalltalk.addClass('Cart', globals.Model, [], 'PetShop');
+
+
 smalltalk.addClass('Catalog', globals.Model, [], 'PetShop');
 
 
 smalltalk.addClass('CatalogController', globals.BindingController, [], 'PetShop');
 smalltalk.addMethod(
 smalltalk.method({
+selector: "onProducts:",
+protocol: 'reactions',
+fn: function (someProducts){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+_st("#loaderBar"._asJQuery())._remove();
+_st(self["@model"])._products_(someProducts);
+return self}, function($ctx1) {$ctx1.fill(self,"onProducts:",{someProducts:someProducts},globals.CatalogController)})},
+args: ["someProducts"],
+source: "onProducts: someProducts\x0a\x0a\x09'#loaderBar'asJQuery remove.\x0a\x09\x0a\x09model products: someProducts",
+messageSends: ["remove", "asJQuery", "products:"],
+referencedClasses: []
+}),
+globals.CatalogController);
+
+smalltalk.addMethod(
+smalltalk.method({
 selector: "onTemplate:",
 protocol: 'reactions',
 fn: function (data){
 var self=this;
+function $Product(){return globals.Product||(typeof Product=="undefined"?nil:Product)}
 return smalltalk.withContext(function($ctx1) { 
 ($ctx1.supercall = true, globals.CatalogController.superclass.fn.prototype._onTemplate_.apply(_st(self), [data]));
 $ctx1.supercall = false;
-_st("#loaderBar"._asJQuery())._remove();
+_st($Product())._findAllDo_((function(res){
+return smalltalk.withContext(function($ctx2) {
+return self._onProducts_(_st($Product())._onAfterReadAll_(res));
+}, function($ctx2) {$ctx2.fillBlock({res:res},$ctx1,1)})}));
 return self}, function($ctx1) {$ctx1.fill(self,"onTemplate:",{data:data},globals.CatalogController)})},
 args: ["data"],
-source: "onTemplate: data\x0a\x09\x22Receives the template's data after requirejs \x0a\x09have received it from the server (or cache).\x22\x0a\x0a\x09super onTemplate: data.\x0a\x09\x0a\x09'#loaderBar'asJQuery remove.\x0a\x0a\x0a\x09",
-messageSends: ["onTemplate:", "remove", "asJQuery"],
-referencedClasses: []
+source: "onTemplate: data\x0a\x09\x22Receives the template's data after requirejs \x0a\x09have received it from the server (or cache).\x22\x0a\x0a\x09super onTemplate: data.\x0a\x0a\x09Product findAllDo: [ :res | \x0a\x09\x09self onProducts: (Product onAfterReadAll: res) ].\x0a\x0a\x0a\x09",
+messageSends: ["onTemplate:", "findAllDo:", "onProducts:", "onAfterReadAll:"],
+referencedClasses: ["Product"]
 }),
 globals.CatalogController);
 
@@ -210,6 +234,9 @@ messageSends: ["onOpen", "for:on:appendingTo:", "asJQuery"],
 referencedClasses: []
 }),
 globals.PetShopController.klass);
+
+
+smalltalk.addClass('Product', globals.Model, [], 'PetShop');
 
 
 smalltalk.addClass('ProductController', globals.BindingController, [], 'PetShop');

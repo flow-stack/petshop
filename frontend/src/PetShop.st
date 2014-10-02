@@ -1,4 +1,8 @@
 Smalltalk createPackage: 'PetShop'!
+Model subclass: #Cart
+	instanceVariableNames: ''
+	package: 'PetShop'!
+
 Model subclass: #Catalog
 	instanceVariableNames: ''
 	package: 'PetShop'!
@@ -9,13 +13,21 @@ BindingController subclass: #CatalogController
 
 !CatalogController methodsFor: 'reactions'!
 
+onProducts: someProducts
+
+	'#loaderBar'asJQuery remove.
+	
+	model products: someProducts
+!
+
 onTemplate: data
 	"Receives the template's data after requirejs 
 	have received it from the server (or cache)."
 
 	super onTemplate: data.
-	
-	'#loaderBar'asJQuery remove.
+
+	Product findAllDo: [ :res | 
+		self onProducts: (Product onAfterReadAll: res) ].
 ! !
 
 Model subclass: #Footer
@@ -127,6 +139,10 @@ isValidFor: anURI
 	anURI = '/' or:[
 	anURI = '/#/' ] ] ]
 ! !
+
+Model subclass: #Product
+	instanceVariableNames: ''
+	package: 'PetShop'!
 
 BindingController subclass: #ProductController
 	instanceVariableNames: ''
