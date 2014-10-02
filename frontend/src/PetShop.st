@@ -18,6 +18,16 @@ onProducts: someProducts
 	'#loaderBar'asJQuery remove.
 	
 	model products: someProducts.
+	
+	(self ifAbsentAt: 'products' put: [
+		"Lazy creation of the list controller for the thumbnails"
+		(ListController 
+			for: model 
+			on: self 
+			appendingTo: '.products' asJQuery)
+				getItemsBlock: [:m| m products ];
+				itemControllerClass: ProductThumbnailController;
+				yourself]) refresh "be sure to display resh stuff"
 !
 
 onTemplate: data

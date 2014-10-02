@@ -16,14 +16,30 @@ selector: "onProducts:",
 protocol: 'reactions',
 fn: function (someProducts){
 var self=this;
+function $ListController(){return globals.ListController||(typeof ListController=="undefined"?nil:ListController)}
+function $ProductThumbnailController(){return globals.ProductThumbnailController||(typeof ProductThumbnailController=="undefined"?nil:ProductThumbnailController)}
 return smalltalk.withContext(function($ctx1) { 
-_st("#loaderBar"._asJQuery())._remove();
+var $1,$2,$3;
+$1="#loaderBar"._asJQuery();
+$ctx1.sendIdx["asJQuery"]=1;
+_st($1)._remove();
 _st(self["@model"])._products_(someProducts);
+_st(self._ifAbsentAt_put_("products",(function(){
+return smalltalk.withContext(function($ctx2) {
+$2=_st($ListController())._for_on_appendingTo_(self["@model"],self,".products"._asJQuery());
+_st($2)._getItemsBlock_((function(m){
+return smalltalk.withContext(function($ctx3) {
+return _st(m)._products();
+}, function($ctx3) {$ctx3.fillBlock({m:m},$ctx2,2)})}));
+_st($2)._itemControllerClass_($ProductThumbnailController());
+$3=_st($2)._yourself();
+return $3;
+}, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)})})))._refresh();
 return self}, function($ctx1) {$ctx1.fill(self,"onProducts:",{someProducts:someProducts},globals.CatalogController)})},
 args: ["someProducts"],
-source: "onProducts: someProducts\x0a\x0a\x09'#loaderBar'asJQuery remove.\x0a\x09\x0a\x09model products: someProducts.\x0a\x09",
-messageSends: ["remove", "asJQuery", "products:"],
-referencedClasses: []
+source: "onProducts: someProducts\x0a\x0a\x09'#loaderBar'asJQuery remove.\x0a\x09\x0a\x09model products: someProducts.\x0a\x09\x0a\x09(self ifAbsentAt: 'products' put: [\x0a\x09\x09\x22Lazy creation of the list controller for the thumbnails\x22\x0a\x09\x09(ListController \x0a\x09\x09\x09for: model \x0a\x09\x09\x09on: self \x0a\x09\x09\x09appendingTo: '.products' asJQuery)\x0a\x09\x09\x09\x09getItemsBlock: [:m| m products ];\x0a\x09\x09\x09\x09itemControllerClass: ProductThumbnailController;\x0a\x09\x09\x09\x09yourself]) refresh \x22be sure to display resh stuff\x22",
+messageSends: ["remove", "asJQuery", "products:", "refresh", "ifAbsentAt:put:", "getItemsBlock:", "for:on:appendingTo:", "products", "itemControllerClass:", "yourself"],
+referencedClasses: ["ListController", "ProductThumbnailController"]
 }),
 globals.CatalogController);
 
