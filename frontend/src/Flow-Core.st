@@ -100,6 +100,20 @@ ifAbsentAt: aKey put: aBlock
 	^ self controllerAt: aKey ifAbsentPut: aBlock
 !
 
+ifAbsentAt: aKey put: aBlock andDo: aPostAddingBlock
+	"Answers the controller already present at aKey or,
+	if absent, puts the one expected to be created during aBlock,
+	evaluates aPostAddingBlock using it and finally returns it"
+	
+	^ self 
+		controllerAt: aKey 
+		ifAbsent: [ | newController |
+			newController := aBlock value.
+			self controllerAt: aKey put: newController.
+			aPostAddingBlock value: newController.
+			newController ]
+!
+
 refresh
 
 	self render

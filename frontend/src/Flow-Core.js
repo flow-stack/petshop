@@ -144,6 +144,32 @@ globals.Controller);
 
 smalltalk.addMethod(
 smalltalk.method({
+selector: "ifAbsentAt:put:andDo:",
+protocol: 'actions',
+fn: function (aKey,aBlock,aPostAddingBlock){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1;
+$1=self._controllerAt_ifAbsent_(aKey,(function(){
+var newController;
+return smalltalk.withContext(function($ctx2) {
+newController=_st(aBlock)._value();
+newController;
+self._controllerAt_put_(aKey,newController);
+_st(aPostAddingBlock)._value_(newController);
+return newController;
+}, function($ctx2) {$ctx2.fillBlock({newController:newController},$ctx1,1)})}));
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"ifAbsentAt:put:andDo:",{aKey:aKey,aBlock:aBlock,aPostAddingBlock:aPostAddingBlock},globals.Controller)})},
+args: ["aKey", "aBlock", "aPostAddingBlock"],
+source: "ifAbsentAt: aKey put: aBlock andDo: aPostAddingBlock\x0a\x09\x22Answers the controller already present at aKey or,\x0a\x09if absent, puts the one expected to be created during aBlock,\x0a\x09evaluates aPostAddingBlock using it and finally returns it\x22\x0a\x09\x0a\x09^ self \x0a\x09\x09controllerAt: aKey \x0a\x09\x09ifAbsent: [ | newController |\x0a\x09\x09\x09newController := aBlock value.\x0a\x09\x09\x09self controllerAt: aKey put: newController.\x0a\x09\x09\x09aPostAddingBlock value: newController.\x0a\x09\x09\x09newController ]",
+messageSends: ["controllerAt:ifAbsent:", "value", "controllerAt:put:", "value:"],
+referencedClasses: []
+}),
+globals.Controller);
+
+smalltalk.addMethod(
+smalltalk.method({
 selector: "initializeControllers",
 protocol: 'initialization',
 fn: function (){

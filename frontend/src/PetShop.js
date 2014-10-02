@@ -280,6 +280,38 @@ smalltalk.addClass('ProductController', globals.BindingController, [], 'PetShop'
 smalltalk.addClass('ProductThumbnailController', globals.BindingController, [], 'PetShop');
 smalltalk.addMethod(
 smalltalk.method({
+selector: "addToCart",
+protocol: 'actions',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+self._trigger_with_("addToCart:",self["@model"]);
+return self}, function($ctx1) {$ctx1.fill(self,"addToCart",{},globals.ProductThumbnailController)})},
+args: [],
+source: "addToCart\x0a\x0a\x09self trigger: #addToCart: with: model",
+messageSends: ["trigger:with:"],
+referencedClasses: []
+}),
+globals.ProductThumbnailController);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "addToWishList",
+protocol: 'actions',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+self._trigger_with_("addToWishList:",self["@model"]);
+return self}, function($ctx1) {$ctx1.fill(self,"addToWishList",{},globals.ProductThumbnailController)})},
+args: [],
+source: "addToWishList\x0a\x0a\x09self trigger: #addToWishList: with: model",
+messageSends: ["trigger:with:"],
+referencedClasses: []
+}),
+globals.ProductThumbnailController);
+
+smalltalk.addMethod(
+smalltalk.method({
 selector: "onAfterModel",
 protocol: 'reactions',
 fn: function (){

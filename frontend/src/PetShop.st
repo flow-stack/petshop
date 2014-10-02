@@ -184,6 +184,18 @@ BindingController subclass: #ProductThumbnailController
 	instanceVariableNames: ''
 	package: 'PetShop'!
 
+!ProductThumbnailController methodsFor: 'actions'!
+
+addToCart
+
+	self trigger: #addToCart: with: model
+!
+
+addToWishList
+
+	self trigger: #addToWishList: with: model
+! !
+
 !ProductThumbnailController methodsFor: 'reactions'!
 
 onAfterModel

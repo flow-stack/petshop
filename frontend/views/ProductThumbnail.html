@@ -5,7 +5,9 @@
       <div class="caption">
         <h4>{ model.description }</h4>
         <p>${ model.price }</p>
-        <p><a href="#" class="btn btn-primary" role="button">Add to cart</a> <a href="#" class="btn btn-default" role="button">Add to wish list</a></p>
+        <p><a class="btn btn-primary" rv-on-click="controller._addToCart">Add to cart</a> 
+          <a class="btn btn-default" rv-on-click="controller._addToWishList">Add to wish list</a>
+        </p>
       </div>
     </div>
   </div>
