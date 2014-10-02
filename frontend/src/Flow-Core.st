@@ -102,9 +102,7 @@ ifAbsentAt: aKey put: aBlock
 
 refresh
 
-	self isRendered 
-		ifFalse:[ self render ]
-		ifTrue:[ self empty render ]
+	self render
 !
 
 remove
@@ -128,8 +126,7 @@ removeControllerAt: aKey
 
 render
 	
-	self view ifNotNil:[
-		self view empty ].
+	self onAboutToRender.
 	
 	self renderOn: (HTMLCanvas onJQuery: self parentElement)
 !
@@ -154,6 +151,16 @@ onAboutToRemove
 	"This controller is about to be removed."
 	
 	"no-op"
+!
+
+onAboutToRender
+	"This controller is just about to be rendered."
+
+	"Empty the contents of the root element of this controller.
+	This would work as long as the view of this controller is the
+	only thing supossed to be child in that element"
+	self parentElement ifNotNil:[
+		self parentElement empty ].
 !
 
 onAfterModel
