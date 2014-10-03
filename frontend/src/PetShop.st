@@ -3,6 +3,28 @@ Model subclass: #Cart
 	instanceVariableNames: ''
 	package: 'PetShop'!
 
+!Cart methodsFor: 'accessing'!
+
+products
+
+	super products ifNil:[
+		self products: OrderedCollection new ].
+		
+	^ super products
+! !
+
+!Cart methodsFor: 'actions'!
+
+addProduct: aProduct
+
+	^ self products add: aProduct
+!
+
+removeProduct: aProduct
+
+	^ self products remove: aProduct ifAbsent:[ nil ]
+! !
+
 BindingController subclass: #CartController
 	instanceVariableNames: ''
 	package: 'PetShop'!
@@ -81,7 +103,9 @@ shopVisitor
 	
 	^ shopVisitor isNil
 		ifTrue:[ ShopVisitor new
+					id: 'me';
 					cart: Cart new;
+					wishList: WishList new;
 					yourself ]
 		ifFalse:[ shopVisitor ]
 ! !
@@ -164,7 +188,7 @@ onAfterModel
 
 	super onAfterModel.
 	
-	self model updateQuantity
+	self model updateCartSize
 !
 
 onTemplate: data
@@ -225,10 +249,19 @@ BindingController subclass: #ProductThumbnailController
 
 addToCart
 
+	Flow session shopVisitor cart addProduct: model; localSave.
+
+	'#alertsRoot' asJQuery html: '<div class="alert alert-success" role="alert">Done. We''ve added one ',model description,' to your cart!!</div>'.
+	['#alertsRoot' asJQuery empty ] valueWithTimeout: 2000.
+	
 	self trigger: #addToCart: with: model
 !
 
 addToWishList
+
+	'#alertsRoot' asJQuery html: '<div class="alert alert-info" role="alert">We''ve added one ',model description,' to your wishlist. It got sooo whishable!!</div>'.
+
+	['#alertsRoot' asJQuery empty ] valueWithTimeout: 2000.
 
 	self trigger: #addToWishList: with: model
 ! !
@@ -246,20 +279,36 @@ Model subclass: #ShopVisitor
 	instanceVariableNames: ''
 	package: 'PetShop'!
 
-!ShopVisitor methodsFor: 'accessing'!
-
-items
-
-	super items ifNil:[
-		self items: OrderedCollection new ].
-		
-	^ super items
-! !
-
 !ShopVisitor methodsFor: 'actions'!
 
-updateQuantity
+updateCartSize
 
-	self quantity: self items size
+	self cartSize: self cart products size
+! !
+
+Model subclass: #WishList
+	instanceVariableNames: ''
+	package: 'PetShop'!
+
+!WishList methodsFor: 'accessing'!
+
+products
+
+	super products ifNil:[
+		self products: OrderedCollection new ].
+		
+	^ super products
+! !
+
+!WishList methodsFor: 'actions'!
+
+addProduct: aProduct
+
+	^ self products add: aProduct
+!
+
+removeProduct: aProduct
+
+	^ self products remove: aProduct ifAbsent:[ nil ]
 ! !
 
