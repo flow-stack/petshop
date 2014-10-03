@@ -249,6 +249,9 @@ BindingController subclass: #ProductThumbnailController
 
 addToCart
 
+	Flow session shopVisitor localSave.
+	model localSave.
+	
 	Flow session shopVisitor cart addProduct: model; localSave.
 
 	'#alertsRoot' asJQuery html: '<div class="alert alert-success" role="alert">Done. We''ve added one ',model description,' to your cart!!</div>'.
@@ -259,6 +262,11 @@ addToCart
 
 addToWishList
 
+	Flow session shopVisitor localSave.
+	model localSave.
+	
+	Flow session shopVisitor wishList addProduct: model; localSave.
+	
 	'#alertsRoot' asJQuery html: '<div class="alert alert-info" role="alert">We''ve added one ',model description,' to your wishlist. It got sooo whishable!!</div>'.
 
 	['#alertsRoot' asJQuery empty ] valueWithTimeout: 2000.

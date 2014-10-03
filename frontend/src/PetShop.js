@@ -1,4 +1,4 @@
-define("app/PetShop", ["amber/boot", "app/Flow-Core", "app/Flow-Binding", "amber_core/Kernel-Objects"], function($boot){
+define("app/PetShop", ["amber/boot", "app/Flow-Binding", "amber_core/Kernel-Objects", "app/Flow-Core"], function($boot){
 var smalltalk=$boot.vm,nil=$boot.nil,_st=$boot.asReceiver,globals=$boot.globals;
 smalltalk.addPackage('PetShop');
 smalltalk.packages["PetShop"].transport = {"type":"amd","amdNamespace":"app"};
@@ -480,15 +480,23 @@ fn: function (){
 var self=this;
 function $Flow(){return globals.Flow||(typeof Flow=="undefined"?nil:Flow)}
 return smalltalk.withContext(function($ctx1) { 
-var $1,$2,$3,$4;
-$1=_st(_st(_st($Flow())._session())._shopVisitor())._cart();
-_st($1)._addProduct_(self["@model"]);
-$2=_st($1)._localSave();
-$3="#alertsRoot"._asJQuery();
+var $2,$1,$3,$4,$5,$6;
+$2=_st($Flow())._session();
+$ctx1.sendIdx["session"]=1;
+$1=_st($2)._shopVisitor();
+$ctx1.sendIdx["shopVisitor"]=1;
+_st($1)._localSave();
+$ctx1.sendIdx["localSave"]=1;
+_st(self["@model"])._localSave();
+$ctx1.sendIdx["localSave"]=2;
+$3=_st(_st(_st($Flow())._session())._shopVisitor())._cart();
+_st($3)._addProduct_(self["@model"]);
+$4=_st($3)._localSave();
+$5="#alertsRoot"._asJQuery();
 $ctx1.sendIdx["asJQuery"]=1;
-$4=_st("<div class=\x22alert alert-success\x22 role=\x22alert\x22>Done. We've added one ".__comma(_st(self["@model"])._description())).__comma(" to your cart!</div>");
+$6=_st("<div class=\x22alert alert-success\x22 role=\x22alert\x22>Done. We've added one ".__comma(_st(self["@model"])._description())).__comma(" to your cart!</div>");
 $ctx1.sendIdx[","]=1;
-_st($3)._html_($4);
+_st($5)._html_($6);
 _st((function(){
 return smalltalk.withContext(function($ctx2) {
 return _st("#alertsRoot"._asJQuery())._empty();
@@ -496,8 +504,8 @@ return _st("#alertsRoot"._asJQuery())._empty();
 self._trigger_with_("addToCart:",self["@model"]);
 return self}, function($ctx1) {$ctx1.fill(self,"addToCart",{},globals.ProductThumbnailController)})},
 args: [],
-source: "addToCart\x0a\x0a\x09Flow session shopVisitor cart addProduct: model; localSave.\x0a\x0a\x09'#alertsRoot' asJQuery html: '<div class=\x22alert alert-success\x22 role=\x22alert\x22>Done. We''ve added one ',model description,' to your cart!</div>'.\x0a\x09['#alertsRoot' asJQuery empty ] valueWithTimeout: 2000.\x0a\x09\x0a\x09self trigger: #addToCart: with: model",
-messageSends: ["addProduct:", "cart", "shopVisitor", "session", "localSave", "html:", "asJQuery", ",", "description", "valueWithTimeout:", "empty", "trigger:with:"],
+source: "addToCart\x0a\x0a\x09Flow session shopVisitor localSave.\x0a\x09model localSave.\x0a\x09\x0a\x09Flow session shopVisitor cart addProduct: model; localSave.\x0a\x0a\x09'#alertsRoot' asJQuery html: '<div class=\x22alert alert-success\x22 role=\x22alert\x22>Done. We''ve added one ',model description,' to your cart!</div>'.\x0a\x09['#alertsRoot' asJQuery empty ] valueWithTimeout: 2000.\x0a\x09\x0a\x09self trigger: #addToCart: with: model",
+messageSends: ["localSave", "shopVisitor", "session", "addProduct:", "cart", "html:", "asJQuery", ",", "description", "valueWithTimeout:", "empty", "trigger:with:"],
 referencedClasses: ["Flow"]
 }),
 globals.ProductThumbnailController);
@@ -508,13 +516,25 @@ selector: "addToWishList",
 protocol: 'actions',
 fn: function (){
 var self=this;
+function $Flow(){return globals.Flow||(typeof Flow=="undefined"?nil:Flow)}
 return smalltalk.withContext(function($ctx1) { 
-var $1,$2;
-$1="#alertsRoot"._asJQuery();
+var $2,$1,$3,$4,$5,$6;
+$2=_st($Flow())._session();
+$ctx1.sendIdx["session"]=1;
+$1=_st($2)._shopVisitor();
+$ctx1.sendIdx["shopVisitor"]=1;
+_st($1)._localSave();
+$ctx1.sendIdx["localSave"]=1;
+_st(self["@model"])._localSave();
+$ctx1.sendIdx["localSave"]=2;
+$3=_st(_st(_st($Flow())._session())._shopVisitor())._wishList();
+_st($3)._addProduct_(self["@model"]);
+$4=_st($3)._localSave();
+$5="#alertsRoot"._asJQuery();
 $ctx1.sendIdx["asJQuery"]=1;
-$2=_st("<div class=\x22alert alert-info\x22 role=\x22alert\x22>We've added one ".__comma(_st(self["@model"])._description())).__comma(" to your wishlist. It got sooo whishable!</div>");
+$6=_st("<div class=\x22alert alert-info\x22 role=\x22alert\x22>We've added one ".__comma(_st(self["@model"])._description())).__comma(" to your wishlist. It got sooo whishable!</div>");
 $ctx1.sendIdx[","]=1;
-_st($1)._html_($2);
+_st($5)._html_($6);
 _st((function(){
 return smalltalk.withContext(function($ctx2) {
 return _st("#alertsRoot"._asJQuery())._empty();
@@ -522,9 +542,9 @@ return _st("#alertsRoot"._asJQuery())._empty();
 self._trigger_with_("addToWishList:",self["@model"]);
 return self}, function($ctx1) {$ctx1.fill(self,"addToWishList",{},globals.ProductThumbnailController)})},
 args: [],
-source: "addToWishList\x0a\x0a\x09'#alertsRoot' asJQuery html: '<div class=\x22alert alert-info\x22 role=\x22alert\x22>We''ve added one ',model description,' to your wishlist. It got sooo whishable!</div>'.\x0a\x0a\x09['#alertsRoot' asJQuery empty ] valueWithTimeout: 2000.\x0a\x0a\x09self trigger: #addToWishList: with: model ",
-messageSends: ["html:", "asJQuery", ",", "description", "valueWithTimeout:", "empty", "trigger:with:"],
-referencedClasses: []
+source: "addToWishList\x0a\x0a\x09Flow session shopVisitor localSave.\x0a\x09model localSave.\x0a\x09\x0a\x09Flow session shopVisitor wishList addProduct: model; localSave.\x0a\x09\x0a\x09'#alertsRoot' asJQuery html: '<div class=\x22alert alert-info\x22 role=\x22alert\x22>We''ve added one ',model description,' to your wishlist. It got sooo whishable!</div>'.\x0a\x0a\x09['#alertsRoot' asJQuery empty ] valueWithTimeout: 2000.\x0a\x0a\x09self trigger: #addToWishList: with: model ",
+messageSends: ["localSave", "shopVisitor", "session", "addProduct:", "wishList", "html:", "asJQuery", ",", "description", "valueWithTimeout:", "empty", "trigger:with:"],
+referencedClasses: ["Flow"]
 }),
 globals.ProductThumbnailController);
 

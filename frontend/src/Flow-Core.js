@@ -1,4 +1,4 @@
-define("app/Flow-Core", ["amber/boot", "amber_core/Web", "app/MiniMapless", "amber_core/Kernel-Objects"], function($boot){
+define("app/Flow-Core", ["amber/boot", "amber_core/Web", "amber_core/Kernel-Objects", "app/MiniMapless"], function($boot){
 var smalltalk=$boot.vm,nil=$boot.nil,_st=$boot.asReceiver,globals=$boot.globals;
 smalltalk.addPackage('Flow-Core');
 smalltalk.packages["Flow-Core"].transport = {"type":"amd","amdNamespace":"app"};
@@ -1149,7 +1149,7 @@ globals.FlowAppController.klass);
 smalltalk.addClass('NotFoundController', globals.RouteableController, [], 'Flow-Core');
 
 
-smalltalk.addClass('Model', globals.Mapless, [], 'Flow-Core');
+smalltalk.addClass('Model', globals.MaplessModel, [], 'Flow-Core');
 
 
 smalltalk.addClass('User', globals.Model, [], 'Flow-Core');
