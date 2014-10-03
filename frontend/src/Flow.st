@@ -113,7 +113,7 @@ Object subclass: #Flow
 	instanceVariableNames: ''
 	package: 'Flow'!
 
-Flow class instanceVariableNames: 'app session currentController'!
+Flow class instanceVariableNames: 'app session'!
 
 !Flow class methodsFor: 'accessing'!
 

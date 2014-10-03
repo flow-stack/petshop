@@ -249,7 +249,7 @@ globals.ModelScaffolder.klass);
 
 smalltalk.addClass('Flow', globals.Object, [], 'Flow');
 
-globals.Flow.klass.iVarNames = ['app','session','currentController'];
+globals.Flow.klass.iVarNames = ['app','session'];
 smalltalk.addMethod(
 smalltalk.method({
 selector: "activeController",
