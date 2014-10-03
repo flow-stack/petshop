@@ -63,6 +63,56 @@ BindingController subclass: #FooterController
 	instanceVariableNames: ''
 	package: 'PetShop'!
 
+Object subclass: #PetShop
+	instanceVariableNames: ''
+	package: 'PetShop'!
+
+!PetShop class methodsFor: 'accessing'!
+
+shopVisitor
+
+	| shopVisitor |
+
+	"The strategy is to have something to model a shop visitor
+	so the controllers can use it and customize somewhow her / his visiting experience.
+	If is not a first timer we will have it stored locally at 'me''
+	and if not, we fallback to a default new model"
+	shopVisitor := 	ShopVisitor localFindId: 'me'.
+	
+	^ shopVisitor isNil
+		ifTrue:[ ShopVisitor new
+					cart: Cart new;
+					yourself ]
+		ifFalse:[ shopVisitor ]
+! !
+
+!PetShop class methodsFor: 'actions'!
+
+publishObjects
+	"Publish some local objects to be reached from backend"
+	
+	Flow session api ws
+		publish: window flow app at: 'app';
+		publish: Transcript current at: 'Transcript';
+		publish: console at: 'console';
+		publish: [ :sent | sent ] at: 'echo';
+		publish: [ :ping | #pong ] at: 'ping';		
+		publish: [ :a :b | a + b ] at: 'sum';	
+		yourself
+!
+
+start
+	"Starts the PetShop app"
+	
+	Flow app: self; start.
+	
+	self publishObjects.
+	
+	Flow session shopVisitor: self shopVisitor.
+	
+	Router refresh
+! !
+
 BindingController subclass: #PetShopController
 	instanceVariableNames: 'session'
 	package: 'PetShop'!
@@ -101,48 +151,20 @@ saveState
 	self model save.
 ! !
 
-!PetShopController methodsFor: 'reactions'!
+!PetShopController methodsFor: 'initialization'!
 
 initialize
 
 	super initialize.
-!
+! !
 
-onOpen
-	"All is loaded, ready to pet!!"
+!PetShopController methodsFor: 'reactions'!
+
+onAfterModel
+
+	super onAfterModel.
 	
-	"Time for the app to do its own particular thigns..."
-	| cart |
-	"do this
-	and
-	that..
-	
-	also this"
-
-	self model: self class defaultModel.
-	self model updateQuantity.
-
-	"Make the router be sensible to URI changes"
-	Router observeHash.
-
-	"Let's have a sesion"
-	session := Session new.
-
-	"Handy reference"
-	window at: 'app' put: self.
-
-	"As we just opened, it probably needs rendering.."
-	self refresh.
-
-	"Publish some local objects to be reached from server"
-	self session api ws
-		publish: window app at: 'app';
-		publish: Transcript current at: 'Transcript';
-		publish: console at: 'console';
-		publish: [ :sent | sent ] at: 'echo';
-		publish: [ :ping | #pong ] at: 'ping';		
-		publish: [ :a :b | a + b ] at: 'sum';	
-		yourself
+	self model updateQuantity
 !
 
 onTemplate: data
@@ -166,19 +188,7 @@ onTemplate: data
 defaultModel
 	"Answers the default model for this controller."
 	
-	| shopVisitor |
-
-	"The strategy is to have as model something that fits for a shop visitor
-	and customizes somewhow to her / his visiting experience.
-	If is not the first time we might have it stored locally at 'me''
-	and if not, we fallback to a default new model"
-	shopVisitor := 	ShopVisitor localFindId: 'me'.
-	
-	^ shopVisitor isNil
-		ifTrue:[ ShopVisitor new
-					cart: Cart new;
-					yourself ]
-		ifFalse:[ shopVisitor ]
+	^ Flow session shopVisitor
 !
 
 open

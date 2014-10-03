@@ -1,4 +1,4 @@
-define("app/PetShop", ["amber/boot", "app/Flow-Core", "app/Flow-Binding"], function($boot){
+define("app/PetShop", ["amber/boot", "app/Flow-Core", "app/Flow-Binding", "amber_core/Kernel-Objects"], function($boot){
 var smalltalk=$boot.vm,nil=$boot.nil,_st=$boot.asReceiver,globals=$boot.globals;
 smalltalk.addPackage('PetShop');
 smalltalk.packages["PetShop"].transport = {"type":"amd","amdNamespace":"app"};
@@ -96,6 +96,101 @@ smalltalk.addClass('Footer', globals.Model, [], 'PetShop');
 smalltalk.addClass('FooterController', globals.BindingController, [], 'PetShop');
 
 
+smalltalk.addClass('PetShop', globals.Object, [], 'PetShop');
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "publishObjects",
+protocol: 'actions',
+fn: function (){
+var self=this;
+function $Flow(){return globals.Flow||(typeof Flow=="undefined"?nil:Flow)}
+function $Transcript(){return globals.Transcript||(typeof Transcript=="undefined"?nil:Transcript)}
+return smalltalk.withContext(function($ctx1) { 
+var $1,$2;
+$1=_st(_st(_st($Flow())._session())._api())._ws();
+_st($1)._publish_at_(_st(_st(window)._flow())._app(),"app");
+$ctx1.sendIdx["publish:at:"]=1;
+_st($1)._publish_at_(_st($Transcript())._current(),"Transcript");
+$ctx1.sendIdx["publish:at:"]=2;
+_st($1)._publish_at_(console,"console");
+$ctx1.sendIdx["publish:at:"]=3;
+_st($1)._publish_at_((function(sent){
+return sent;
+}),"echo");
+$ctx1.sendIdx["publish:at:"]=4;
+_st($1)._publish_at_((function(ping){
+return "pong";
+}),"ping");
+$ctx1.sendIdx["publish:at:"]=5;
+_st($1)._publish_at_((function(a,b){
+return smalltalk.withContext(function($ctx2) {
+return _st(a).__plus(b);
+}, function($ctx2) {$ctx2.fillBlock({a:a,b:b},$ctx1,3)})}),"sum");
+$2=_st($1)._yourself();
+return self}, function($ctx1) {$ctx1.fill(self,"publishObjects",{},globals.PetShop.klass)})},
+args: [],
+source: "publishObjects\x0a\x09\x22Publish some local objects to be reached from backend\x22\x0a\x09\x0a\x09Flow session api ws\x0a\x09\x09publish: window flow app at: 'app';\x0a\x09\x09publish: Transcript current at: 'Transcript';\x0a\x09\x09publish: console at: 'console';\x0a\x09\x09publish: [ :sent | sent ] at: 'echo';\x0a\x09\x09publish: [ :ping | #pong ] at: 'ping';\x09\x09\x0a\x09\x09publish: [ :a :b | a + b ] at: 'sum';\x09\x0a\x09\x09yourself\x0a\x09\x0a\x09",
+messageSends: ["publish:at:", "ws", "api", "session", "app", "flow", "current", "+", "yourself"],
+referencedClasses: ["Flow", "Transcript"]
+}),
+globals.PetShop.klass);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "shopVisitor",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+var shopVisitor;
+function $ShopVisitor(){return globals.ShopVisitor||(typeof ShopVisitor=="undefined"?nil:ShopVisitor)}
+function $Cart(){return globals.Cart||(typeof Cart=="undefined"?nil:Cart)}
+return smalltalk.withContext(function($ctx1) { 
+var $2,$3,$4,$1;
+shopVisitor=_st($ShopVisitor())._localFindId_("me");
+$2=_st(shopVisitor)._isNil();
+if(smalltalk.assert($2)){
+$3=_st($ShopVisitor())._new();
+$ctx1.sendIdx["new"]=1;
+_st($3)._cart_(_st($Cart())._new());
+$4=_st($3)._yourself();
+$1=$4;
+} else {
+$1=shopVisitor;
+};
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"shopVisitor",{shopVisitor:shopVisitor},globals.PetShop.klass)})},
+args: [],
+source: "shopVisitor\x0a\x0a\x09| shopVisitor |\x0a\x0a\x09\x22The strategy is to have something to model a shop visitor\x0a\x09so the controllers can use it and customize somewhow her / his visiting experience.\x0a\x09If is not a first timer we will have it stored locally at 'me''\x0a\x09and if not, we fallback to a default new model\x22\x0a\x09shopVisitor := \x09ShopVisitor localFindId: 'me'.\x0a\x09\x0a\x09^ shopVisitor isNil\x0a\x09\x09ifTrue:[ ShopVisitor new\x0a\x09\x09\x09\x09\x09cart: Cart new;\x0a\x09\x09\x09\x09\x09yourself ]\x0a\x09\x09ifFalse:[ shopVisitor ]",
+messageSends: ["localFindId:", "ifTrue:ifFalse:", "isNil", "cart:", "new", "yourself"],
+referencedClasses: ["ShopVisitor", "Cart"]
+}),
+globals.PetShop.klass);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "start",
+protocol: 'actions',
+fn: function (){
+var self=this;
+function $Flow(){return globals.Flow||(typeof Flow=="undefined"?nil:Flow)}
+function $Router(){return globals.Router||(typeof Router=="undefined"?nil:Router)}
+return smalltalk.withContext(function($ctx1) { 
+var $1;
+_st($Flow())._app_(self);
+$1=_st($Flow())._start();
+self._publishObjects();
+_st(_st($Flow())._session())._shopVisitor_(self._shopVisitor());
+_st($Router())._refresh();
+return self}, function($ctx1) {$ctx1.fill(self,"start",{},globals.PetShop.klass)})},
+args: [],
+source: "start\x0a\x09\x22Starts the PetShop app\x22\x0a\x09\x0a\x09Flow app: self; start.\x0a\x09\x0a\x09self publishObjects.\x0a\x09\x0a\x09Flow session shopVisitor: self shopVisitor.\x0a\x09\x0a\x09Router refresh",
+messageSends: ["app:", "start", "publishObjects", "shopVisitor:", "session", "shopVisitor", "refresh"],
+referencedClasses: ["Flow", "Router"]
+}),
+globals.PetShop.klass);
+
+
 smalltalk.addClass('PetShopController', globals.BindingController, ['session'], 'PetShop');
 globals.PetShopController.comment="The `PetShopController` is the main controller in this PetShop sample application.\x0a\x0aAs you can see in class side `isValidFor: anURI`, it's going to be routed when the `URI` is at `/`.\x0a\x0aIt uses the default model, which is `aShopVisitor`, either loaded from localStorage using MiniMapless or, lazily, creating a brand new one.\x0a\x0aIf you take a look into `onOpen` you'll see that:\x0a\x0a- sets the model\x0a- activates the Router\x0a- creates a session\x0a- puts the instance in window.app (so you can reach it from the console)\x0a- and publishes some objects to be remotely reached by the backend";
 smalltalk.addMethod(
@@ -117,7 +212,7 @@ globals.PetShopController);
 smalltalk.addMethod(
 smalltalk.method({
 selector: "initialize",
-protocol: 'reactions',
+protocol: 'initialization',
 fn: function (){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
@@ -133,47 +228,19 @@ globals.PetShopController);
 
 smalltalk.addMethod(
 smalltalk.method({
-selector: "onOpen",
+selector: "onAfterModel",
 protocol: 'reactions',
 fn: function (){
 var self=this;
-var cart;
-function $Router(){return globals.Router||(typeof Router=="undefined"?nil:Router)}
-function $Session(){return globals.Session||(typeof Session=="undefined"?nil:Session)}
-function $Transcript(){return globals.Transcript||(typeof Transcript=="undefined"?nil:Transcript)}
 return smalltalk.withContext(function($ctx1) { 
-var $1,$2;
-self._model_(_st(self._class())._defaultModel());
+($ctx1.supercall = true, globals.PetShopController.superclass.fn.prototype._onAfterModel.apply(_st(self), []));
+$ctx1.supercall = false;
 _st(self._model())._updateQuantity();
-_st($Router())._observeHash();
-self["@session"]=_st($Session())._new();
-_st(window)._at_put_("app",self);
-self._refresh();
-$1=_st(_st(self._session())._api())._ws();
-_st($1)._publish_at_(_st(window)._app(),"app");
-$ctx1.sendIdx["publish:at:"]=1;
-_st($1)._publish_at_(_st($Transcript())._current(),"Transcript");
-$ctx1.sendIdx["publish:at:"]=2;
-_st($1)._publish_at_(console,"console");
-$ctx1.sendIdx["publish:at:"]=3;
-_st($1)._publish_at_((function(sent){
-return sent;
-}),"echo");
-$ctx1.sendIdx["publish:at:"]=4;
-_st($1)._publish_at_((function(ping){
-return "pong";
-}),"ping");
-$ctx1.sendIdx["publish:at:"]=5;
-_st($1)._publish_at_((function(a,b){
-return smalltalk.withContext(function($ctx2) {
-return _st(a).__plus(b);
-}, function($ctx2) {$ctx2.fillBlock({a:a,b:b},$ctx1,3)})}),"sum");
-$2=_st($1)._yourself();
-return self}, function($ctx1) {$ctx1.fill(self,"onOpen",{cart:cart},globals.PetShopController)})},
+return self}, function($ctx1) {$ctx1.fill(self,"onAfterModel",{},globals.PetShopController)})},
 args: [],
-source: "onOpen\x0a\x09\x22All is loaded, ready to pet!\x22\x0a\x09\x0a\x09\x22Time for the app to do its own particular thigns...\x22\x0a\x09| cart |\x0a\x09\x22do this\x0a\x09and\x0a\x09that..\x0a\x09\x0a\x09also this\x22\x0a\x0a\x09self model: self class defaultModel.\x0a\x09self model updateQuantity.\x0a\x0a\x09\x22Make the router be sensible to URI changes\x22\x0a\x09Router observeHash.\x0a\x0a\x09\x22Let's have a sesion\x22\x0a\x09session := Session new.\x0a\x0a\x09\x22Handy reference\x22\x0a\x09window at: 'app' put: self.\x0a\x0a\x09\x22As we just opened, it probably needs rendering..\x22\x0a\x09self refresh.\x0a\x0a\x09\x22Publish some local objects to be reached from server\x22\x0a\x09self session api ws\x0a\x09\x09publish: window app at: 'app';\x0a\x09\x09publish: Transcript current at: 'Transcript';\x0a\x09\x09publish: console at: 'console';\x0a\x09\x09publish: [ :sent | sent ] at: 'echo';\x0a\x09\x09publish: [ :ping | #pong ] at: 'ping';\x09\x09\x0a\x09\x09publish: [ :a :b | a + b ] at: 'sum';\x09\x0a\x09\x09yourself\x0a\x09\x09",
-messageSends: ["model:", "defaultModel", "class", "updateQuantity", "model", "observeHash", "new", "at:put:", "refresh", "publish:at:", "ws", "api", "session", "app", "current", "+", "yourself"],
-referencedClasses: ["Router", "Session", "Transcript"]
+source: "onAfterModel\x0a\x0a\x09super onAfterModel.\x0a\x09\x0a\x09self model updateQuantity\x0a\x0a\x09\x09",
+messageSends: ["onAfterModel", "updateQuantity", "model"],
+referencedClasses: []
 }),
 globals.PetShopController);
 
@@ -264,28 +331,16 @@ selector: "defaultModel",
 protocol: 'actions',
 fn: function (){
 var self=this;
-var shopVisitor;
-function $ShopVisitor(){return globals.ShopVisitor||(typeof ShopVisitor=="undefined"?nil:ShopVisitor)}
-function $Cart(){return globals.Cart||(typeof Cart=="undefined"?nil:Cart)}
+function $Flow(){return globals.Flow||(typeof Flow=="undefined"?nil:Flow)}
 return smalltalk.withContext(function($ctx1) { 
-var $2,$3,$4,$1;
-shopVisitor=_st($ShopVisitor())._localFindId_("me");
-$2=_st(shopVisitor)._isNil();
-if(smalltalk.assert($2)){
-$3=_st($ShopVisitor())._new();
-$ctx1.sendIdx["new"]=1;
-_st($3)._cart_(_st($Cart())._new());
-$4=_st($3)._yourself();
-$1=$4;
-} else {
-$1=shopVisitor;
-};
+var $1;
+$1=_st(_st($Flow())._session())._shopVisitor();
 return $1;
-}, function($ctx1) {$ctx1.fill(self,"defaultModel",{shopVisitor:shopVisitor},globals.PetShopController.klass)})},
+}, function($ctx1) {$ctx1.fill(self,"defaultModel",{},globals.PetShopController.klass)})},
 args: [],
-source: "defaultModel\x0a\x09\x22Answers the default model for this controller.\x22\x0a\x09\x0a\x09| shopVisitor |\x0a\x0a\x09\x22The strategy is to have as model something that fits for a shop visitor\x0a\x09and customizes somewhow to her / his visiting experience.\x0a\x09If is not the first time we might have it stored locally at 'me''\x0a\x09and if not, we fallback to a default new model\x22\x0a\x09shopVisitor := \x09ShopVisitor localFindId: 'me'.\x0a\x09\x0a\x09^ shopVisitor isNil\x0a\x09\x09ifTrue:[ ShopVisitor new\x0a\x09\x09\x09\x09\x09cart: Cart new;\x0a\x09\x09\x09\x09\x09yourself ]\x0a\x09\x09ifFalse:[ shopVisitor ]",
-messageSends: ["localFindId:", "ifTrue:ifFalse:", "isNil", "cart:", "new", "yourself"],
-referencedClasses: ["ShopVisitor", "Cart"]
+source: "defaultModel\x0a\x09\x22Answers the default model for this controller.\x22\x0a\x09\x0a\x09^ Flow session shopVisitor",
+messageSends: ["shopVisitor", "session"],
+referencedClasses: ["Flow"]
 }),
 globals.PetShopController.klass);
 

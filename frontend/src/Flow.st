@@ -113,7 +113,25 @@ Object subclass: #Flow
 	instanceVariableNames: ''
 	package: 'Flow'!
 
+Flow class instanceVariableNames: 'app session currentController'!
+
 !Flow class methodsFor: 'accessing'!
+
+activeController 
+	"Returns the controller that is currently active"
+	
+	^ Router active
+!
+
+app 
+
+	^ app
+!
+
+app: anApplication 
+
+	app := anApplication
+!
 
 scaffold
 
@@ -123,6 +141,34 @@ scaffold
 scaffolder
 
 	^ Scaffolder
+!
+
+session
+
+	^ session ifNil:[ self initializeSession ]
+!
+
+session: aSession
+
+	session := aSession
+! !
+
+!Flow class methodsFor: 'actions'!
+
+start
+	"Makes the foundation of a flow app to be ready for action."
+
+	window at: 'flow' put: self.
+
+	"Make the router be sensible to URI changes"
+	Router observeHash
+! !
+
+!Flow class methodsFor: 'initialization'!
+
+initializeSession
+	
+	^ session := Session new
 ! !
 
 Object subclass: #Scaffolder
