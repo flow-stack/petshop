@@ -3,6 +3,17 @@ Model subclass: #Cart
 	instanceVariableNames: ''
 	package: 'PetShop'!
 
+BindingController subclass: #CartController
+	instanceVariableNames: ''
+	package: 'PetShop'!
+
+!CartController class methodsFor: 'actions'!
+
+defaultModel
+
+	^ Cart localFindId: 'cart'
+! !
+
 Model subclass: #Catalog
 	instanceVariableNames: ''
 	package: 'PetShop'!
@@ -77,6 +88,19 @@ session
 	^ session
 ! !
 
+!PetShopController methodsFor: 'actions'!
+
+find
+
+	window alert: 'Implement find please!!'
+!
+
+saveState
+
+	self model cart save.
+	self model save.
+! !
+
 !PetShopController methodsFor: 'reactions'!
 
 initialize
@@ -88,7 +112,7 @@ onOpen
 	"All is loaded, ready to pet!!"
 	
 	"Time for the app to do its own particular thigns..."
-	
+	| cart |
 	"do this
 	and
 	that..
@@ -96,6 +120,7 @@ onOpen
 	also this"
 
 	self model: self class defaultModel.
+	self model updateQuantity.
 
 	"Make the router be sensible to URI changes"
 	Router observeHash.
@@ -150,7 +175,9 @@ defaultModel
 	shopVisitor := 	ShopVisitor localFindId: 'me'.
 	
 	^ shopVisitor isNil
-		ifTrue:[ ShopVisitor new ]
+		ifTrue:[ ShopVisitor new
+					cart: Cart new;
+					yourself ]
 		ifFalse:[ shopVisitor ]
 !
 
@@ -208,4 +235,21 @@ onAfterModel
 Model subclass: #ShopVisitor
 	instanceVariableNames: ''
 	package: 'PetShop'!
+
+!ShopVisitor methodsFor: 'accessing'!
+
+items
+
+	super items ifNil:[
+		self items: OrderedCollection new ].
+		
+	^ super items
+! !
+
+!ShopVisitor methodsFor: 'actions'!
+
+updateQuantity
+
+	self quantity: self items size
+! !
 

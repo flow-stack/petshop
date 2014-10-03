@@ -11,16 +11,22 @@
 				      placeholder="Search pet food, accessories, toys and more..."
 				      rv-value="model.searchText">
 				    <span class="input-group-btn">
-				    <button class="btn btn-default" type="button">Go!</button>
+				    <button 
+					    class="btn btn-default" 
+					    type="button"
+					    rv-on-click="controller._find">Go!</button>
 					</span>
 				</div><!-- /input-group -->
 			</form>
 		</div><!-- /.col-lg-6 -->
 		<div class="headerCart pull-right">
 			
-			<button type="button" class="btn btn-default btn-lg">
-				<span class="glyphicon glyphicon-shopping-cart"></span> Cart
-			</button>
+			<a 
+				type="button" 
+				class="btn btn-default btn-lg"
+				href="#/cart">
+				<span class="glyphicon glyphicon-shopping-cart"></span> Cart ({ model.quantity })
+			</a>
 		</div>
 	</div>
 

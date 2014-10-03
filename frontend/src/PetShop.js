@@ -6,6 +6,28 @@ smalltalk.packages["PetShop"].transport = {"type":"amd","amdNamespace":"app"};
 smalltalk.addClass('Cart', globals.Model, [], 'PetShop');
 
 
+smalltalk.addClass('CartController', globals.BindingController, [], 'PetShop');
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "defaultModel",
+protocol: 'actions',
+fn: function (){
+var self=this;
+function $Cart(){return globals.Cart||(typeof Cart=="undefined"?nil:Cart)}
+return smalltalk.withContext(function($ctx1) { 
+var $1;
+$1=_st($Cart())._localFindId_("cart");
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"defaultModel",{},globals.CartController.klass)})},
+args: [],
+source: "defaultModel\x0a\x0a\x09^ Cart localFindId: 'cart' ",
+messageSends: ["localFindId:"],
+referencedClasses: ["Cart"]
+}),
+globals.CartController.klass);
+
+
 smalltalk.addClass('Catalog', globals.Model, [], 'PetShop');
 
 
@@ -78,6 +100,22 @@ smalltalk.addClass('PetShopController', globals.BindingController, ['session'], 
 globals.PetShopController.comment="The `PetShopController` is the main controller in this PetShop sample application.\x0a\x0aAs you can see in class side `isValidFor: anURI`, it's going to be routed when the `URI` is at `/`.\x0a\x0aIt uses the default model, which is `aShopVisitor`, either loaded from localStorage using MiniMapless or, lazily, creating a brand new one.\x0a\x0aIf you take a look into `onOpen` you'll see that:\x0a\x0a- sets the model\x0a- activates the Router\x0a- creates a session\x0a- puts the instance in window.app (so you can reach it from the console)\x0a- and publishes some objects to be remotely reached by the backend";
 smalltalk.addMethod(
 smalltalk.method({
+selector: "find",
+protocol: 'actions',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+_st(window)._alert_("Implement find please!");
+return self}, function($ctx1) {$ctx1.fill(self,"find",{},globals.PetShopController)})},
+args: [],
+source: "find\x0a\x0a\x09window alert: 'Implement find please!'",
+messageSends: ["alert:"],
+referencedClasses: []
+}),
+globals.PetShopController);
+
+smalltalk.addMethod(
+smalltalk.method({
 selector: "initialize",
 protocol: 'reactions',
 fn: function (){
@@ -99,12 +137,14 @@ selector: "onOpen",
 protocol: 'reactions',
 fn: function (){
 var self=this;
+var cart;
 function $Router(){return globals.Router||(typeof Router=="undefined"?nil:Router)}
 function $Session(){return globals.Session||(typeof Session=="undefined"?nil:Session)}
 function $Transcript(){return globals.Transcript||(typeof Transcript=="undefined"?nil:Transcript)}
 return smalltalk.withContext(function($ctx1) { 
 var $1,$2;
 self._model_(_st(self._class())._defaultModel());
+_st(self._model())._updateQuantity();
 _st($Router())._observeHash();
 self["@session"]=_st($Session())._new();
 _st(window)._at_put_("app",self);
@@ -129,10 +169,10 @@ return smalltalk.withContext(function($ctx2) {
 return _st(a).__plus(b);
 }, function($ctx2) {$ctx2.fillBlock({a:a,b:b},$ctx1,3)})}),"sum");
 $2=_st($1)._yourself();
-return self}, function($ctx1) {$ctx1.fill(self,"onOpen",{},globals.PetShopController)})},
+return self}, function($ctx1) {$ctx1.fill(self,"onOpen",{cart:cart},globals.PetShopController)})},
 args: [],
-source: "onOpen\x0a\x09\x22All is loaded, ready to pet!\x22\x0a\x09\x0a\x09\x22Time for the app to do its own particular thigns...\x22\x0a\x09\x0a\x09\x22do this\x0a\x09and\x0a\x09that..\x0a\x09\x0a\x09also this\x22\x0a\x0a\x09self model: self class defaultModel.\x0a\x0a\x09\x22Make the router be sensible to URI changes\x22\x0a\x09Router observeHash.\x0a\x0a\x09\x22Let's have a sesion\x22\x0a\x09session := Session new.\x0a\x0a\x09\x22Handy reference\x22\x0a\x09window at: 'app' put: self.\x0a\x0a\x09\x22As we just opened, it probably needs rendering..\x22\x0a\x09self refresh.\x0a\x0a\x09\x22Publish some local objects to be reached from server\x22\x0a\x09self session api ws\x0a\x09\x09publish: window app at: 'app';\x0a\x09\x09publish: Transcript current at: 'Transcript';\x0a\x09\x09publish: console at: 'console';\x0a\x09\x09publish: [ :sent | sent ] at: 'echo';\x0a\x09\x09publish: [ :ping | #pong ] at: 'ping';\x09\x09\x0a\x09\x09publish: [ :a :b | a + b ] at: 'sum';\x09\x0a\x09\x09yourself\x0a\x09\x09",
-messageSends: ["model:", "defaultModel", "class", "observeHash", "new", "at:put:", "refresh", "publish:at:", "ws", "api", "session", "app", "current", "+", "yourself"],
+source: "onOpen\x0a\x09\x22All is loaded, ready to pet!\x22\x0a\x09\x0a\x09\x22Time for the app to do its own particular thigns...\x22\x0a\x09| cart |\x0a\x09\x22do this\x0a\x09and\x0a\x09that..\x0a\x09\x0a\x09also this\x22\x0a\x0a\x09self model: self class defaultModel.\x0a\x09self model updateQuantity.\x0a\x0a\x09\x22Make the router be sensible to URI changes\x22\x0a\x09Router observeHash.\x0a\x0a\x09\x22Let's have a sesion\x22\x0a\x09session := Session new.\x0a\x0a\x09\x22Handy reference\x22\x0a\x09window at: 'app' put: self.\x0a\x0a\x09\x22As we just opened, it probably needs rendering..\x22\x0a\x09self refresh.\x0a\x0a\x09\x22Publish some local objects to be reached from server\x22\x0a\x09self session api ws\x0a\x09\x09publish: window app at: 'app';\x0a\x09\x09publish: Transcript current at: 'Transcript';\x0a\x09\x09publish: console at: 'console';\x0a\x09\x09publish: [ :sent | sent ] at: 'echo';\x0a\x09\x09publish: [ :ping | #pong ] at: 'ping';\x09\x09\x0a\x09\x09publish: [ :a :b | a + b ] at: 'sum';\x09\x0a\x09\x09yourself\x0a\x09\x09",
+messageSends: ["model:", "defaultModel", "class", "updateQuantity", "model", "observeHash", "new", "at:put:", "refresh", "publish:at:", "ws", "api", "session", "app", "current", "+", "yourself"],
 referencedClasses: ["Router", "Session", "Transcript"]
 }),
 globals.PetShopController);
@@ -180,6 +220,28 @@ globals.PetShopController);
 
 smalltalk.addMethod(
 smalltalk.method({
+selector: "saveState",
+protocol: 'actions',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $2,$1;
+$2=self._model();
+$ctx1.sendIdx["model"]=1;
+$1=_st($2)._cart();
+_st($1)._save();
+$ctx1.sendIdx["save"]=1;
+_st(self._model())._save();
+return self}, function($ctx1) {$ctx1.fill(self,"saveState",{},globals.PetShopController)})},
+args: [],
+source: "saveState\x0a\x0a\x09self model cart save.\x0a\x09self model save.\x0a\x09",
+messageSends: ["save", "cart", "model"],
+referencedClasses: []
+}),
+globals.PetShopController);
+
+smalltalk.addMethod(
+smalltalk.method({
 selector: "session",
 protocol: 'accessing',
 fn: function (){
@@ -204,21 +266,26 @@ fn: function (){
 var self=this;
 var shopVisitor;
 function $ShopVisitor(){return globals.ShopVisitor||(typeof ShopVisitor=="undefined"?nil:ShopVisitor)}
+function $Cart(){return globals.Cart||(typeof Cart=="undefined"?nil:Cart)}
 return smalltalk.withContext(function($ctx1) { 
-var $2,$1;
+var $2,$3,$4,$1;
 shopVisitor=_st($ShopVisitor())._localFindId_("me");
 $2=_st(shopVisitor)._isNil();
 if(smalltalk.assert($2)){
-$1=_st($ShopVisitor())._new();
+$3=_st($ShopVisitor())._new();
+$ctx1.sendIdx["new"]=1;
+_st($3)._cart_(_st($Cart())._new());
+$4=_st($3)._yourself();
+$1=$4;
 } else {
 $1=shopVisitor;
 };
 return $1;
 }, function($ctx1) {$ctx1.fill(self,"defaultModel",{shopVisitor:shopVisitor},globals.PetShopController.klass)})},
 args: [],
-source: "defaultModel\x0a\x09\x22Answers the default model for this controller.\x22\x0a\x09\x0a\x09| shopVisitor |\x0a\x0a\x09\x22The strategy is to have as model something that fits for a shop visitor\x0a\x09and customizes somewhow to her / his visiting experience.\x0a\x09If is not the first time we might have it stored locally at 'me''\x0a\x09and if not, we fallback to a default new model\x22\x0a\x09shopVisitor := \x09ShopVisitor localFindId: 'me'.\x0a\x09\x0a\x09^ shopVisitor isNil\x0a\x09\x09ifTrue:[ ShopVisitor new ]\x0a\x09\x09ifFalse:[ shopVisitor ]",
-messageSends: ["localFindId:", "ifTrue:ifFalse:", "isNil", "new"],
-referencedClasses: ["ShopVisitor"]
+source: "defaultModel\x0a\x09\x22Answers the default model for this controller.\x22\x0a\x09\x0a\x09| shopVisitor |\x0a\x0a\x09\x22The strategy is to have as model something that fits for a shop visitor\x0a\x09and customizes somewhow to her / his visiting experience.\x0a\x09If is not the first time we might have it stored locally at 'me''\x0a\x09and if not, we fallback to a default new model\x22\x0a\x09shopVisitor := \x09ShopVisitor localFindId: 'me'.\x0a\x09\x0a\x09^ shopVisitor isNil\x0a\x09\x09ifTrue:[ ShopVisitor new\x0a\x09\x09\x09\x09\x09cart: Cart new;\x0a\x09\x09\x09\x09\x09yourself ]\x0a\x09\x09ifFalse:[ shopVisitor ]",
+messageSends: ["localFindId:", "ifTrue:ifFalse:", "isNil", "cart:", "new", "yourself"],
+referencedClasses: ["ShopVisitor", "Cart"]
 }),
 globals.PetShopController.klass);
 
@@ -334,5 +401,49 @@ globals.ProductThumbnailController);
 
 
 smalltalk.addClass('ShopVisitor', globals.Model, [], 'PetShop');
+smalltalk.addMethod(
+smalltalk.method({
+selector: "items",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+function $OrderedCollection(){return globals.OrderedCollection||(typeof OrderedCollection=="undefined"?nil:OrderedCollection)}
+return smalltalk.withContext(function($ctx1) { 
+var $1,$2,$receiver;
+$1=($ctx1.supercall = true, globals.ShopVisitor.superclass.fn.prototype._items.apply(_st(self), []));
+$ctx1.supercall = false;
+$ctx1.sendIdx["items"]=1;
+if(($receiver = $1) == null || $receiver.isNil){
+self._items_(_st($OrderedCollection())._new());
+} else {
+$1;
+};
+$2=($ctx1.supercall = true, globals.ShopVisitor.superclass.fn.prototype._items.apply(_st(self), []));
+$ctx1.supercall = false;
+return $2;
+}, function($ctx1) {$ctx1.fill(self,"items",{},globals.ShopVisitor)})},
+args: [],
+source: "items\x0a\x0a\x09super items ifNil:[\x0a\x09\x09self items: OrderedCollection new ].\x0a\x09\x09\x0a\x09^ super items",
+messageSends: ["ifNil:", "items", "items:", "new"],
+referencedClasses: ["OrderedCollection"]
+}),
+globals.ShopVisitor);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "updateQuantity",
+protocol: 'actions',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+self._quantity_(_st(self._items())._size());
+return self}, function($ctx1) {$ctx1.fill(self,"updateQuantity",{},globals.ShopVisitor)})},
+args: [],
+source: "updateQuantity\x0a\x0a\x09self quantity: self items size",
+messageSends: ["quantity:", "size", "items"],
+referencedClasses: []
+}),
+globals.ShopVisitor);
+
 
 });
