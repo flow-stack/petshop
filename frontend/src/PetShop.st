@@ -29,11 +29,33 @@ BindingController subclass: #CartController
 	instanceVariableNames: ''
 	package: 'PetShop'!
 
+!CartController methodsFor: 'reactions'!
+
+onTemplate: data
+	"Receives the template's data after requirejs 
+	have received it from the server (or cache)."
+
+	super onTemplate: data.
+
+	'#loaderBar'asJQuery remove.
+		
+	(self ifAbsentAt: 'products' put: [
+		"Lazy creation of the list controller for the thumbnails"
+		(ListController 
+			for: model 
+			on: self 
+			appendingTo: '.products' asJQuery)
+				getItemsBlock: [:m| m products ];
+				itemControllerClass: ProductInCartController;
+				yourself]) refresh "be sure to display resh stuff"
+! !
+
 !CartController class methodsFor: 'actions'!
 
 defaultModel
-
-	^ Cart localFindId: 'cart'
+	"Answers the default model for this controller."
+	
+	^ Flow session shopVisitor cart
 ! !
 
 Model subclass: #Catalog
@@ -188,7 +210,8 @@ onAfterModel
 
 	super onAfterModel.
 	
-	self model updateCartSize
+	self model updateCartSize.
+	self model updateWishListSize.
 !
 
 onTemplate: data
@@ -241,6 +264,48 @@ BindingController subclass: #ProductController
 	instanceVariableNames: ''
 	package: 'PetShop'!
 
+BindingController subclass: #ProductInCartController
+	instanceVariableNames: ''
+	package: 'PetShop'!
+
+!ProductInCartController methodsFor: 'actions'!
+
+removeFromCart
+
+	Flow session shopVisitor localSave.
+	model localSave.
+	
+	Flow session shopVisitor cart removeProduct: model; localSave.
+	Flow session shopVisitor updateCartSize.
+	
+	'#alertsRoot' asJQuery html: '<div class="alert alert-warning" role="alert">We''ve removed one ',model description,' from your cart</div>'.
+
+	['#alertsRoot' asJQuery empty ] valueWithTimeout: 2000.
+
+	self trigger: #removeFromCart: with: model
+! !
+
+BindingController subclass: #ProductInWishListController
+	instanceVariableNames: ''
+	package: 'PetShop'!
+
+!ProductInWishListController methodsFor: 'actions'!
+
+removeFromCart
+
+	Flow session shopVisitor localSave.
+	model localSave.
+	
+	Flow session shopVisitor wishList removeProduct: model; localSave.
+	Flow session shopVisitor updateWishListSize.
+	
+	'#alertsRoot' asJQuery html: '<div class="alert alert-warning" role="alert">We''ve removed one ',model description,' from your wish list</div>'.
+
+	['#alertsRoot' asJQuery empty ] valueWithTimeout: 2000.
+
+	self trigger: #removeFromWishList: with: model
+! !
+
 BindingController subclass: #ProductThumbnailController
 	instanceVariableNames: ''
 	package: 'PetShop'!
@@ -253,7 +318,8 @@ addToCart
 	model localSave.
 	
 	Flow session shopVisitor cart addProduct: model; localSave.
-
+	Flow session shopVisitor updateCartSize.
+	
 	'#alertsRoot' asJQuery html: '<div class="alert alert-success" role="alert">Done. We''ve added one ',model description,' to your cart!!</div>'.
 	['#alertsRoot' asJQuery empty ] valueWithTimeout: 2000.
 	
@@ -266,6 +332,7 @@ addToWishList
 	model localSave.
 	
 	Flow session shopVisitor wishList addProduct: model; localSave.
+	Flow session shopVisitor updateWishListSize.
 	
 	'#alertsRoot' asJQuery html: '<div class="alert alert-info" role="alert">We''ve added one ',model description,' to your wishlist. It got sooo whishable!!</div>'.
 
@@ -292,6 +359,20 @@ Model subclass: #ShopVisitor
 updateCartSize
 
 	self cartSize: self cart products size
+!
+
+updateWishListSize
+
+	self wishListSize: self wishList products size
+! !
+
+!ShopVisitor methodsFor: 'initialization'!
+
+initialize
+
+	super initialize.
+	
+	self searchText: ''.
 ! !
 
 Model subclass: #WishList
