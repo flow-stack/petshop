@@ -1,11 +1,18 @@
 <section class='col-sm-12 cart'>
+	<img class="pull-left smallLogo" src="img/logo.png">
 	<h1>Hi pet!</h1>
-	<h2>Hold on a sec.. your hooman is just about to get you new things!</h2>
+	<h2>Hold on a sec..</h2>
+	<h3>Your hooman is just about to get you new things!</h3>
+
+	<div class="panel panel-default">
+		<div class="panel-body">
+			<ul class='products'></ul>
+		</div>
+		<div class="panel-footer">
+			<div class="total">Total: ${ model.total }</div>
+		</div>
+	</div>
 	<div id="alertsRoot"></div>
-
-	<ul class='products'></ul>
-
-	<div class="total pull-right">Total: ${ model.total }</div>
 	<a 
 		type="button" 
 		class="btn btn-success btn-lg"

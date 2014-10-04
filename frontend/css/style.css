@@ -3,7 +3,11 @@ li {
 }
 
 img.logo {
-	width: 200px;
+	width: 150px;
+}
+
+img.smallLogo {
+	height: 150px;
 }
 
 .headerCart, .searchBox {

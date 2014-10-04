@@ -5,40 +5,68 @@ Model subclass: #Cart
 
 !Cart methodsFor: 'accessing'!
 
-productIds
-
-	super productIds ifNil:[
-		self productIds: OrderedCollection new ].
-		
-	^ super productIds
-!
-
 products
 
-	^ self productIds collect:[ :anId |
-		Product localFindId: anId ]
+	super products ifNil:[
+		self products: OrderedCollection new ].
+		
+	^ super products
 ! !
 
 !Cart methodsFor: 'actions'!
 
 addProduct: aProduct
 
-	(self productIds includes: aProduct id) ifFalse:[
-		self productIds add: aProduct id ]
+	(self products includes: aProduct) ifFalse:[
+		self products add: aProduct ].
+
+	self trigger: #added: with: aProduct.
+	
+	self updateTotal.
 !
 
 removeProduct: aProduct
 
-	^ self productIds
-		remove: aProduct id
-		ifAbsent:[ nil ]
+	self products
+		remove: aProduct
+		ifAbsent:[ nil ].
+
+	self trigger: #removed: with: aProduct. 
+	
+	self updateTotal
+!
+
+updateTotal
+
+	self total: (self products inject: 0 into:[ :sum :e | sum + e price ])
 ! !
 
 BindingController subclass: #CartController
 	instanceVariableNames: ''
 	package: 'PetShop'!
 
+!CartController methodsFor: 'actions'!
+
+observeProducts
+
+	Flow session shopVisitor cart 
+		when: #removed: 
+		do:[ :evt :product | self onRemoved: product ].
+! !
+
 !CartController methodsFor: 'reactions'!
+
+onAfterModel
+
+	super onAfterModel.
+	
+	self model updateTotal
+!
+
+onRemoved: aProduct
+
+	(self controllerAt: 'products') refresh
+!
 
 onTemplate: data
 	"Receives the template's data after requirejs 
@@ -48,15 +76,17 @@ onTemplate: data
 
 	'#loaderBar'asJQuery remove.
 		
-	(self ifAbsentAt: 'products' put: [
-		"Lazy creation of the list controller for the thumbnails"
-		(ListController 
-			for: model 
-			on: self 
-			appendingTo: '.products' asJQuery)
-				getItemsBlock: [:m| m products ];
-				itemControllerClass: ProductInCartController;
-				yourself]) refresh "be sure to display resh stuff"
+	(self ifAbsentAt: 'products' 
+		put: [
+			"Lazy creation of the list controller for the thumbnails"
+			(ListController 
+				for: model 
+				on: self 
+				appendingTo: '.products' asJQuery)
+					getItemsBlock: [:m| m products ];
+					itemControllerClass: ProductInCartController;
+					yourself]
+		andDo:[ :lc | self observeProducts ]) refresh "be sure to display resh stuff"
 ! !
 
 !CartController class methodsFor: 'actions'!
@@ -290,8 +320,6 @@ removeFromCart
 	'#alertsRoot' asJQuery html: '<div class="alert alert-warning" role="alert">We''ve removed one ',model description,' from your cart</div>'.
 
 	['#alertsRoot' asJQuery empty ] valueWithTimeout: 2000.
-
-	self trigger: #removeFromCart: with: model
 ! !
 
 BindingController subclass: #ProductInWishListController
@@ -311,8 +339,6 @@ removeFromCart
 	'#alertsRoot' asJQuery html: '<div class="alert alert-warning" role="alert">We''ve removed one ',model description,' from your wish list</div>'.
 
 	['#alertsRoot' asJQuery empty ] valueWithTimeout: 2000.
-
-	self trigger: #removeFromWishList: with: model
 ! !
 
 BindingController subclass: #ProductThumbnailController
@@ -331,8 +357,6 @@ addToCart
 	
 	'#alertsRoot' asJQuery html: '<div class="alert alert-success" role="alert">Done. We''ve added one ',model description,' to your cart!!</div>'.
 	['#alertsRoot' asJQuery empty ] valueWithTimeout: 2000.
-	
-	self trigger: #addToCart: with: model
 !
 
 addToWishList
@@ -346,17 +370,12 @@ addToWishList
 	'#alertsRoot' asJQuery html: '<div class="alert alert-info" role="alert">We''ve added one ',model description,' to your wishlist. It got sooo whishable!!</div>'.
 
 	['#alertsRoot' asJQuery empty ] valueWithTimeout: 2000.
-
-	self trigger: #addToWishList: with: model
 !
 
 getModelAsArgument
 	"Returns the model in a way that is appropiate for binding (usable by rivets).
 	By default BindingController assumes you are using mapless as controllers model
-	so we send their data but subclasses might differ if they please."
-	Transcript cr; show: model.
-	window console warn: model data.
-	
+	so we send their data but subclasses might differ if they please."	
 	^ model data
 ! !
 
@@ -377,12 +396,12 @@ Model subclass: #ShopVisitor
 
 updateCartSize
 
-	self cartSize: self cart productIds size
+	self cartSize: self cart products size
 !
 
 updateWishListSize
 
-	self wishListSize: self wishList productIds size
+	self wishListSize: self wishList products size
 ! !
 
 !ShopVisitor methodsFor: 'initialization'!
@@ -400,32 +419,30 @@ Model subclass: #WishList
 
 !WishList methodsFor: 'accessing'!
 
-productIds
-
-	super productIds ifNil:[
-		self productIds: OrderedCollection new ].
-		
-	^ super productIds
-!
-
 products
 
-	^ self productIds collect:[ :anId |
-		Product localFindId: anId ]
+	super products ifNil:[
+		self products: OrderedCollection new ].
+		
+	^ super products
 ! !
 
 !WishList methodsFor: 'actions'!
 
 addProduct: aProduct
 
-	(self productIds includes: aProduct id) ifFalse:[
-		self productIds add: aProduct id ]
+	(self products includes: aProduct) ifFalse:[
+		self products add: aProduct ].
+		
+	self trigger: #added: with: aProduct
 !
 
 removeProduct: aProduct
 
-	^ self productIds 
-		remove: aProduct id
-		ifAbsent:[ nil ]
+	self products 
+		remove: aProduct
+		ifAbsent:[ nil ].
+		
+	self trigger: #removed: with: aProduct
 ! !
 

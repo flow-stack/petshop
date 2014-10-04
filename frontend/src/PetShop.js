@@ -11,48 +11,20 @@ protocol: 'actions',
 fn: function (aProduct){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-var $2,$3,$1;
-$2=self._productIds();
-$ctx1.sendIdx["productIds"]=1;
-$3=_st(aProduct)._id();
-$ctx1.sendIdx["id"]=1;
-$1=_st($2)._includes_($3);
+var $2,$1;
+$2=self._products();
+$ctx1.sendIdx["products"]=1;
+$1=_st($2)._includes_(aProduct);
 if(! smalltalk.assert($1)){
-_st(self._productIds())._add_(_st(aProduct)._id());
+_st(self._products())._add_(aProduct);
 };
+self._trigger_with_("added:",aProduct);
+self._updateTotal();
 return self}, function($ctx1) {$ctx1.fill(self,"addProduct:",{aProduct:aProduct},globals.Cart)})},
 args: ["aProduct"],
-source: "addProduct: aProduct\x0a\x0a\x09(self productIds includes: aProduct id) ifFalse:[\x0a\x09\x09self productIds add: aProduct id ]",
-messageSends: ["ifFalse:", "includes:", "productIds", "id", "add:"],
+source: "addProduct: aProduct\x0a\x0a\x09(self products includes: aProduct) ifFalse:[\x0a\x09\x09self products add: aProduct ].\x0a\x0a\x09self trigger: #added: with: aProduct.\x0a\x09\x0a\x09self updateTotal.\x0a\x09\x09",
+messageSends: ["ifFalse:", "includes:", "products", "add:", "trigger:with:", "updateTotal"],
 referencedClasses: []
-}),
-globals.Cart);
-
-smalltalk.addMethod(
-smalltalk.method({
-selector: "productIds",
-protocol: 'accessing',
-fn: function (){
-var self=this;
-function $OrderedCollection(){return globals.OrderedCollection||(typeof OrderedCollection=="undefined"?nil:OrderedCollection)}
-return smalltalk.withContext(function($ctx1) { 
-var $1,$2,$receiver;
-$1=($ctx1.supercall = true, globals.Cart.superclass.fn.prototype._productIds.apply(_st(self), []));
-$ctx1.supercall = false;
-$ctx1.sendIdx["productIds"]=1;
-if(($receiver = $1) == null || $receiver.isNil){
-self._productIds_(_st($OrderedCollection())._new());
-} else {
-$1;
-};
-$2=($ctx1.supercall = true, globals.Cart.superclass.fn.prototype._productIds.apply(_st(self), []));
-$ctx1.supercall = false;
-return $2;
-}, function($ctx1) {$ctx1.fill(self,"productIds",{},globals.Cart)})},
-args: [],
-source: "productIds\x0a\x0a\x09super productIds ifNil:[\x0a\x09\x09self productIds: OrderedCollection new ].\x0a\x09\x09\x0a\x09^ super productIds",
-messageSends: ["ifNil:", "productIds", "productIds:", "new"],
-referencedClasses: ["OrderedCollection"]
 }),
 globals.Cart);
 
@@ -62,19 +34,25 @@ selector: "products",
 protocol: 'accessing',
 fn: function (){
 var self=this;
-function $Product(){return globals.Product||(typeof Product=="undefined"?nil:Product)}
+function $OrderedCollection(){return globals.OrderedCollection||(typeof OrderedCollection=="undefined"?nil:OrderedCollection)}
 return smalltalk.withContext(function($ctx1) { 
-var $1;
-$1=_st(self._productIds())._collect_((function(anId){
-return smalltalk.withContext(function($ctx2) {
-return _st($Product())._localFindId_(anId);
-}, function($ctx2) {$ctx2.fillBlock({anId:anId},$ctx1,1)})}));
-return $1;
+var $1,$2,$receiver;
+$1=($ctx1.supercall = true, globals.Cart.superclass.fn.prototype._products.apply(_st(self), []));
+$ctx1.supercall = false;
+$ctx1.sendIdx["products"]=1;
+if(($receiver = $1) == null || $receiver.isNil){
+self._products_(_st($OrderedCollection())._new());
+} else {
+$1;
+};
+$2=($ctx1.supercall = true, globals.Cart.superclass.fn.prototype._products.apply(_st(self), []));
+$ctx1.supercall = false;
+return $2;
 }, function($ctx1) {$ctx1.fill(self,"products",{},globals.Cart)})},
 args: [],
-source: "products\x0a\x0a\x09^ self productIds collect:[ :anId |\x0a\x09\x09Product localFindId: anId ]",
-messageSends: ["collect:", "productIds", "localFindId:"],
-referencedClasses: ["Product"]
+source: "products\x0a\x0a\x09super products ifNil:[\x0a\x09\x09self products: OrderedCollection new ].\x0a\x09\x09\x0a\x09^ super products",
+messageSends: ["ifNil:", "products", "products:", "new"],
+referencedClasses: ["OrderedCollection"]
 }),
 globals.Cart);
 
@@ -85,15 +63,34 @@ protocol: 'actions',
 fn: function (aProduct){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-var $1;
-$1=_st(self._productIds())._remove_ifAbsent_(_st(aProduct)._id(),(function(){
+_st(self._products())._remove_ifAbsent_(aProduct,(function(){
 return nil;
 }));
-return $1;
-}, function($ctx1) {$ctx1.fill(self,"removeProduct:",{aProduct:aProduct},globals.Cart)})},
+self._trigger_with_("removed:",aProduct);
+self._updateTotal();
+return self}, function($ctx1) {$ctx1.fill(self,"removeProduct:",{aProduct:aProduct},globals.Cart)})},
 args: ["aProduct"],
-source: "removeProduct: aProduct\x0a\x0a\x09^ self productIds\x0a\x09\x09remove: aProduct id\x0a\x09\x09ifAbsent:[ nil ]",
-messageSends: ["remove:ifAbsent:", "productIds", "id"],
+source: "removeProduct: aProduct\x0a\x0a\x09self products\x0a\x09\x09remove: aProduct\x0a\x09\x09ifAbsent:[ nil ].\x0a\x0a\x09self trigger: #removed: with: aProduct. \x0a\x09\x0a\x09self updateTotal",
+messageSends: ["remove:ifAbsent:", "products", "trigger:with:", "updateTotal"],
+referencedClasses: []
+}),
+globals.Cart);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "updateTotal",
+protocol: 'actions',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+self._total_(_st(self._products())._inject_into_((0),(function(sum,e){
+return smalltalk.withContext(function($ctx2) {
+return _st(sum).__plus(_st(e)._price());
+}, function($ctx2) {$ctx2.fillBlock({sum:sum,e:e},$ctx1,1)})})));
+return self}, function($ctx1) {$ctx1.fill(self,"updateTotal",{},globals.Cart)})},
+args: [],
+source: "updateTotal\x0a\x0a\x09self total: (self products inject: 0 into:[ :sum :e | sum + e price ])",
+messageSends: ["total:", "inject:into:", "products", "+", "price"],
 referencedClasses: []
 }),
 globals.Cart);
@@ -101,6 +98,60 @@ globals.Cart);
 
 
 smalltalk.addClass('CartController', globals.BindingController, [], 'PetShop');
+smalltalk.addMethod(
+smalltalk.method({
+selector: "observeProducts",
+protocol: 'actions',
+fn: function (){
+var self=this;
+function $Flow(){return globals.Flow||(typeof Flow=="undefined"?nil:Flow)}
+return smalltalk.withContext(function($ctx1) { 
+_st(_st(_st(_st($Flow())._session())._shopVisitor())._cart())._when_do_("removed:",(function(evt,product){
+return smalltalk.withContext(function($ctx2) {
+return self._onRemoved_(product);
+}, function($ctx2) {$ctx2.fillBlock({evt:evt,product:product},$ctx1,1)})}));
+return self}, function($ctx1) {$ctx1.fill(self,"observeProducts",{},globals.CartController)})},
+args: [],
+source: "observeProducts\x0a\x0a\x09Flow session shopVisitor cart \x0a\x09\x09when: #removed: \x0a\x09\x09do:[ :evt :product | self onRemoved: product ].\x0a\x09\x09\x0a\x09\x09\x0a\x09",
+messageSends: ["when:do:", "cart", "shopVisitor", "session", "onRemoved:"],
+referencedClasses: ["Flow"]
+}),
+globals.CartController);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "onAfterModel",
+protocol: 'reactions',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+($ctx1.supercall = true, globals.CartController.superclass.fn.prototype._onAfterModel.apply(_st(self), []));
+$ctx1.supercall = false;
+_st(self._model())._updateTotal();
+return self}, function($ctx1) {$ctx1.fill(self,"onAfterModel",{},globals.CartController)})},
+args: [],
+source: "onAfterModel\x0a\x0a\x09super onAfterModel.\x0a\x09\x0a\x09self model updateTotal",
+messageSends: ["onAfterModel", "updateTotal", "model"],
+referencedClasses: []
+}),
+globals.CartController);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "onRemoved:",
+protocol: 'reactions',
+fn: function (aProduct){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+_st(self._controllerAt_("products"))._refresh();
+return self}, function($ctx1) {$ctx1.fill(self,"onRemoved:",{aProduct:aProduct},globals.CartController)})},
+args: ["aProduct"],
+source: "onRemoved: aProduct\x0a\x0a\x09(self controllerAt: 'products') refresh",
+messageSends: ["refresh", "controllerAt:"],
+referencedClasses: []
+}),
+globals.CartController);
+
 smalltalk.addMethod(
 smalltalk.method({
 selector: "onTemplate:",
@@ -116,7 +167,7 @@ $ctx1.supercall = false;
 $1="#loaderBar"._asJQuery();
 $ctx1.sendIdx["asJQuery"]=1;
 _st($1)._remove();
-_st(self._ifAbsentAt_put_("products",(function(){
+_st(self._ifAbsentAt_put_andDo_("products",(function(){
 return smalltalk.withContext(function($ctx2) {
 $2=_st($ListController())._for_on_appendingTo_(self["@model"],self,".products"._asJQuery());
 _st($2)._getItemsBlock_((function(m){
@@ -126,11 +177,14 @@ return _st(m)._products();
 _st($2)._itemControllerClass_($ProductInCartController());
 $3=_st($2)._yourself();
 return $3;
-}, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)})})))._refresh();
+}, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)})}),(function(lc){
+return smalltalk.withContext(function($ctx2) {
+return self._observeProducts();
+}, function($ctx2) {$ctx2.fillBlock({lc:lc},$ctx1,3)})})))._refresh();
 return self}, function($ctx1) {$ctx1.fill(self,"onTemplate:",{data:data},globals.CartController)})},
 args: ["data"],
-source: "onTemplate: data\x0a\x09\x22Receives the template's data after requirejs \x0a\x09have received it from the server (or cache).\x22\x0a\x0a\x09super onTemplate: data.\x0a\x0a\x09'#loaderBar'asJQuery remove.\x0a\x09\x09\x0a\x09(self ifAbsentAt: 'products' put: [\x0a\x09\x09\x22Lazy creation of the list controller for the thumbnails\x22\x0a\x09\x09(ListController \x0a\x09\x09\x09for: model \x0a\x09\x09\x09on: self \x0a\x09\x09\x09appendingTo: '.products' asJQuery)\x0a\x09\x09\x09\x09getItemsBlock: [:m| m products ];\x0a\x09\x09\x09\x09itemControllerClass: ProductInCartController;\x0a\x09\x09\x09\x09yourself]) refresh \x22be sure to display resh stuff\x22\x0a\x0a\x09",
-messageSends: ["onTemplate:", "remove", "asJQuery", "refresh", "ifAbsentAt:put:", "getItemsBlock:", "for:on:appendingTo:", "products", "itemControllerClass:", "yourself"],
+source: "onTemplate: data\x0a\x09\x22Receives the template's data after requirejs \x0a\x09have received it from the server (or cache).\x22\x0a\x0a\x09super onTemplate: data.\x0a\x0a\x09'#loaderBar'asJQuery remove.\x0a\x09\x09\x0a\x09(self ifAbsentAt: 'products' \x0a\x09\x09put: [\x0a\x09\x09\x09\x22Lazy creation of the list controller for the thumbnails\x22\x0a\x09\x09\x09(ListController \x0a\x09\x09\x09\x09for: model \x0a\x09\x09\x09\x09on: self \x0a\x09\x09\x09\x09appendingTo: '.products' asJQuery)\x0a\x09\x09\x09\x09\x09getItemsBlock: [:m| m products ];\x0a\x09\x09\x09\x09\x09itemControllerClass: ProductInCartController;\x0a\x09\x09\x09\x09\x09yourself]\x0a\x09\x09andDo:[ :lc | self observeProducts ]) refresh \x22be sure to display resh stuff\x22\x0a\x0a\x09",
+messageSends: ["onTemplate:", "remove", "asJQuery", "refresh", "ifAbsentAt:put:andDo:", "getItemsBlock:", "for:on:appendingTo:", "products", "itemControllerClass:", "yourself", "observeProducts"],
 referencedClasses: ["ListController", "ProductInCartController"]
 }),
 globals.CartController);
@@ -572,11 +626,10 @@ _st((function(){
 return smalltalk.withContext(function($ctx2) {
 return _st("#alertsRoot"._asJQuery())._empty();
 }, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)})}))._valueWithTimeout_((2000));
-self._trigger_with_("removeFromCart:",self["@model"]);
 return self}, function($ctx1) {$ctx1.fill(self,"removeFromCart",{},globals.ProductInCartController)})},
 args: [],
-source: "removeFromCart\x0a\x0a\x09Flow session shopVisitor localSave.\x0a\x09model localSave.\x0a\x09\x0a\x09Flow session shopVisitor cart removeProduct: model; localSave.\x0a\x09Flow session shopVisitor updateCartSize.\x0a\x09\x0a\x09'#alertsRoot' asJQuery html: '<div class=\x22alert alert-warning\x22 role=\x22alert\x22>We''ve removed one ',model description,' from your cart</div>'.\x0a\x0a\x09['#alertsRoot' asJQuery empty ] valueWithTimeout: 2000.\x0a\x0a\x09self trigger: #removeFromCart: with: model ",
-messageSends: ["localSave", "shopVisitor", "session", "removeProduct:", "cart", "updateCartSize", "html:", "asJQuery", ",", "description", "valueWithTimeout:", "empty", "trigger:with:"],
+source: "removeFromCart\x0a\x0a\x09Flow session shopVisitor localSave.\x0a\x09model localSave.\x0a\x09\x0a\x09Flow session shopVisitor cart removeProduct: model; localSave.\x0a\x09Flow session shopVisitor updateCartSize.\x0a\x09\x0a\x09'#alertsRoot' asJQuery html: '<div class=\x22alert alert-warning\x22 role=\x22alert\x22>We''ve removed one ',model description,' from your cart</div>'.\x0a\x0a\x09['#alertsRoot' asJQuery empty ] valueWithTimeout: 2000.\x0a\x0a\x09",
+messageSends: ["localSave", "shopVisitor", "session", "removeProduct:", "cart", "updateCartSize", "html:", "asJQuery", ",", "description", "valueWithTimeout:", "empty"],
 referencedClasses: ["Flow"]
 }),
 globals.ProductInCartController);
@@ -618,11 +671,10 @@ _st((function(){
 return smalltalk.withContext(function($ctx2) {
 return _st("#alertsRoot"._asJQuery())._empty();
 }, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)})}))._valueWithTimeout_((2000));
-self._trigger_with_("removeFromWishList:",self["@model"]);
 return self}, function($ctx1) {$ctx1.fill(self,"removeFromCart",{},globals.ProductInWishListController)})},
 args: [],
-source: "removeFromCart\x0a\x0a\x09Flow session shopVisitor localSave.\x0a\x09model localSave.\x0a\x09\x0a\x09Flow session shopVisitor wishList removeProduct: model; localSave.\x0a\x09Flow session shopVisitor updateWishListSize.\x0a\x09\x0a\x09'#alertsRoot' asJQuery html: '<div class=\x22alert alert-warning\x22 role=\x22alert\x22>We''ve removed one ',model description,' from your wish list</div>'.\x0a\x0a\x09['#alertsRoot' asJQuery empty ] valueWithTimeout: 2000.\x0a\x0a\x09self trigger: #removeFromWishList: with: model ",
-messageSends: ["localSave", "shopVisitor", "session", "removeProduct:", "wishList", "updateWishListSize", "html:", "asJQuery", ",", "description", "valueWithTimeout:", "empty", "trigger:with:"],
+source: "removeFromCart\x0a\x0a\x09Flow session shopVisitor localSave.\x0a\x09model localSave.\x0a\x09\x0a\x09Flow session shopVisitor wishList removeProduct: model; localSave.\x0a\x09Flow session shopVisitor updateWishListSize.\x0a\x09\x0a\x09'#alertsRoot' asJQuery html: '<div class=\x22alert alert-warning\x22 role=\x22alert\x22>We''ve removed one ',model description,' from your wish list</div>'.\x0a\x0a\x09['#alertsRoot' asJQuery empty ] valueWithTimeout: 2000.\x0a\x0a\x09",
+messageSends: ["localSave", "shopVisitor", "session", "removeProduct:", "wishList", "updateWishListSize", "html:", "asJQuery", ",", "description", "valueWithTimeout:", "empty"],
 referencedClasses: ["Flow"]
 }),
 globals.ProductInWishListController);
@@ -664,11 +716,10 @@ _st((function(){
 return smalltalk.withContext(function($ctx2) {
 return _st("#alertsRoot"._asJQuery())._empty();
 }, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)})}))._valueWithTimeout_((2000));
-self._trigger_with_("addToCart:",self["@model"]);
 return self}, function($ctx1) {$ctx1.fill(self,"addToCart",{},globals.ProductThumbnailController)})},
 args: [],
-source: "addToCart\x0a\x0a\x09Flow session shopVisitor localSave.\x0a\x09model localSave.\x0a\x09\x0a\x09Flow session shopVisitor cart addProduct: model; localSave.\x0a\x09Flow session shopVisitor updateCartSize.\x0a\x09\x0a\x09'#alertsRoot' asJQuery html: '<div class=\x22alert alert-success\x22 role=\x22alert\x22>Done. We''ve added one ',model description,' to your cart!</div>'.\x0a\x09['#alertsRoot' asJQuery empty ] valueWithTimeout: 2000.\x0a\x09\x0a\x09self trigger: #addToCart: with: model",
-messageSends: ["localSave", "shopVisitor", "session", "addProduct:", "cart", "updateCartSize", "html:", "asJQuery", ",", "description", "valueWithTimeout:", "empty", "trigger:with:"],
+source: "addToCart\x0a\x0a\x09Flow session shopVisitor localSave.\x0a\x09model localSave.\x0a\x09\x0a\x09Flow session shopVisitor cart addProduct: model; localSave.\x0a\x09Flow session shopVisitor updateCartSize.\x0a\x09\x0a\x09'#alertsRoot' asJQuery html: '<div class=\x22alert alert-success\x22 role=\x22alert\x22>Done. We''ve added one ',model description,' to your cart!</div>'.\x0a\x09['#alertsRoot' asJQuery empty ] valueWithTimeout: 2000.\x0a\x09",
+messageSends: ["localSave", "shopVisitor", "session", "addProduct:", "cart", "updateCartSize", "html:", "asJQuery", ",", "description", "valueWithTimeout:", "empty"],
 referencedClasses: ["Flow"]
 }),
 globals.ProductThumbnailController);
@@ -707,11 +758,10 @@ _st((function(){
 return smalltalk.withContext(function($ctx2) {
 return _st("#alertsRoot"._asJQuery())._empty();
 }, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)})}))._valueWithTimeout_((2000));
-self._trigger_with_("addToWishList:",self["@model"]);
 return self}, function($ctx1) {$ctx1.fill(self,"addToWishList",{},globals.ProductThumbnailController)})},
 args: [],
-source: "addToWishList\x0a\x0a\x09Flow session shopVisitor localSave.\x0a\x09model localSave.\x0a\x09\x0a\x09Flow session shopVisitor wishList addProduct: model; localSave.\x0a\x09Flow session shopVisitor updateWishListSize.\x0a\x09\x0a\x09'#alertsRoot' asJQuery html: '<div class=\x22alert alert-info\x22 role=\x22alert\x22>We''ve added one ',model description,' to your wishlist. It got sooo whishable!</div>'.\x0a\x0a\x09['#alertsRoot' asJQuery empty ] valueWithTimeout: 2000.\x0a\x0a\x09self trigger: #addToWishList: with: model ",
-messageSends: ["localSave", "shopVisitor", "session", "addProduct:", "wishList", "updateWishListSize", "html:", "asJQuery", ",", "description", "valueWithTimeout:", "empty", "trigger:with:"],
+source: "addToWishList\x0a\x0a\x09Flow session shopVisitor localSave.\x0a\x09model localSave.\x0a\x09\x0a\x09Flow session shopVisitor wishList addProduct: model; localSave.\x0a\x09Flow session shopVisitor updateWishListSize.\x0a\x09\x0a\x09'#alertsRoot' asJQuery html: '<div class=\x22alert alert-info\x22 role=\x22alert\x22>We''ve added one ',model description,' to your wishlist. It got sooo whishable!</div>'.\x0a\x0a\x09['#alertsRoot' asJQuery empty ] valueWithTimeout: 2000.",
+messageSends: ["localSave", "shopVisitor", "session", "addProduct:", "wishList", "updateWishListSize", "html:", "asJQuery", ",", "description", "valueWithTimeout:", "empty"],
 referencedClasses: ["Flow"]
 }),
 globals.ProductThumbnailController);
@@ -722,22 +772,15 @@ selector: "getModelAsArgument",
 protocol: 'actions',
 fn: function (){
 var self=this;
-function $Transcript(){return globals.Transcript||(typeof Transcript=="undefined"?nil:Transcript)}
 return smalltalk.withContext(function($ctx1) { 
-var $1,$2,$3,$4;
-_st($Transcript())._cr();
-$1=_st($Transcript())._show_(self["@model"]);
-$2=_st(window)._console();
-$3=_st(self["@model"])._data();
-$ctx1.sendIdx["data"]=1;
-_st($2)._warn_($3);
-$4=_st(self["@model"])._data();
-return $4;
+var $1;
+$1=_st(self["@model"])._data();
+return $1;
 }, function($ctx1) {$ctx1.fill(self,"getModelAsArgument",{},globals.ProductThumbnailController)})},
 args: [],
-source: "getModelAsArgument\x0a\x09\x22Returns the model in a way that is appropiate for binding (usable by rivets).\x0a\x09By default BindingController assumes you are using mapless as controllers model\x0a\x09so we send their data but subclasses might differ if they please.\x22\x0a\x09Transcript cr; show: model.\x0a\x09window console warn: model data.\x0a\x09\x0a\x09^ model data",
-messageSends: ["cr", "show:", "warn:", "console", "data"],
-referencedClasses: ["Transcript"]
+source: "getModelAsArgument\x0a\x09\x22Returns the model in a way that is appropiate for binding (usable by rivets).\x0a\x09By default BindingController assumes you are using mapless as controllers model\x0a\x09so we send their data but subclasses might differ if they please.\x22\x09\x0a\x09^ model data",
+messageSends: ["data"],
+referencedClasses: []
 }),
 globals.ProductThumbnailController);
 
@@ -790,11 +833,11 @@ protocol: 'actions',
 fn: function (){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-self._cartSize_(_st(_st(self._cart())._productIds())._size());
+self._cartSize_(_st(_st(self._cart())._products())._size());
 return self}, function($ctx1) {$ctx1.fill(self,"updateCartSize",{},globals.ShopVisitor)})},
 args: [],
-source: "updateCartSize\x0a\x0a\x09self cartSize: self cart productIds size",
-messageSends: ["cartSize:", "size", "productIds", "cart"],
+source: "updateCartSize\x0a\x0a\x09self cartSize: self cart products size",
+messageSends: ["cartSize:", "size", "products", "cart"],
 referencedClasses: []
 }),
 globals.ShopVisitor);
@@ -806,11 +849,11 @@ protocol: 'actions',
 fn: function (){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-self._wishListSize_(_st(_st(self._wishList())._productIds())._size());
+self._wishListSize_(_st(_st(self._wishList())._products())._size());
 return self}, function($ctx1) {$ctx1.fill(self,"updateWishListSize",{},globals.ShopVisitor)})},
 args: [],
-source: "updateWishListSize\x0a\x0a\x09self wishListSize: self wishList productIds size",
-messageSends: ["wishListSize:", "size", "productIds", "wishList"],
+source: "updateWishListSize\x0a\x0a\x09self wishListSize: self wishList products size",
+messageSends: ["wishListSize:", "size", "products", "wishList"],
 referencedClasses: []
 }),
 globals.ShopVisitor);
@@ -825,48 +868,19 @@ protocol: 'actions',
 fn: function (aProduct){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-var $2,$3,$1;
-$2=self._productIds();
-$ctx1.sendIdx["productIds"]=1;
-$3=_st(aProduct)._id();
-$ctx1.sendIdx["id"]=1;
-$1=_st($2)._includes_($3);
+var $2,$1;
+$2=self._products();
+$ctx1.sendIdx["products"]=1;
+$1=_st($2)._includes_(aProduct);
 if(! smalltalk.assert($1)){
-_st(self._productIds())._add_(_st(aProduct)._id());
+_st(self._products())._add_(aProduct);
 };
+self._trigger_with_("added:",aProduct);
 return self}, function($ctx1) {$ctx1.fill(self,"addProduct:",{aProduct:aProduct},globals.WishList)})},
 args: ["aProduct"],
-source: "addProduct: aProduct\x0a\x0a\x09(self productIds includes: aProduct id) ifFalse:[\x0a\x09\x09self productIds add: aProduct id ]",
-messageSends: ["ifFalse:", "includes:", "productIds", "id", "add:"],
+source: "addProduct: aProduct\x0a\x0a\x09(self products includes: aProduct) ifFalse:[\x0a\x09\x09self products add: aProduct ].\x0a\x09\x09\x0a\x09self trigger: #added: with: aProduct \x09\x09",
+messageSends: ["ifFalse:", "includes:", "products", "add:", "trigger:with:"],
 referencedClasses: []
-}),
-globals.WishList);
-
-smalltalk.addMethod(
-smalltalk.method({
-selector: "productIds",
-protocol: 'accessing',
-fn: function (){
-var self=this;
-function $OrderedCollection(){return globals.OrderedCollection||(typeof OrderedCollection=="undefined"?nil:OrderedCollection)}
-return smalltalk.withContext(function($ctx1) { 
-var $1,$2,$receiver;
-$1=($ctx1.supercall = true, globals.WishList.superclass.fn.prototype._productIds.apply(_st(self), []));
-$ctx1.supercall = false;
-$ctx1.sendIdx["productIds"]=1;
-if(($receiver = $1) == null || $receiver.isNil){
-self._productIds_(_st($OrderedCollection())._new());
-} else {
-$1;
-};
-$2=($ctx1.supercall = true, globals.WishList.superclass.fn.prototype._productIds.apply(_st(self), []));
-$ctx1.supercall = false;
-return $2;
-}, function($ctx1) {$ctx1.fill(self,"productIds",{},globals.WishList)})},
-args: [],
-source: "productIds\x0a\x0a\x09super productIds ifNil:[\x0a\x09\x09self productIds: OrderedCollection new ].\x0a\x09\x09\x0a\x09^ super productIds",
-messageSends: ["ifNil:", "productIds", "productIds:", "new"],
-referencedClasses: ["OrderedCollection"]
 }),
 globals.WishList);
 
@@ -876,19 +890,25 @@ selector: "products",
 protocol: 'accessing',
 fn: function (){
 var self=this;
-function $Product(){return globals.Product||(typeof Product=="undefined"?nil:Product)}
+function $OrderedCollection(){return globals.OrderedCollection||(typeof OrderedCollection=="undefined"?nil:OrderedCollection)}
 return smalltalk.withContext(function($ctx1) { 
-var $1;
-$1=_st(self._productIds())._collect_((function(anId){
-return smalltalk.withContext(function($ctx2) {
-return _st($Product())._localFindId_(anId);
-}, function($ctx2) {$ctx2.fillBlock({anId:anId},$ctx1,1)})}));
-return $1;
+var $1,$2,$receiver;
+$1=($ctx1.supercall = true, globals.WishList.superclass.fn.prototype._products.apply(_st(self), []));
+$ctx1.supercall = false;
+$ctx1.sendIdx["products"]=1;
+if(($receiver = $1) == null || $receiver.isNil){
+self._products_(_st($OrderedCollection())._new());
+} else {
+$1;
+};
+$2=($ctx1.supercall = true, globals.WishList.superclass.fn.prototype._products.apply(_st(self), []));
+$ctx1.supercall = false;
+return $2;
 }, function($ctx1) {$ctx1.fill(self,"products",{},globals.WishList)})},
 args: [],
-source: "products\x0a\x0a\x09^ self productIds collect:[ :anId |\x0a\x09\x09Product localFindId: anId ]",
-messageSends: ["collect:", "productIds", "localFindId:"],
-referencedClasses: ["Product"]
+source: "products\x0a\x0a\x09super products ifNil:[\x0a\x09\x09self products: OrderedCollection new ].\x0a\x09\x09\x0a\x09^ super products",
+messageSends: ["ifNil:", "products", "products:", "new"],
+referencedClasses: ["OrderedCollection"]
 }),
 globals.WishList);
 
@@ -899,15 +919,14 @@ protocol: 'actions',
 fn: function (aProduct){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-var $1;
-$1=_st(self._productIds())._remove_ifAbsent_(_st(aProduct)._id(),(function(){
+_st(self._products())._remove_ifAbsent_(aProduct,(function(){
 return nil;
 }));
-return $1;
-}, function($ctx1) {$ctx1.fill(self,"removeProduct:",{aProduct:aProduct},globals.WishList)})},
+self._trigger_with_("removed:",aProduct);
+return self}, function($ctx1) {$ctx1.fill(self,"removeProduct:",{aProduct:aProduct},globals.WishList)})},
 args: ["aProduct"],
-source: "removeProduct: aProduct\x0a\x0a\x09^ self productIds \x0a\x09\x09remove: aProduct id\x0a\x09\x09ifAbsent:[ nil ]",
-messageSends: ["remove:ifAbsent:", "productIds", "id"],
+source: "removeProduct: aProduct\x0a\x0a\x09self products \x0a\x09\x09remove: aProduct\x0a\x09\x09ifAbsent:[ nil ].\x0a\x09\x09\x0a\x09self trigger: #removed: with: aProduct ",
+messageSends: ["remove:ifAbsent:", "products", "trigger:with:"],
 referencedClasses: []
 }),
 globals.WishList);
