@@ -1,7 +1,9 @@
 <li class="productInCart">
   <div class="col-sm-8">
     <div class="row">
-        <a class="btn btn-danger pull-left" rv-on-click="controller._removeFromCart">Remove</a> 
+        <a class="btn btn-danger pull-left" rv-on-click="controller._removeFromCart">
+			<span class="glyphicon glyphicon-minus"></span>
+        </a> 
         <div class="col-sm-4">{ model.description }</div>
         <div class="col-sm-4">${ model.price }</div>
     </div>

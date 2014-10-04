@@ -5,24 +5,33 @@ Model subclass: #Cart
 
 !Cart methodsFor: 'accessing'!
 
+productIds
+
+	super productIds ifNil:[
+		self productIds: OrderedCollection new ].
+		
+	^ super productIds
+!
+
 products
 
-	super products ifNil:[
-		self products: OrderedCollection new ].
-		
-	^ super products
+	^ self productIds collect:[ :anId |
+		Product localFindId: anId ]
 ! !
 
 !Cart methodsFor: 'actions'!
 
 addProduct: aProduct
 
-	^ self products add: aProduct
+	(self productIds includes: aProduct id) ifFalse:[
+		self productIds add: aProduct id ]
 !
 
 removeProduct: aProduct
 
-	^ self products remove: aProduct ifAbsent:[ nil ]
+	^ self productIds
+		remove: aProduct id
+		ifAbsent:[ nil ]
 ! !
 
 BindingController subclass: #CartController
@@ -358,12 +367,12 @@ Model subclass: #ShopVisitor
 
 updateCartSize
 
-	self cartSize: self cart products size
+	self cartSize: self cart productIds size
 !
 
 updateWishListSize
 
-	self wishListSize: self wishList products size
+	self wishListSize: self wishList productIds size
 ! !
 
 !ShopVisitor methodsFor: 'initialization'!
@@ -381,23 +390,32 @@ Model subclass: #WishList
 
 !WishList methodsFor: 'accessing'!
 
+productIds
+
+	super productIds ifNil:[
+		self productIds: OrderedCollection new ].
+		
+	^ super productIds
+!
+
 products
 
-	super products ifNil:[
-		self products: OrderedCollection new ].
-		
-	^ super products
+	^ self productIds collect:[ :anId |
+		Product localFindId: anId ]
 ! !
 
 !WishList methodsFor: 'actions'!
 
 addProduct: aProduct
 
-	^ self products add: aProduct
+	(self productIds includes: aProduct id) ifFalse:[
+		self productIds add: aProduct id ]
 !
 
 removeProduct: aProduct
 
-	^ self products remove: aProduct ifAbsent:[ nil ]
+	^ self productIds 
+		remove: aProduct id
+		ifAbsent:[ nil ]
 ! !
 

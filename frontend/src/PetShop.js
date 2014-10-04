@@ -11,14 +11,48 @@ protocol: 'actions',
 fn: function (aProduct){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-var $1;
-$1=_st(self._products())._add_(aProduct);
-return $1;
-}, function($ctx1) {$ctx1.fill(self,"addProduct:",{aProduct:aProduct},globals.Cart)})},
+var $2,$3,$1;
+$2=self._productIds();
+$ctx1.sendIdx["productIds"]=1;
+$3=_st(aProduct)._id();
+$ctx1.sendIdx["id"]=1;
+$1=_st($2)._includes_($3);
+if(! smalltalk.assert($1)){
+_st(self._productIds())._add_(_st(aProduct)._id());
+};
+return self}, function($ctx1) {$ctx1.fill(self,"addProduct:",{aProduct:aProduct},globals.Cart)})},
 args: ["aProduct"],
-source: "addProduct: aProduct\x0a\x0a\x09^ self products add: aProduct",
-messageSends: ["add:", "products"],
+source: "addProduct: aProduct\x0a\x0a\x09(self productIds includes: aProduct id) ifFalse:[\x0a\x09\x09self productIds add: aProduct id ]",
+messageSends: ["ifFalse:", "includes:", "productIds", "id", "add:"],
 referencedClasses: []
+}),
+globals.Cart);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "productIds",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+function $OrderedCollection(){return globals.OrderedCollection||(typeof OrderedCollection=="undefined"?nil:OrderedCollection)}
+return smalltalk.withContext(function($ctx1) { 
+var $1,$2,$receiver;
+$1=($ctx1.supercall = true, globals.Cart.superclass.fn.prototype._productIds.apply(_st(self), []));
+$ctx1.supercall = false;
+$ctx1.sendIdx["productIds"]=1;
+if(($receiver = $1) == null || $receiver.isNil){
+self._productIds_(_st($OrderedCollection())._new());
+} else {
+$1;
+};
+$2=($ctx1.supercall = true, globals.Cart.superclass.fn.prototype._productIds.apply(_st(self), []));
+$ctx1.supercall = false;
+return $2;
+}, function($ctx1) {$ctx1.fill(self,"productIds",{},globals.Cart)})},
+args: [],
+source: "productIds\x0a\x0a\x09super productIds ifNil:[\x0a\x09\x09self productIds: OrderedCollection new ].\x0a\x09\x09\x0a\x09^ super productIds",
+messageSends: ["ifNil:", "productIds", "productIds:", "new"],
+referencedClasses: ["OrderedCollection"]
 }),
 globals.Cart);
 
@@ -28,25 +62,19 @@ selector: "products",
 protocol: 'accessing',
 fn: function (){
 var self=this;
-function $OrderedCollection(){return globals.OrderedCollection||(typeof OrderedCollection=="undefined"?nil:OrderedCollection)}
+function $Product(){return globals.Product||(typeof Product=="undefined"?nil:Product)}
 return smalltalk.withContext(function($ctx1) { 
-var $1,$2,$receiver;
-$1=($ctx1.supercall = true, globals.Cart.superclass.fn.prototype._products.apply(_st(self), []));
-$ctx1.supercall = false;
-$ctx1.sendIdx["products"]=1;
-if(($receiver = $1) == null || $receiver.isNil){
-self._products_(_st($OrderedCollection())._new());
-} else {
-$1;
-};
-$2=($ctx1.supercall = true, globals.Cart.superclass.fn.prototype._products.apply(_st(self), []));
-$ctx1.supercall = false;
-return $2;
+var $1;
+$1=_st(self._productIds())._collect_((function(anId){
+return smalltalk.withContext(function($ctx2) {
+return _st($Product())._localFindId_(anId);
+}, function($ctx2) {$ctx2.fillBlock({anId:anId},$ctx1,1)})}));
+return $1;
 }, function($ctx1) {$ctx1.fill(self,"products",{},globals.Cart)})},
 args: [],
-source: "products\x0a\x0a\x09super products ifNil:[\x0a\x09\x09self products: OrderedCollection new ].\x0a\x09\x09\x0a\x09^ super products",
-messageSends: ["ifNil:", "products", "products:", "new"],
-referencedClasses: ["OrderedCollection"]
+source: "products\x0a\x0a\x09^ self productIds collect:[ :anId |\x0a\x09\x09Product localFindId: anId ]",
+messageSends: ["collect:", "productIds", "localFindId:"],
+referencedClasses: ["Product"]
 }),
 globals.Cart);
 
@@ -58,14 +86,14 @@ fn: function (aProduct){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
 var $1;
-$1=_st(self._products())._remove_ifAbsent_(aProduct,(function(){
+$1=_st(self._productIds())._remove_ifAbsent_(_st(aProduct)._id(),(function(){
 return nil;
 }));
 return $1;
 }, function($ctx1) {$ctx1.fill(self,"removeProduct:",{aProduct:aProduct},globals.Cart)})},
 args: ["aProduct"],
-source: "removeProduct: aProduct\x0a\x0a\x09^ self products remove: aProduct ifAbsent:[ nil ]",
-messageSends: ["remove:ifAbsent:", "products"],
+source: "removeProduct: aProduct\x0a\x0a\x09^ self productIds\x0a\x09\x09remove: aProduct id\x0a\x09\x09ifAbsent:[ nil ]",
+messageSends: ["remove:ifAbsent:", "productIds", "id"],
 referencedClasses: []
 }),
 globals.Cart);
@@ -737,11 +765,11 @@ protocol: 'actions',
 fn: function (){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-self._cartSize_(_st(_st(self._cart())._products())._size());
+self._cartSize_(_st(_st(self._cart())._productIds())._size());
 return self}, function($ctx1) {$ctx1.fill(self,"updateCartSize",{},globals.ShopVisitor)})},
 args: [],
-source: "updateCartSize\x0a\x0a\x09self cartSize: self cart products size",
-messageSends: ["cartSize:", "size", "products", "cart"],
+source: "updateCartSize\x0a\x0a\x09self cartSize: self cart productIds size",
+messageSends: ["cartSize:", "size", "productIds", "cart"],
 referencedClasses: []
 }),
 globals.ShopVisitor);
@@ -753,11 +781,11 @@ protocol: 'actions',
 fn: function (){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-self._wishListSize_(_st(_st(self._wishList())._products())._size());
+self._wishListSize_(_st(_st(self._wishList())._productIds())._size());
 return self}, function($ctx1) {$ctx1.fill(self,"updateWishListSize",{},globals.ShopVisitor)})},
 args: [],
-source: "updateWishListSize\x0a\x0a\x09self wishListSize: self wishList products size",
-messageSends: ["wishListSize:", "size", "products", "wishList"],
+source: "updateWishListSize\x0a\x0a\x09self wishListSize: self wishList productIds size",
+messageSends: ["wishListSize:", "size", "productIds", "wishList"],
 referencedClasses: []
 }),
 globals.ShopVisitor);
@@ -772,14 +800,48 @@ protocol: 'actions',
 fn: function (aProduct){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-var $1;
-$1=_st(self._products())._add_(aProduct);
-return $1;
-}, function($ctx1) {$ctx1.fill(self,"addProduct:",{aProduct:aProduct},globals.WishList)})},
+var $2,$3,$1;
+$2=self._productIds();
+$ctx1.sendIdx["productIds"]=1;
+$3=_st(aProduct)._id();
+$ctx1.sendIdx["id"]=1;
+$1=_st($2)._includes_($3);
+if(! smalltalk.assert($1)){
+_st(self._productIds())._add_(_st(aProduct)._id());
+};
+return self}, function($ctx1) {$ctx1.fill(self,"addProduct:",{aProduct:aProduct},globals.WishList)})},
 args: ["aProduct"],
-source: "addProduct: aProduct\x0a\x0a\x09^ self products add: aProduct",
-messageSends: ["add:", "products"],
+source: "addProduct: aProduct\x0a\x0a\x09(self productIds includes: aProduct id) ifFalse:[\x0a\x09\x09self productIds add: aProduct id ]",
+messageSends: ["ifFalse:", "includes:", "productIds", "id", "add:"],
 referencedClasses: []
+}),
+globals.WishList);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "productIds",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+function $OrderedCollection(){return globals.OrderedCollection||(typeof OrderedCollection=="undefined"?nil:OrderedCollection)}
+return smalltalk.withContext(function($ctx1) { 
+var $1,$2,$receiver;
+$1=($ctx1.supercall = true, globals.WishList.superclass.fn.prototype._productIds.apply(_st(self), []));
+$ctx1.supercall = false;
+$ctx1.sendIdx["productIds"]=1;
+if(($receiver = $1) == null || $receiver.isNil){
+self._productIds_(_st($OrderedCollection())._new());
+} else {
+$1;
+};
+$2=($ctx1.supercall = true, globals.WishList.superclass.fn.prototype._productIds.apply(_st(self), []));
+$ctx1.supercall = false;
+return $2;
+}, function($ctx1) {$ctx1.fill(self,"productIds",{},globals.WishList)})},
+args: [],
+source: "productIds\x0a\x0a\x09super productIds ifNil:[\x0a\x09\x09self productIds: OrderedCollection new ].\x0a\x09\x09\x0a\x09^ super productIds",
+messageSends: ["ifNil:", "productIds", "productIds:", "new"],
+referencedClasses: ["OrderedCollection"]
 }),
 globals.WishList);
 
@@ -789,25 +851,19 @@ selector: "products",
 protocol: 'accessing',
 fn: function (){
 var self=this;
-function $OrderedCollection(){return globals.OrderedCollection||(typeof OrderedCollection=="undefined"?nil:OrderedCollection)}
+function $Product(){return globals.Product||(typeof Product=="undefined"?nil:Product)}
 return smalltalk.withContext(function($ctx1) { 
-var $1,$2,$receiver;
-$1=($ctx1.supercall = true, globals.WishList.superclass.fn.prototype._products.apply(_st(self), []));
-$ctx1.supercall = false;
-$ctx1.sendIdx["products"]=1;
-if(($receiver = $1) == null || $receiver.isNil){
-self._products_(_st($OrderedCollection())._new());
-} else {
-$1;
-};
-$2=($ctx1.supercall = true, globals.WishList.superclass.fn.prototype._products.apply(_st(self), []));
-$ctx1.supercall = false;
-return $2;
+var $1;
+$1=_st(self._productIds())._collect_((function(anId){
+return smalltalk.withContext(function($ctx2) {
+return _st($Product())._localFindId_(anId);
+}, function($ctx2) {$ctx2.fillBlock({anId:anId},$ctx1,1)})}));
+return $1;
 }, function($ctx1) {$ctx1.fill(self,"products",{},globals.WishList)})},
 args: [],
-source: "products\x0a\x0a\x09super products ifNil:[\x0a\x09\x09self products: OrderedCollection new ].\x0a\x09\x09\x0a\x09^ super products",
-messageSends: ["ifNil:", "products", "products:", "new"],
-referencedClasses: ["OrderedCollection"]
+source: "products\x0a\x0a\x09^ self productIds collect:[ :anId |\x0a\x09\x09Product localFindId: anId ]",
+messageSends: ["collect:", "productIds", "localFindId:"],
+referencedClasses: ["Product"]
 }),
 globals.WishList);
 
@@ -819,14 +875,14 @@ fn: function (aProduct){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
 var $1;
-$1=_st(self._products())._remove_ifAbsent_(aProduct,(function(){
+$1=_st(self._productIds())._remove_ifAbsent_(_st(aProduct)._id(),(function(){
 return nil;
 }));
 return $1;
 }, function($ctx1) {$ctx1.fill(self,"removeProduct:",{aProduct:aProduct},globals.WishList)})},
 args: ["aProduct"],
-source: "removeProduct: aProduct\x0a\x0a\x09^ self products remove: aProduct ifAbsent:[ nil ]",
-messageSends: ["remove:ifAbsent:", "products"],
+source: "removeProduct: aProduct\x0a\x0a\x09^ self productIds \x0a\x09\x09remove: aProduct id\x0a\x09\x09ifAbsent:[ nil ]",
+messageSends: ["remove:ifAbsent:", "productIds", "id"],
 referencedClasses: []
 }),
 globals.WishList);
