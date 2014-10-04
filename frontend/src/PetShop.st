@@ -348,6 +348,16 @@ addToWishList
 	['#alertsRoot' asJQuery empty ] valueWithTimeout: 2000.
 
 	self trigger: #addToWishList: with: model
+!
+
+getModelAsArgument
+	"Returns the model in a way that is appropiate for binding (usable by rivets).
+	By default BindingController assumes you are using mapless as controllers model
+	so we send their data but subclasses might differ if they please."
+	Transcript cr; show: model.
+	window console warn: model data.
+	
+	^ model data
 ! !
 
 !ProductThumbnailController methodsFor: 'reactions'!

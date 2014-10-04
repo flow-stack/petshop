@@ -718,6 +718,31 @@ globals.ProductThumbnailController);
 
 smalltalk.addMethod(
 smalltalk.method({
+selector: "getModelAsArgument",
+protocol: 'actions',
+fn: function (){
+var self=this;
+function $Transcript(){return globals.Transcript||(typeof Transcript=="undefined"?nil:Transcript)}
+return smalltalk.withContext(function($ctx1) { 
+var $1,$2,$3,$4;
+_st($Transcript())._cr();
+$1=_st($Transcript())._show_(self["@model"]);
+$2=_st(window)._console();
+$3=_st(self["@model"])._data();
+$ctx1.sendIdx["data"]=1;
+_st($2)._warn_($3);
+$4=_st(self["@model"])._data();
+return $4;
+}, function($ctx1) {$ctx1.fill(self,"getModelAsArgument",{},globals.ProductThumbnailController)})},
+args: [],
+source: "getModelAsArgument\x0a\x09\x22Returns the model in a way that is appropiate for binding (usable by rivets).\x0a\x09By default BindingController assumes you are using mapless as controllers model\x0a\x09so we send their data but subclasses might differ if they please.\x22\x0a\x09Transcript cr; show: model.\x0a\x09window console warn: model data.\x0a\x09\x0a\x09^ model data",
+messageSends: ["cr", "show:", "warn:", "console", "data"],
+referencedClasses: ["Transcript"]
+}),
+globals.ProductThumbnailController);
+
+smalltalk.addMethod(
+smalltalk.method({
 selector: "onAfterModel",
 protocol: 'reactions',
 fn: function (){
