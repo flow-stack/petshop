@@ -270,11 +270,45 @@ protocol: 'actions',
 fn: function (){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-_st(_st(self._model())._things())._add_(self._newThing());
+var $2,$1,$3,$6,$5,$4;
+$2=self._model();
+$ctx1.sendIdx["model"]=1;
+$1=_st($2)._things();
+$ctx1.sendIdx["things"]=1;
+_st($1)._add_(self._newThing());
+$3=console;
+$6=self._model();
+$ctx1.sendIdx["model"]=2;
+$5=_st($6)._things();
+$ctx1.sendIdx["things"]=2;
+$4=_st($5)._last();
+$ctx1.sendIdx["last"]=1;
+_st($3)._log_($4);
+_st(console)._info_(_st(_st(_st(self._model())._things())._last())._data());
 return self}, function($ctx1) {$ctx1.fill(self,"addThing",{},globals.StuffUsingEachController)})},
 args: [],
-source: "addThing\x0a\x09\x0a\x09self model things add: self newThing",
-messageSends: ["add:", "things", "model", "newThing"],
+source: "addThing\x0a\x09\x0a\x09self model things add: self newThing.\x0a\x09\x0a\x09console log: self model things last.\x0a\x09console info: self model things last data.\x0a\x09",
+messageSends: ["add:", "things", "model", "newThing", "log:", "last", "info:", "data"],
+referencedClasses: []
+}),
+globals.StuffUsingEachController);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "getConfiguration",
+protocol: 'actions',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $2,$1;
+$2=($ctx1.supercall = true, globals.StuffUsingEachController.superclass.fn.prototype._getConfiguration.apply(_st(self), []));
+$ctx1.supercall = false;
+$1=_st($2)._yourself();
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"getConfiguration",{},globals.StuffUsingEachController)})},
+args: [],
+source: "getConfiguration\x0a\x0a\x09^ super getConfiguration\x0a\x09\x09\x22at: 'adapter' put: ( #{\x0a    \x09\x09#subscribe -> [ :obj :keypath :callback | obj on: 'change:',keypath do: callback].\x0a    \x09\x09#unsubscribe -> [ :obj :keypath :callback | obj off: 'change:',keypath do: callback].\x0a    \x09\x09#read -> [ :obj :keypath | obj get keypath ].\x0a    \x09\x09#publish -> [ :obj :keypath :value | obj set: keypath val: value ]});\x22\x0a\x09\x09yourself\x0a\x09\x09\x09",
+messageSends: ["yourself", "getConfiguration"],
 referencedClasses: []
 }),
 globals.StuffUsingEachController);
@@ -362,6 +396,41 @@ referencedClasses: ["Thing"]
 }),
 globals.StuffUsingEachController);
 
+smalltalk.addMethod(
+smalltalk.method({
+selector: "removeThing",
+protocol: 'actions',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+_st(_st(self._model())._things())._removeLast();
+return self}, function($ctx1) {$ctx1.fill(self,"removeThing",{},globals.StuffUsingEachController)})},
+args: [],
+source: "removeThing\x0a\x09\x0a\x09self model things removeLast",
+messageSends: ["removeLast", "things", "model"],
+referencedClasses: []
+}),
+globals.StuffUsingEachController);
+
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "defaultModel",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+function $Stuff(){return globals.Stuff||(typeof Stuff=="undefined"?nil:Stuff)}
+return smalltalk.withContext(function($ctx1) { 
+var $1;
+$1=_st($Stuff())._new();
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"defaultModel",{},globals.StuffUsingEachController.klass)})},
+args: [],
+source: "defaultModel\x0a\x0a\x09^ Stuff new",
+messageSends: ["new"],
+referencedClasses: ["Stuff"]
+}),
+globals.StuffUsingEachController.klass);
 
 smalltalk.addMethod(
 smalltalk.method({
