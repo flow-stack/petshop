@@ -57,8 +57,8 @@ getHandler
 	rivets would send the html element (target of the event)
 	screwing the self instance of this controller"
 
-	<return function( target, event, binding ){
-		self._onBinded_event_view_( target, event, binding );
+	<return function( target, event, binding, view ){
+		self._onBinded_event_handler_view_( target, event, binding, view );
 		this.call(binding.model);
 	}>
 !
@@ -85,10 +85,10 @@ onAboutToRemove
 	self unbind
 !
 
-onBinded: target event: anEvent view: aBindedView
-	"The view of this controller has just been created by rivetjs"
-
-	console log: target w: anEvent v: aBindedView
+onBinded: target event: anEvent handler: aHandler view: aBindedView
+	"The custom handler to bind on this controller is reacting"
+	
+	"no-op"
 !
 
 onTemplate: data
@@ -108,4 +108,15 @@ isAbstract
 	
 	^ self = BindingController
 ! !
+
+BindingController subclass: #IteratedController
+	instanceVariableNames: ''
+	package: 'Flow-Binding'!
+!IteratedController commentStamp!
+##IteratedController
+Like ListController except it relies on rivets.js to iterate  models' presentation.
+
+It's rivets who triggers the creation, maintenance and destruction of the (sub)controllers of this controller.
+
+[This is how you use it in the template/view](http://rivetsjs.com/docs/reference/#each-[item])!
 

@@ -84,13 +84,13 @@ protocol: 'actions',
 fn: function (){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-return function( target, event, binding ){
-		self._onBinded_event_view_( target, event, binding );
+return function( target, event, binding, view ){
+		self._onBinded_event_handler_view_( target, event, binding, view );
 		this.call(binding.model);
 	};
 return self}, function($ctx1) {$ctx1.fill(self,"getHandler",{},globals.BindingController)})},
 args: [],
-source: "getHandler\x0a\x09\x22Answers the custom handler of flow controllers for rivets.\x0a\x09We need it to be call on binding.model otherwhise \x0a\x09rivets would send the html element (target of the event)\x0a\x09screwing the self instance of this controller\x22\x0a\x0a\x09<return function( target, event, binding ){\x0a\x09\x09self._onBinded_event_view_( target, event, binding );\x0a\x09\x09this.call(binding.model);\x0a\x09}>",
+source: "getHandler\x0a\x09\x22Answers the custom handler of flow controllers for rivets.\x0a\x09We need it to be call on binding.model otherwhise \x0a\x09rivets would send the html element (target of the event)\x0a\x09screwing the self instance of this controller\x22\x0a\x0a\x09<return function( target, event, binding, view ){\x0a\x09\x09self._onBinded_event_handler_view_( target, event, binding, view );\x0a\x09\x09this.call(binding.model);\x0a\x09}>",
 messageSends: [],
 referencedClasses: []
 }),
@@ -134,16 +134,14 @@ globals.BindingController);
 
 smalltalk.addMethod(
 smalltalk.method({
-selector: "onBinded:event:view:",
+selector: "onBinded:event:handler:view:",
 protocol: 'reactions',
-fn: function (target,anEvent,aBindedView){
+fn: function (target,anEvent,aHandler,aBindedView){
 var self=this;
-return smalltalk.withContext(function($ctx1) { 
-_st(console)._log_w_v_(target,anEvent,aBindedView);
-return self}, function($ctx1) {$ctx1.fill(self,"onBinded:event:view:",{target:target,anEvent:anEvent,aBindedView:aBindedView},globals.BindingController)})},
-args: ["target", "anEvent", "aBindedView"],
-source: "onBinded: target event: anEvent view: aBindedView\x0a\x09\x22The view of this controller has just been created by rivetjs\x22\x0a\x0a\x09console log: target w: anEvent v: aBindedView",
-messageSends: ["log:w:v:"],
+return self},
+args: ["target", "anEvent", "aHandler", "aBindedView"],
+source: "onBinded: target event: anEvent handler: aHandler view: aBindedView\x0a\x09\x22The custom handler to bind on this controller is reacting\x22\x0a\x09\x0a\x09\x22no-op\x22",
+messageSends: [],
 referencedClasses: []
 }),
 globals.BindingController);
@@ -226,5 +224,9 @@ messageSends: ["="],
 referencedClasses: ["BindingController"]
 }),
 globals.BindingController.klass);
+
+
+smalltalk.addClass('IteratedController', globals.BindingController, [], 'Flow-Binding');
+globals.IteratedController.comment="##IteratedController\x0aLike ListController except it relies on rivets.js to iterate  models' presentation.\x0a\x0aIt's rivets who triggers the creation, maintenance and destruction of the (sub)controllers of this controller.\x0a\x0a[This is how you use it in the template/view](http://rivetsjs.com/docs/reference/#each-[item])";
 
 });
