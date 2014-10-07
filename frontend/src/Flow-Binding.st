@@ -85,7 +85,7 @@ onAboutToRemove
 	self unbind
 !
 
-onBinded: target event: anEvent handler: aHandler view: aBindedView
+onBinded: aTarget event: anEvent handler: aHandler view: aBindedView
 	"The custom handler to bind on this controller is reacting"
 	
 	"no-op"
@@ -110,7 +110,7 @@ isAbstract
 ! !
 
 BindingController subclass: #IteratedController
-	instanceVariableNames: ''
+	instanceVariableNames: 'itemControllerClass newItemControllerBlock'
 	package: 'Flow-Binding'!
 !IteratedController commentStamp!
 ##IteratedController
@@ -119,4 +119,51 @@ Like ListController except it relies on rivets.js to iterate  models' presentati
 It's rivets who triggers the creation, maintenance and destruction of the (sub)controllers of this controller.
 
 [This is how you use it in the template/view](http://rivetsjs.com/docs/reference/#each-[item])!
+
+!IteratedController methodsFor: 'accessing'!
+
+itemControllerClass
+
+	^ itemControllerClass
+!
+
+itemControllerClass: aBlock
+
+	itemControllerClass := aBlock
+!
+
+newItemControllerBlock
+
+	^ newItemControllerBlock
+!
+
+newItemControllerBlock: aBlock
+
+	newItemControllerBlock := aBlock
+! !
+
+!IteratedController methodsFor: 'actions'!
+
+newItemControllerFor: anItem
+
+	^ itemControllerClass isNil
+		ifFalse:[ itemControllerClass 
+					for: anItem 
+					on: self 
+					appendingTo: self view ] 
+		ifTrue:[ self newItemControllerBlock value: anItem ]
+! !
+
+!IteratedController methodsFor: 'reactions'!
+
+onBinded: aTarget event: anEvent handler: aHandler view: aBindedView
+	"The custom handler to bind on this controller is reacting"
+
+	console log: aBindedView.
+
+	super onBinded: aTarget event: anEvent handler: aHandler view: aBindedView.
+	
+	
+	"self ifAbsentAt: "
+! !
 

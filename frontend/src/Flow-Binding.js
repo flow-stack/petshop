@@ -136,11 +136,11 @@ smalltalk.addMethod(
 smalltalk.method({
 selector: "onBinded:event:handler:view:",
 protocol: 'reactions',
-fn: function (target,anEvent,aHandler,aBindedView){
+fn: function (aTarget,anEvent,aHandler,aBindedView){
 var self=this;
 return self},
-args: ["target", "anEvent", "aHandler", "aBindedView"],
-source: "onBinded: target event: anEvent handler: aHandler view: aBindedView\x0a\x09\x22The custom handler to bind on this controller is reacting\x22\x0a\x09\x0a\x09\x22no-op\x22",
+args: ["aTarget", "anEvent", "aHandler", "aBindedView"],
+source: "onBinded: aTarget event: anEvent handler: aHandler view: aBindedView\x0a\x09\x22The custom handler to bind on this controller is reacting\x22\x0a\x09\x0a\x09\x22no-op\x22",
 messageSends: [],
 referencedClasses: []
 }),
@@ -226,7 +226,112 @@ referencedClasses: ["BindingController"]
 globals.BindingController.klass);
 
 
-smalltalk.addClass('IteratedController', globals.BindingController, [], 'Flow-Binding');
+smalltalk.addClass('IteratedController', globals.BindingController, ['itemControllerClass', 'newItemControllerBlock'], 'Flow-Binding');
 globals.IteratedController.comment="##IteratedController\x0aLike ListController except it relies on rivets.js to iterate  models' presentation.\x0a\x0aIt's rivets who triggers the creation, maintenance and destruction of the (sub)controllers of this controller.\x0a\x0a[This is how you use it in the template/view](http://rivetsjs.com/docs/reference/#each-[item])";
+smalltalk.addMethod(
+smalltalk.method({
+selector: "itemControllerClass",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+var $1;
+$1=self["@itemControllerClass"];
+return $1;
+},
+args: [],
+source: "itemControllerClass\x0a\x0a\x09^ itemControllerClass",
+messageSends: [],
+referencedClasses: []
+}),
+globals.IteratedController);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "itemControllerClass:",
+protocol: 'accessing',
+fn: function (aBlock){
+var self=this;
+self["@itemControllerClass"]=aBlock;
+return self},
+args: ["aBlock"],
+source: "itemControllerClass: aBlock\x0a\x0a\x09itemControllerClass := aBlock",
+messageSends: [],
+referencedClasses: []
+}),
+globals.IteratedController);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "newItemControllerBlock",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+var $1;
+$1=self["@newItemControllerBlock"];
+return $1;
+},
+args: [],
+source: "newItemControllerBlock\x0a\x0a\x09^ newItemControllerBlock",
+messageSends: [],
+referencedClasses: []
+}),
+globals.IteratedController);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "newItemControllerBlock:",
+protocol: 'accessing',
+fn: function (aBlock){
+var self=this;
+self["@newItemControllerBlock"]=aBlock;
+return self},
+args: ["aBlock"],
+source: "newItemControllerBlock: aBlock\x0a\x0a\x09newItemControllerBlock := aBlock",
+messageSends: [],
+referencedClasses: []
+}),
+globals.IteratedController);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "newItemControllerFor:",
+protocol: 'actions',
+fn: function (anItem){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $2,$1;
+$2=_st(self["@itemControllerClass"])._isNil();
+if(smalltalk.assert($2)){
+$1=_st(self._newItemControllerBlock())._value_(anItem);
+} else {
+$1=_st(self["@itemControllerClass"])._for_on_appendingTo_(anItem,self,self._view());
+};
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"newItemControllerFor:",{anItem:anItem},globals.IteratedController)})},
+args: ["anItem"],
+source: "newItemControllerFor: anItem\x0a\x0a\x09^ itemControllerClass isNil\x0a\x09\x09ifFalse:[ itemControllerClass \x0a\x09\x09\x09\x09\x09for: anItem \x0a\x09\x09\x09\x09\x09on: self \x0a\x09\x09\x09\x09\x09appendingTo: self view ] \x0a\x09\x09ifTrue:[ self newItemControllerBlock value: anItem ]\x0a\x0a\x09 ",
+messageSends: ["ifFalse:ifTrue:", "isNil", "for:on:appendingTo:", "view", "value:", "newItemControllerBlock"],
+referencedClasses: []
+}),
+globals.IteratedController);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "onBinded:event:handler:view:",
+protocol: 'reactions',
+fn: function (aTarget,anEvent,aHandler,aBindedView){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+_st(console)._log_(aBindedView);
+($ctx1.supercall = true, globals.IteratedController.superclass.fn.prototype._onBinded_event_handler_view_.apply(_st(self), [aTarget,anEvent,aHandler,aBindedView]));
+$ctx1.supercall = false;
+return self}, function($ctx1) {$ctx1.fill(self,"onBinded:event:handler:view:",{aTarget:aTarget,anEvent:anEvent,aHandler:aHandler,aBindedView:aBindedView},globals.IteratedController)})},
+args: ["aTarget", "anEvent", "aHandler", "aBindedView"],
+source: "onBinded: aTarget event: anEvent handler: aHandler view: aBindedView\x0a\x09\x22The custom handler to bind on this controller is reacting\x22\x0a\x0a\x09console log: aBindedView.\x0a\x0a\x09super onBinded: aTarget event: anEvent handler: aHandler view: aBindedView.\x0a\x09\x0a\x09\x0a\x09\x22self ifAbsentAt: \x22",
+messageSends: ["log:", "onBinded:event:handler:view:"],
+referencedClasses: []
+}),
+globals.IteratedController);
+
 
 });

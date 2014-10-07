@@ -258,12 +258,6 @@ ListControllers know how to deal with lists of things. It needs to know how you 
 
 !ListController methodsFor: 'accessing'!
 
-getItems
-	"Answers the items using the custom getItemsBlock on its model"
-	
-	^ self getItemsBlock value: model
-!
-
 getItemsBlock
 
 	^ getItemsBlock
@@ -305,6 +299,21 @@ newItemControllerBlock: aBlock
 	newItemControllerBlock := aBlock
 !
 
+parentElement: anHtmlElement
+	"Sets the parent elment for the list.
+	It can be anything but, in the case of lists, the parent element usually is a <ul>
+	The thing is to treat it like an <ul> full of <li> children."
+	parentElement := view := anHtmlElement
+! !
+
+!ListController methodsFor: 'actions'!
+
+getItems
+	"Answers the items using the custom getItemsBlock on its model"
+	
+	^ self getItemsBlock value: model
+!
+
 newItemControllerFor: anItem
 
 	^ itemControllerClass isNil
@@ -314,15 +323,6 @@ newItemControllerFor: anItem
 					appendingTo: self view ] 
 		ifTrue:[ self newItemControllerBlock value: anItem ]
 !
-
-parentElement: anHtmlElement
-	"Sets the parent elment for the list.
-	It can be anything but, in the case of lists, the parent element usually is a <ul>
-	The thing is to treat it like an <ul> full of <li> children."
-	parentElement := view := anHtmlElement
-! !
-
-!ListController methodsFor: 'actions'!
 
 refresh
 	"Makes sure all the items in the model have its own controller.
@@ -334,7 +334,7 @@ refresh
 	"Remove absences"
 	self controllers keys 
 		with: self getItems 
-		do:[ :e | (self getItems includes: e) ifFalse:[
+		do:[ :e | (self getItems anySatisfy:[ :each | each == e]) ifFalse:[
 					self removeControllerAt: e ] ].
 	
 	"Add novelties"

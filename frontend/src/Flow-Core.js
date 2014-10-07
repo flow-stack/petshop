@@ -618,7 +618,7 @@ globals.ListController.comment="## ListController\x0a\x0aListControllers know ho
 smalltalk.addMethod(
 smalltalk.method({
 selector: "getItems",
-protocol: 'accessing',
+protocol: 'actions',
 fn: function (){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
@@ -764,7 +764,7 @@ globals.ListController);
 smalltalk.addMethod(
 smalltalk.method({
 selector: "newItemControllerFor:",
-protocol: 'accessing',
+protocol: 'actions',
 fn: function (anItem){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
@@ -816,7 +816,10 @@ _st($1)._with_do_($2,(function(e){
 return smalltalk.withContext(function($ctx2) {
 $4=self._getItems();
 $ctx2.sendIdx["getItems"]=2;
-$3=_st($4)._includes_(e);
+$3=_st($4)._anySatisfy_((function(each){
+return smalltalk.withContext(function($ctx3) {
+return _st(each).__eq_eq(e);
+}, function($ctx3) {$ctx3.fillBlock({each:each},$ctx2,2)})}));
 if(! smalltalk.assert($3)){
 return self._removeControllerAt_(e);
 };
@@ -828,18 +831,18 @@ self._controllerAt_ifAbsentPut_(e,(function(){
 return smalltalk.withContext(function($ctx3) {
 added=self._newItemControllerFor_(e);
 return added;
-}, function($ctx3) {$ctx3.fillBlock({},$ctx2,4)})}));
+}, function($ctx3) {$ctx3.fillBlock({},$ctx2,5)})}));
 $5=added;
 if(($receiver = $5) == null || $receiver.isNil){
 return $5;
 } else {
 return _st(added)._render();
 };
-}, function($ctx2) {$ctx2.fillBlock({e:e,added:added},$ctx1,3)})}));
+}, function($ctx2) {$ctx2.fillBlock({e:e,added:added},$ctx1,4)})}));
 return self}, function($ctx1) {$ctx1.fill(self,"refresh",{items:items},globals.ListController)})},
 args: [],
-source: "refresh\x0a\x09\x22Makes sure all the items in the model have its own controller.\x0a\x09Nothing less and nothing more. So it will add lazily \x0a\x09the missing controllers and remove those who's model isn't present.\x22\x0a\x09\x0a\x09| items |\x0a\x09\x0a\x09\x22Remove absences\x22\x0a\x09self controllers keys \x0a\x09\x09with: self getItems \x0a\x09\x09do:[ :e | (self getItems includes: e) ifFalse:[\x0a\x09\x09\x09\x09\x09self removeControllerAt: e ] ].\x0a\x09\x0a\x09\x22Add novelties\x22\x0a\x09self getItems do:[ :e | | added |\x0a\x09\x09self controllerAt: e ifAbsentPut:[ \x0a\x09\x09\x09added := self newItemControllerFor: e ].\x0a\x09\x09added ifNotNil:[ \x0a\x09\x09\x09added render ] ]\x0a\x09",
-messageSends: ["with:do:", "keys", "controllers", "getItems", "ifFalse:", "includes:", "removeControllerAt:", "do:", "controllerAt:ifAbsentPut:", "newItemControllerFor:", "ifNotNil:", "render"],
+source: "refresh\x0a\x09\x22Makes sure all the items in the model have its own controller.\x0a\x09Nothing less and nothing more. So it will add lazily \x0a\x09the missing controllers and remove those who's model isn't present.\x22\x0a\x09\x0a\x09| items |\x0a\x09\x0a\x09\x22Remove absences\x22\x0a\x09self controllers keys \x0a\x09\x09with: self getItems \x0a\x09\x09do:[ :e | (self getItems anySatisfy:[ :each | each == e]) ifFalse:[\x0a\x09\x09\x09\x09\x09self removeControllerAt: e ] ].\x0a\x09\x0a\x09\x22Add novelties\x22\x0a\x09self getItems do:[ :e | | added |\x0a\x09\x09self controllerAt: e ifAbsentPut:[ \x0a\x09\x09\x09added := self newItemControllerFor: e ].\x0a\x09\x09added ifNotNil:[ \x0a\x09\x09\x09added render ] ]\x0a\x09",
+messageSends: ["with:do:", "keys", "controllers", "getItems", "ifFalse:", "anySatisfy:", "==", "removeControllerAt:", "do:", "controllerAt:ifAbsentPut:", "newItemControllerFor:", "ifNotNil:", "render"],
 referencedClasses: []
 }),
 globals.ListController);
