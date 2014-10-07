@@ -144,6 +144,24 @@ newItemControllerBlock: aBlock
 
 !IteratedController methodsFor: 'actions'!
 
+configure
+Transcript open.
+	self getConfiguration inspect.
+	
+	super configure.
+!
+
+getConfiguration
+
+	^ super getConfiguration
+		"at: 'adapter' put: ( #{
+    		#subscribe -> [ :obj :keypath :callback | obj on: 'change:',keypath do: callback].
+    		#unsubscribe -> [ :obj :keypath :callback | obj off: 'change:',keypath do: callback].
+    		#read -> [ :obj :keypath | obj get keypath ].
+    		#publish -> [ :obj :keypath :value | obj set: keypath val: value ]});"
+		yourself
+!
+
 newItemControllerFor: anItem
 
 	^ itemControllerClass isNil
@@ -159,7 +177,7 @@ newItemControllerFor: anItem
 onBinded: aTarget event: anEvent handler: aHandler view: aBindedView
 	"The custom handler to bind on this controller is reacting"
 
-	console log: aBindedView.
+	console warn: aHandler.
 
 	super onBinded: aTarget event: anEvent handler: aHandler view: aBindedView.
 	

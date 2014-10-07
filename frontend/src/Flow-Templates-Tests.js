@@ -372,6 +372,25 @@ globals.StuffUsingEachController.klass);
 smalltalk.addClass('StuffComposedUsingEachController', globals.StuffUsingEachController, [], 'Flow-Templates-Tests');
 smalltalk.addMethod(
 smalltalk.method({
+selector: "onBinded:event:handler:view:",
+protocol: 'reactions',
+fn: function (aTarget,anEvent,aHandler,aBindedView){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+_st(console)._info_(aHandler);
+_st(console)._log_(aBindedView);
+($ctx1.supercall = true, globals.StuffComposedUsingEachController.superclass.fn.prototype._onBinded_event_handler_view_.apply(_st(self), [aTarget,anEvent,aHandler,aBindedView]));
+$ctx1.supercall = false;
+return self}, function($ctx1) {$ctx1.fill(self,"onBinded:event:handler:view:",{aTarget:aTarget,anEvent:anEvent,aHandler:aHandler,aBindedView:aBindedView},globals.StuffComposedUsingEachController)})},
+args: ["aTarget", "anEvent", "aHandler", "aBindedView"],
+source: "onBinded: aTarget event: anEvent handler: aHandler view: aBindedView\x0a\x09\x22The custom handler to bind on this controller is reacting\x22\x0a\x0a\x09console info: aHandler.\x0a\x09console log: aBindedView.\x0a\x0a\x09super onBinded: aTarget event: anEvent handler: aHandler view: aBindedView.\x0a\x09\x0a\x09\x0a\x09\x22self ifAbsentAt: \x22",
+messageSends: ["info:", "log:", "onBinded:event:handler:view:"],
+referencedClasses: []
+}),
+globals.StuffComposedUsingEachController);
+
+smalltalk.addMethod(
+smalltalk.method({
 selector: "onTemplate:",
 protocol: 'reactions',
 fn: function (data){
@@ -391,7 +410,7 @@ return $2;
 }, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)})}));
 return self}, function($ctx1) {$ctx1.fill(self,"onTemplate:",{data:data},globals.StuffComposedUsingEachController)})},
 args: ["data"],
-source: "onTemplate: data\x0a\x0a\x09super onTemplate: data.\x0a\x09\x09\x0a\x09self ifAbsentAt: 'things' \x0a\x09\x09put: [\x0a\x09\x09\x09\x22Lazy creation of the iterated controller for the things in stuff\x22\x0a\x09\x09\x09(IteratedController \x0a\x09\x09\x09\x09for: model \x0a\x09\x09\x09\x09on: self\x0a\x09\x09\x09\x09appendingTo: '.things' asJQuery)\x0a\x09\x09\x09\x09\x09\x22getItemsBlock: [:m| m things ];\x22\x0a\x09\x09\x09\x09\x09itemControllerClass: ThingController;\x0a\x09\x09\x09\x09\x09yourself]\x0a\x09",
+source: "onTemplate: data\x0a\x0a\x09super onTemplate: data.\x0a\x09\x09\x0a\x09self ifAbsentAt: 'things' \x0a\x09\x09put: [\x0a\x09\x09\x09\x22Lazy creation of the iterated controller for the things in stuff\x22\x0a\x09\x09\x09(IteratedController \x0a\x09\x09\x09\x09for: model \x0a\x09\x09\x09\x09on: self\x0a\x09\x09\x09\x09appendingTo: '.things' asJQuery)\x0a\x09\x09\x09\x09\x09itemControllerClass: ThingController;\x0a\x09\x09\x09\x09\x09yourself].\x0a\x0a\x09\x22(self controllerAt: 'things') refresh\x22\x0a\x09",
 messageSends: ["onTemplate:", "ifAbsentAt:put:", "itemControllerClass:", "for:on:appendingTo:", "asJQuery", "yourself"],
 referencedClasses: ["IteratedController", "ThingController"]
 }),

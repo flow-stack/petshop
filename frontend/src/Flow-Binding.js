@@ -230,6 +230,46 @@ smalltalk.addClass('IteratedController', globals.BindingController, ['itemContro
 globals.IteratedController.comment="##IteratedController\x0aLike ListController except it relies on rivets.js to iterate  models' presentation.\x0a\x0aIt's rivets who triggers the creation, maintenance and destruction of the (sub)controllers of this controller.\x0a\x0a[This is how you use it in the template/view](http://rivetsjs.com/docs/reference/#each-[item])";
 smalltalk.addMethod(
 smalltalk.method({
+selector: "configure",
+protocol: 'actions',
+fn: function (){
+var self=this;
+function $Transcript(){return globals.Transcript||(typeof Transcript=="undefined"?nil:Transcript)}
+return smalltalk.withContext(function($ctx1) { 
+_st($Transcript())._open();
+_st(self._getConfiguration())._inspect();
+($ctx1.supercall = true, globals.IteratedController.superclass.fn.prototype._configure.apply(_st(self), []));
+$ctx1.supercall = false;
+return self}, function($ctx1) {$ctx1.fill(self,"configure",{},globals.IteratedController)})},
+args: [],
+source: "configure\x0aTranscript open.\x0a\x09self getConfiguration inspect.\x0a\x09\x0a\x09super configure.",
+messageSends: ["open", "inspect", "getConfiguration", "configure"],
+referencedClasses: ["Transcript"]
+}),
+globals.IteratedController);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "getConfiguration",
+protocol: 'actions',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $2,$1;
+$2=($ctx1.supercall = true, globals.IteratedController.superclass.fn.prototype._getConfiguration.apply(_st(self), []));
+$ctx1.supercall = false;
+$1=_st($2)._yourself();
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"getConfiguration",{},globals.IteratedController)})},
+args: [],
+source: "getConfiguration\x0a\x0a\x09^ super getConfiguration\x0a\x09\x09\x22at: 'adapter' put: ( #{\x0a    \x09\x09#subscribe -> [ :obj :keypath :callback | obj on: 'change:',keypath do: callback].\x0a    \x09\x09#unsubscribe -> [ :obj :keypath :callback | obj off: 'change:',keypath do: callback].\x0a    \x09\x09#read -> [ :obj :keypath | obj get keypath ].\x0a    \x09\x09#publish -> [ :obj :keypath :value | obj set: keypath val: value ]});\x22\x0a\x09\x09yourself",
+messageSends: ["yourself", "getConfiguration"],
+referencedClasses: []
+}),
+globals.IteratedController);
+
+smalltalk.addMethod(
+smalltalk.method({
 selector: "itemControllerClass",
 protocol: 'accessing',
 fn: function (){
@@ -322,13 +362,13 @@ protocol: 'reactions',
 fn: function (aTarget,anEvent,aHandler,aBindedView){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-_st(console)._log_(aBindedView);
+_st(console)._warn_(aHandler);
 ($ctx1.supercall = true, globals.IteratedController.superclass.fn.prototype._onBinded_event_handler_view_.apply(_st(self), [aTarget,anEvent,aHandler,aBindedView]));
 $ctx1.supercall = false;
 return self}, function($ctx1) {$ctx1.fill(self,"onBinded:event:handler:view:",{aTarget:aTarget,anEvent:anEvent,aHandler:aHandler,aBindedView:aBindedView},globals.IteratedController)})},
 args: ["aTarget", "anEvent", "aHandler", "aBindedView"],
-source: "onBinded: aTarget event: anEvent handler: aHandler view: aBindedView\x0a\x09\x22The custom handler to bind on this controller is reacting\x22\x0a\x0a\x09console log: aBindedView.\x0a\x0a\x09super onBinded: aTarget event: anEvent handler: aHandler view: aBindedView.\x0a\x09\x0a\x09\x0a\x09\x22self ifAbsentAt: \x22",
-messageSends: ["log:", "onBinded:event:handler:view:"],
+source: "onBinded: aTarget event: anEvent handler: aHandler view: aBindedView\x0a\x09\x22The custom handler to bind on this controller is reacting\x22\x0a\x0a\x09console warn: aHandler.\x0a\x0a\x09super onBinded: aTarget event: anEvent handler: aHandler view: aBindedView.\x0a\x09\x0a\x09\x0a\x09\x22self ifAbsentAt: \x22",
+messageSends: ["warn:", "onBinded:event:handler:view:"],
 referencedClasses: []
 }),
 globals.IteratedController);

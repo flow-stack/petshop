@@ -185,6 +185,18 @@ StuffUsingEachController subclass: #StuffComposedUsingEachController
 
 !StuffComposedUsingEachController methodsFor: 'reactions'!
 
+onBinded: aTarget event: anEvent handler: aHandler view: aBindedView
+	"The custom handler to bind on this controller is reacting"
+
+	console info: aHandler.
+	console log: aBindedView.
+
+	super onBinded: aTarget event: anEvent handler: aHandler view: aBindedView.
+	
+	
+	"self ifAbsentAt: "
+!
+
 onTemplate: data
 
 	super onTemplate: data.
@@ -196,9 +208,10 @@ onTemplate: data
 				for: model 
 				on: self
 				appendingTo: '.things' asJQuery)
-					"getItemsBlock: [:m| m things ];"
 					itemControllerClass: ThingController;
-					yourself]
+					yourself].
+
+	"(self controllerAt: 'things') refresh"
 ! !
 
 BindingController subclass: #ThingController
