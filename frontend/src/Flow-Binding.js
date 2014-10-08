@@ -258,6 +258,10 @@ $2=($ctx1.supercall = true, globals.IteratedController.superclass.fn.prototype._
 $ctx1.supercall = false;
 _st($2)._at_put_("adapter",globals.HashedCollection._newFromPairs_(["subscribe",(function(obj,keypath,callback){
 return smalltalk.withContext(function($ctx2) {
+_st(console)._log_("subscribed and observing on change:");
+$ctx2.sendIdx["log:"]=1;
+_st(console)._log_(obj);
+$ctx2.sendIdx["log:"]=2;
 $3="change:".__comma(keypath);
 $ctx2.sendIdx[","]=1;
 return _st(obj)._on_do_($3,callback);
@@ -266,9 +270,12 @@ return smalltalk.withContext(function($ctx2) {
 return _st(obj)._off_do_("change:".__comma(keypath),callback);
 }, function($ctx2) {$ctx2.fillBlock({obj:obj,keypath:keypath,callback:callback},$ctx1,2)})}),"read",(function(obj,keypath){
 return smalltalk.withContext(function($ctx2) {
+_st(console)._log_("on read");
+$ctx2.sendIdx["log:"]=3;
 return _st(_st(obj)._get())._keypath();
 }, function($ctx2) {$ctx2.fillBlock({obj:obj,keypath:keypath},$ctx1,3)})}),"publish",(function(obj,keypath,value){
 return smalltalk.withContext(function($ctx2) {
+_st(console)._log_("on publish");
 return _st(obj)._set_val_(keypath,value);
 }, function($ctx2) {$ctx2.fillBlock({obj:obj,keypath:keypath,value:value},$ctx1,4)})})]));
 $4=_st($2)._yourself();
@@ -276,8 +283,8 @@ $1=$4;
 return $1;
 }, function($ctx1) {$ctx1.fill(self,"getConfiguration",{},globals.IteratedController)})},
 args: [],
-source: "getConfiguration\x0a\x0a\x09^ super getConfiguration\x0a\x09\x09at: 'adapter' put: ( #{\x0a    \x09\x09#subscribe -> [ :obj :keypath :callback | \x0a\x09\x09\x09\x09obj on: 'change:',keypath do: callback ].\x0a    \x09\x09#unsubscribe -> [ :obj :keypath :callback | \x0a\x09\x09\x09\x09obj off: 'change:',keypath do: callback ].\x0a    \x09\x09#read -> [ :obj :keypath | obj get keypath ].\x0a    \x09\x09#publish -> [ :obj :keypath :value | obj set: keypath val: value ]});\x0a\x09\x09yourself",
-messageSends: ["at:put:", "getConfiguration", "on:do:", ",", "off:do:", "keypath", "get", "set:val:", "yourself"],
+source: "getConfiguration\x0a\x0a\x09^ super getConfiguration\x0a\x09\x09at: 'adapter' put: ( #{\x0a    \x09\x09#subscribe -> [ :obj :keypath :callback | \x0a\x09\x09\x09\x09console log: 'subscribed and observing on change:'.\x0a\x09\x09\x09\x09console log: obj.\x0a\x09\x09\x09\x09obj on: 'change:',keypath do: callback ].\x0a    \x09\x09#unsubscribe -> [ :obj :keypath :callback | \x0a\x09\x09\x09\x09obj off: 'change:',keypath do: callback ].\x0a    \x09\x09#read -> [ :obj :keypath | \x0a\x09\x09\x09\x09console log: 'on read'.\x0a\x09\x09\x09\x09obj get keypath ].\x0a    \x09\x09#publish -> [ :obj :keypath :value | \x0a\x09\x09\x09\x09console log: 'on publish'.\x0a\x09\x09\x09\x09obj set: keypath val: value ]});\x0a\x09\x09yourself",
+messageSends: ["at:put:", "getConfiguration", "log:", "on:do:", ",", "off:do:", "keypath", "get", "set:val:", "yourself"],
 referencedClasses: []
 }),
 globals.IteratedController);
@@ -377,14 +384,12 @@ protocol: 'reactions',
 fn: function (aTarget,anEvent,aHandler,aBindedView){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-_st(console)._warn_(aHandler);
-_st(console)._info_(aBindedView);
 ($ctx1.supercall = true, globals.IteratedController.superclass.fn.prototype._onBinded_event_handler_view_.apply(_st(self), [aTarget,anEvent,aHandler,aBindedView]));
 $ctx1.supercall = false;
 return self}, function($ctx1) {$ctx1.fill(self,"onBinded:event:handler:view:",{aTarget:aTarget,anEvent:anEvent,aHandler:aHandler,aBindedView:aBindedView},globals.IteratedController)})},
 args: ["aTarget", "anEvent", "aHandler", "aBindedView"],
-source: "onBinded: aTarget event: anEvent handler: aHandler view: aBindedView\x0a\x09\x22The custom handler to bind on this controller is reacting\x22\x0a\x0a\x09console warn: aHandler.\x0a\x09console info: aBindedView.\x0a\x0a\x09super onBinded: aTarget event: anEvent handler: aHandler view: aBindedView.\x0a\x09\x0a\x09\x0a\x09\x22self ifAbsentAt: \x22",
-messageSends: ["warn:", "info:", "onBinded:event:handler:view:"],
+source: "onBinded: aTarget event: anEvent handler: aHandler view: aBindedView\x0a\x09\x22The custom handler to bind on this controller is reacting\x22\x0a\x0a\x09super onBinded: aTarget event: anEvent handler: aHandler view: aBindedView.\x0a\x09\x0a\x09",
+messageSends: ["onBinded:event:handler:view:"],
 referencedClasses: []
 }),
 globals.IteratedController);

@@ -164,11 +164,17 @@ getConfiguration
 	^ super getConfiguration
 		at: 'adapter' put: ( #{
     		#subscribe -> [ :obj :keypath :callback | 
+				console log: 'subscribed and observing on change:'.
+				console log: obj.
 				obj on: 'change:',keypath do: callback ].
     		#unsubscribe -> [ :obj :keypath :callback | 
 				obj off: 'change:',keypath do: callback ].
-    		#read -> [ :obj :keypath | obj get keypath ].
-    		#publish -> [ :obj :keypath :value | obj set: keypath val: value ]});
+    		#read -> [ :obj :keypath | 
+				console log: 'on read'.
+				obj get keypath ].
+    		#publish -> [ :obj :keypath :value | 
+				console log: 'on publish'.
+				obj set: keypath val: value ]});
 		yourself
 !
 
@@ -196,12 +202,6 @@ renderOn: html
 onBinded: aTarget event: anEvent handler: aHandler view: aBindedView
 	"The custom handler to bind on this controller is reacting"
 
-	console warn: aHandler.
-	console info: aBindedView.
-
 	super onBinded: aTarget event: anEvent handler: aHandler view: aBindedView.
-	
-	
-	"self ifAbsentAt: "
 ! !
 
