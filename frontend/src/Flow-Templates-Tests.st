@@ -30,7 +30,7 @@ inspiration
 addThing
 	
 	self model things add: self newThing.
-	"self refresh."
+	self refresh.
 !
 
 newThing
@@ -188,8 +188,8 @@ StuffUsingEachController subclass: #StuffComposedUsingEachController
 onBinded: aTarget event: anEvent handler: aHandler view: aBindedView
 	"The custom handler to bind on this controller is reacting"
 
-	console info: aHandler.
-	console log: aBindedView.
+	"console info: aHandler.
+	console log: aBindedView."
 
 	super onBinded: aTarget event: anEvent handler: aHandler view: aBindedView.
 	
@@ -211,7 +211,7 @@ onTemplate: data
 					itemControllerClass: ThingController;
 					yourself].
 
-	"(self controllerAt: 'things') refresh"
+	(self controllerAt: 'things') render
 ! !
 
 BindingController subclass: #ThingController

@@ -58,6 +58,7 @@ getHandler
 	screwing the self instance of this controller"
 
 	<return function( target, event, binding, view ){
+
 		self._onBinded_event_handler_view_( target, event, binding, view );
 		this.call(binding.model);
 	}>
@@ -140,13 +141,20 @@ newItemControllerBlock
 newItemControllerBlock: aBlock
 
 	newItemControllerBlock := aBlock
+!
+
+parentElement: anHtmlElement
+	"Sets the parent elment for the list.
+	It can be anything but, in the case of lists, the parent element usually is a <ul>
+	The thing is to treat it like an <ul> full of <li> children."
+	parentElement := view := anHtmlElement
 ! !
 
 !IteratedController methodsFor: 'actions'!
 
 configure
-Transcript open.
-	self getConfiguration inspect.
+"Transcript open.
+	self getConfiguration inspect."
 	
 	super configure.
 !
@@ -154,22 +162,33 @@ Transcript open.
 getConfiguration
 
 	^ super getConfiguration
-		"at: 'adapter' put: ( #{
-    		#subscribe -> [ :obj :keypath :callback | obj on: 'change:',keypath do: callback].
-    		#unsubscribe -> [ :obj :keypath :callback | obj off: 'change:',keypath do: callback].
+		at: 'adapter' put: ( #{
+    		#subscribe -> [ :obj :keypath :callback | 
+				obj on: 'change:',keypath do: callback ].
+    		#unsubscribe -> [ :obj :keypath :callback | 
+				obj off: 'change:',keypath do: callback ].
     		#read -> [ :obj :keypath | obj get keypath ].
-    		#publish -> [ :obj :keypath :value | obj set: keypath val: value ]});"
+    		#publish -> [ :obj :keypath :value | obj set: keypath val: value ]});
 		yourself
 !
 
 newItemControllerFor: anItem
-
+self halt.
 	^ itemControllerClass isNil
 		ifFalse:[ itemControllerClass 
 					for: anItem 
 					on: self 
 					appendingTo: self view ] 
 		ifTrue:[ self newItemControllerBlock value: anItem ]
+!
+
+renderOn: html
+
+	console log: 'rendering Iterated..'.
+
+	self configure.
+
+	self bind.
 ! !
 
 !IteratedController methodsFor: 'reactions'!
@@ -178,6 +197,7 @@ onBinded: aTarget event: anEvent handler: aHandler view: aBindedView
 	"The custom handler to bind on this controller is reacting"
 
 	console warn: aHandler.
+	console info: aBindedView.
 
 	super onBinded: aTarget event: anEvent handler: aHandler view: aBindedView.
 	

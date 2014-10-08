@@ -264,19 +264,10 @@ selector: "onAboutToRender",
 protocol: 'reactions',
 fn: function (){
 var self=this;
-return smalltalk.withContext(function($ctx1) { 
-var $1,$receiver;
-$1=self._parentElement();
-$ctx1.sendIdx["parentElement"]=1;
-if(($receiver = $1) == null || $receiver.isNil){
-$1;
-} else {
-_st(self._parentElement())._empty();
-};
-return self}, function($ctx1) {$ctx1.fill(self,"onAboutToRender",{},globals.Controller)})},
+return self},
 args: [],
-source: "onAboutToRender\x0a\x09\x22This controller is just about to be rendered.\x22\x0a\x0a\x09\x22Empty the contents of the root element of this controller.\x0a\x09This would work as long as the view of this controller is the\x0a\x09only thing supossed to be child in that element\x22\x0a\x09self parentElement ifNotNil:[\x0a\x09\x09self parentElement empty ].",
-messageSends: ["ifNotNil:", "parentElement", "empty"],
+source: "onAboutToRender\x0a\x09\x22This controller is just about to be rendered.\x22\x0a\x0a\x09\x22Empty the contents of the root element of this controller.\x0a\x09This would work as long as the view of this controller is the\x0a\x09only thing supossed to be child in that element\x22\x0a\x0a\x09\x22self parentElement ifNotNil:[\x0a\x09\x09self parentElement empty ].\x22",
+messageSends: [],
 referencedClasses: []
 }),
 globals.Controller);
