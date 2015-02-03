@@ -1,7 +1,7 @@
-Smalltalk createPackage: 'App-Tests'!
-TestCase subclass: #AppTest
+Smalltalk createPackage: 'PetShop-Tests'!
+TestCase subclass: #PetShopTest
 	instanceVariableNames: ''
-	package: 'App-Tests'!
-!AppTest commentStamp!
+	package: 'PetShop-Tests'!
+!PetShopTest commentStamp!
 Nicely tested App!!!
 

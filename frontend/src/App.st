@@ -1,16 +1,16 @@
-Smalltalk createPackage: 'App'!
-FlowAppController subclass: #AppController
+Smalltalk createPackage: 'PetShop'!
+TemplateController subclass: #PetShopController
 	instanceVariableNames: ''
-	package: 'App'!
-!AppController commentStamp!
+	package: 'PetShop'!
+!PetShopController commentStamp!
 ##AppController
 
 The AppController is the main/root controller of your flow-based application.!
 
-!AppController methodsFor: 'reactions'!
+!PetShopController methodsFor: 'reactions'!
 
 onOpen
-	"All is loaded, ready to rock!!"
+	"All is loaded, ready to pet!!"
 	
 	super onOpen.
 	
@@ -18,25 +18,29 @@ onOpen
 	
 	"do this
 	and
-	that"
+	that..
+	
+	also this"
 
+	"Publish some local objects to be reached from server"
 	self session api ws
-		publish: app at: 'app';
+		publish: Flow app at: 'app';
 		publish: Transcript current at: 'Transcript';
 		publish: console at: 'console';
 		publish: [ :sent | sent ] at: 'echo';
 		publish: [ :ping | #pong ] at: 'ping';		
 		publish: [ :a :b | a + b ] at: 'sum';	
 		yourself
-!
+! !
 
-tellMe
+!PetShopController class methodsFor: 'as yet unclassified'!
 
-	^ 'again how cool this is'
-!
-
-you
-
-	^ self
+isValidFor: anURI
+	"Answers true if this controller is the right route for anURI"
+	
+	^ self isAbstract not and:[
+	anURI isEmpty or:[
+	anURI = '/' or:[
+	anURI = '/#/' ] ] ]
 ! !
 

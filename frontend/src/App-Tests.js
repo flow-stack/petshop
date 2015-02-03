@@ -1,9 +1,6 @@
-define("app/App-Tests", ["amber/boot", "amber_core/SUnit"], function($boot){
-var smalltalk=$boot.vm,nil=$boot.nil,_st=$boot.asReceiver,globals=$boot.globals;
-smalltalk.addPackage('App-Tests');
-smalltalk.packages["App-Tests"].transport = {"type":"amd","amdNamespace":"app"};
-
-smalltalk.addClass('AppTest', globals.TestCase, [], 'App-Tests');
-globals.AppTest.comment="Nicely tested App!";
-
+define("flow-app/App-Tests", ["amber/boot"], function($boot){
+var $core=$boot.api,nil=$boot.nil,$recv=$boot.asReceiver,$globals=$boot.globals;
+$core.addPackage('App-Tests');
+$core.packages["App-Tests"].innerEval = function (expr) { return eval(expr); };
+$core.packages["App-Tests"].transport = {"type":"amd","amdNamespace":"flow-app"};
 });
