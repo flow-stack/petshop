@@ -1,4 +1,96 @@
 Smalltalk createPackage: 'App'!
+Object subclass: #App
+	instanceVariableNames: ''
+	package: 'App'!
+
+App class instanceVariableNames: 'main'!
+
+!App class methodsFor: 'accessing'!
+
+main
+
+	^ main ifNil: [ self initializeMain ]
+! !
+
+!App class methodsFor: 'actions'!
+
+getSession
+
+	^ ShopSession new
+		visitor:  self getVisitor;
+		yourself
+!
+
+getVisitor
+
+	| shopVisitor |
+
+	"The strategy is to have something to model a shop visitor
+	so the controllers can use it and customize somewhow her / his visiting experience.
+	If is not a first timer we will have it stored locally at 'me''
+	and if not, we fallback to a default new model"
+	shopVisitor := ShopVisitor localFindCid: (window localStorage getItem: 'visitor').
+	
+	^ shopVisitor isNil
+		ifTrue:[ ShopVisitor new
+					cart: Cart new;
+					wishList: WishList new;
+					yourself ]
+		ifFalse:[ shopVisitor ]
+!
+
+saveVisitor
+
+	self main session model visitor localSave
+!
+
+setupRouter
+
+	Router rlite
+		add: '' do: [ :r | Router set: '#/home' ];
+		add: '#' do: [ :r | Router set: '#/home' ];
+		add: '#/' do: [ :r | Router set: '#/home' ];
+		add: '/' do: [ :r | Router set: '#/home' ];
+		
+		add: 'home' do: [ :r | App main reset ];
+
+		add: 'orders' do: [ :r | App main showOrders ];
+		add: 'orders/new' do: [ :r | App main showOrder ];
+		add: 'orders/edit' do: [ :r | App main showOrder ];
+		add: 'orders/:id' do: [ :r | Router set: '#/orders/',r params id,'/view' ];	
+		add: 'orders/:id/view' do: [ :r | App main showOrderId: r params id ];	
+
+		add: 'search/:target' do: [ :r | App main showSearchResultsFor: r params target ];
+		
+		yourself
+!
+
+start
+	"Starts the App app"
+
+	Flow app: self; start.
+	window at: #app put: self.
+	
+	self main model: self getSession.
+	self main show done: [ Router processHash ]
+! !
+
+!App class methodsFor: 'initialization'!
+
+initialize
+
+	super initialize.
+	
+	self setupRouter
+!
+
+initializeMain
+
+	^ main := MainController 
+					in: nil
+					appendingTo: '#main-wrapper' asJQuery
+! !
+
 Model subclass: #Cart
 	instanceVariableNames: ''
 	package: 'App'!
@@ -145,58 +237,6 @@ Model subclass: #Footer
 BindingController subclass: #FooterController
 	instanceVariableNames: ''
 	package: 'App'!
-
-Object subclass: #App
-	instanceVariableNames: ''
-	package: 'App'!
-
-!App class methodsFor: 'accessing'!
-
-shopVisitor
-
-	| shopVisitor |
-
-	"The strategy is to have something to model a shop visitor
-	so the controllers can use it and customize somewhow her / his visiting experience.
-	If is not a first timer we will have it stored locally at 'me''
-	and if not, we fallback to a default new model"
-	shopVisitor := 	ShopVisitor localFindId: 'me'.
-	
-	^ shopVisitor isNil
-		ifTrue:[ ShopVisitor new
-					id: 'me';
-					cart: Cart new;
-					wishList: WishList new;
-					yourself ]
-		ifFalse:[ shopVisitor ]
-! !
-
-!App class methodsFor: 'actions'!
-
-publishObjects
-	"Publish some local objects to be reached from backend"
-	
-	Flow session api ws
-		publish: window flow app at: 'app';
-		publish: Transcript current at: 'Transcript';
-		publish: console at: 'console';
-		publish: [ :sent | sent ] at: 'echo';
-		publish: [ :ping | #pong ] at: 'ping';		
-		publish: [ :a :b | a + b ] at: 'sum';	
-		yourself
-!
-
-start
-	"Starts the App app"
-	
-	Flow app: self; start.
-	
-	self publishObjects.
-	
-	Flow session shopVisitor: self shopVisitor.
-	
-	Router refresh
-! !
 
 BindingController subclass: #MainController
 	instanceVariableNames: ''
@@ -387,6 +427,10 @@ onAfterModel
 	
 	self model imageUrl: 'img/products/', self model image
 ! !
+
+Session subclass: #ShopSession
+	instanceVariableNames: ''
+	package: 'App'!
 
 Model subclass: #ShopVisitor
 	instanceVariableNames: ''

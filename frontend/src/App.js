@@ -1,4 +1,4 @@
-define("flow-app/App", ["amber/boot", "amber-mvc/MVC-Core", "amber_core/Kernel-Objects"], function($boot){
+define("flow-app/App", ["amber/boot", "amber_core/Kernel-Objects", "amber-mvc/MVC-Core", "amber-flow/Flow-Core"], function($boot){
 var $core=$boot.api,nil=$boot.nil,$recv=$boot.asReceiver,$globals=$boot.globals;
 $core.addPackage('App');
 $core.packages["App"].innerEval = function (expr) { return eval(expr); };
@@ -6,73 +6,40 @@ $core.packages["App"].transport = {"type":"amd","amdNamespace":"flow-app"};
 
 $core.addClass('App', $globals.Object, [], 'App');
 
+$globals.App.klass.iVarNames = ['main'];
 $core.addMethod(
 $core.method({
-selector: "publishObjects",
+selector: "getSession",
 protocol: 'actions',
 fn: function (){
 var self=this;
-function $Flow(){return $globals.Flow||(typeof Flow=="undefined"?nil:Flow)}
-function $Transcript(){return $globals.Transcript||(typeof Transcript=="undefined"?nil:Transcript)}
+function $ShopSession(){return $globals.ShopSession||(typeof ShopSession=="undefined"?nil:ShopSession)}
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx1) {
 //>>excludeEnd("ctx");
-var $1,$2;
-$1=$recv($recv($recv($Flow())._session())._api())._ws();
-$recv($1)._publish_at_($recv($recv(window)._flow())._app(),"app");
+var $2,$3,$1;
+$2=$recv($ShopSession())._new();
+$recv($2)._visitor_(self._getVisitor());
+$3=$recv($2)._yourself();
+$1=$3;
+return $1;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
-$ctx1.sendIdx["publish:at:"]=1;
-//>>excludeEnd("ctx");
-$recv($1)._publish_at_($recv($Transcript())._current(),"Transcript");
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-$ctx1.sendIdx["publish:at:"]=2;
-//>>excludeEnd("ctx");
-$recv($1)._publish_at_(console,"console");
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-$ctx1.sendIdx["publish:at:"]=3;
-//>>excludeEnd("ctx");
-$recv($1)._publish_at_((function(sent){
-return sent;
-
-}),"echo");
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-$ctx1.sendIdx["publish:at:"]=4;
-//>>excludeEnd("ctx");
-$recv($1)._publish_at_((function(ping){
-return "pong";
-
-}),"ping");
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-$ctx1.sendIdx["publish:at:"]=5;
-//>>excludeEnd("ctx");
-$recv($1)._publish_at_((function(a,b){
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-return $core.withContext(function($ctx2) {
-//>>excludeEnd("ctx");
-return $recv(a).__plus(b);
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-}, function($ctx2) {$ctx2.fillBlock({a:a,b:b},$ctx1,3)});
-//>>excludeEnd("ctx");
-}),"sum");
-$2=$recv($1)._yourself();
-return self;
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-}, function($ctx1) {$ctx1.fill(self,"publishObjects",{},$globals.App.klass)});
+}, function($ctx1) {$ctx1.fill(self,"getSession",{},$globals.App.klass)});
 //>>excludeEnd("ctx");
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: [],
-source: "publishObjects\x0a\x09\x22Publish some local objects to be reached from backend\x22\x0a\x09\x0a\x09Flow session api ws\x0a\x09\x09publish: window flow app at: 'app';\x0a\x09\x09publish: Transcript current at: 'Transcript';\x0a\x09\x09publish: console at: 'console';\x0a\x09\x09publish: [ :sent | sent ] at: 'echo';\x0a\x09\x09publish: [ :ping | #pong ] at: 'ping';\x09\x09\x0a\x09\x09publish: [ :a :b | a + b ] at: 'sum';\x09\x0a\x09\x09yourself",
-referencedClasses: ["Flow", "Transcript"],
+source: "getSession\x0a\x0a\x09^ ShopSession new\x0a\x09\x09visitor:  self getVisitor;\x0a\x09\x09yourself",
+referencedClasses: ["ShopSession"],
 //>>excludeEnd("ide");
-messageSends: ["publish:at:", "ws", "api", "session", "app", "flow", "current", "+", "yourself"]
+messageSends: ["visitor:", "new", "getVisitor", "yourself"]
 }),
 $globals.App.klass);
 
 $core.addMethod(
 $core.method({
-selector: "shopVisitor",
-protocol: 'accessing',
+selector: "getVisitor",
+protocol: 'actions',
 fn: function (){
 var self=this;
 var shopVisitor;
@@ -83,14 +50,13 @@ function $WishList(){return $globals.WishList||(typeof WishList=="undefined"?nil
 return $core.withContext(function($ctx1) {
 //>>excludeEnd("ctx");
 var $2,$3,$4,$5,$6,$1;
-shopVisitor=$recv($ShopVisitor())._localFindId_("me");
+shopVisitor=$recv($ShopVisitor())._localFindCid_($recv($recv(window)._localStorage())._getItem_("visitor"));
 $2=$recv(shopVisitor)._isNil();
 if($core.assert($2)){
 $3=$recv($ShopVisitor())._new();
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 $ctx1.sendIdx["new"]=1;
 //>>excludeEnd("ctx");
-$recv($3)._id_("me");
 $4=$3;
 $5=$recv($Cart())._new();
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
@@ -105,15 +71,338 @@ $1=shopVisitor;
 };
 return $1;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
-}, function($ctx1) {$ctx1.fill(self,"shopVisitor",{shopVisitor:shopVisitor},$globals.App.klass)});
+}, function($ctx1) {$ctx1.fill(self,"getVisitor",{shopVisitor:shopVisitor},$globals.App.klass)});
 //>>excludeEnd("ctx");
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: [],
-source: "shopVisitor\x0a\x0a\x09| shopVisitor |\x0a\x0a\x09\x22The strategy is to have something to model a shop visitor\x0a\x09so the controllers can use it and customize somewhow her / his visiting experience.\x0a\x09If is not a first timer we will have it stored locally at 'me''\x0a\x09and if not, we fallback to a default new model\x22\x0a\x09shopVisitor := \x09ShopVisitor localFindId: 'me'.\x0a\x09\x0a\x09^ shopVisitor isNil\x0a\x09\x09ifTrue:[ ShopVisitor new\x0a\x09\x09\x09\x09\x09id: 'me';\x0a\x09\x09\x09\x09\x09cart: Cart new;\x0a\x09\x09\x09\x09\x09wishList: WishList new;\x0a\x09\x09\x09\x09\x09yourself ]\x0a\x09\x09ifFalse:[ shopVisitor ]",
+source: "getVisitor\x0a\x0a\x09| shopVisitor |\x0a\x0a\x09\x22The strategy is to have something to model a shop visitor\x0a\x09so the controllers can use it and customize somewhow her / his visiting experience.\x0a\x09If is not a first timer we will have it stored locally at 'me''\x0a\x09and if not, we fallback to a default new model\x22\x0a\x09shopVisitor := ShopVisitor localFindCid: (window localStorage getItem: 'visitor').\x0a\x09\x0a\x09^ shopVisitor isNil\x0a\x09\x09ifTrue:[ ShopVisitor new\x0a\x09\x09\x09\x09\x09cart: Cart new;\x0a\x09\x09\x09\x09\x09wishList: WishList new;\x0a\x09\x09\x09\x09\x09yourself ]\x0a\x09\x09ifFalse:[ shopVisitor ]",
 referencedClasses: ["ShopVisitor", "Cart", "WishList"],
 //>>excludeEnd("ide");
-messageSends: ["localFindId:", "ifTrue:ifFalse:", "isNil", "id:", "new", "cart:", "wishList:", "yourself"]
+messageSends: ["localFindCid:", "getItem:", "localStorage", "ifTrue:ifFalse:", "isNil", "cart:", "new", "wishList:", "yourself"]
+}),
+$globals.App.klass);
+
+$core.addMethod(
+$core.method({
+selector: "initialize",
+protocol: 'initialization',
+fn: function (){
+var self=this;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx1) {
+//>>excludeEnd("ctx");
+(
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.supercall = true, 
+//>>excludeEnd("ctx");
+$globals.App.klass.superclass.fn.prototype._initialize.apply($recv(self), []));
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.supercall = false;
+//>>excludeEnd("ctx");;
+self._setupRouter();
+return self;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx1) {$ctx1.fill(self,"initialize",{},$globals.App.klass)});
+//>>excludeEnd("ctx");
+},
+//>>excludeStart("ide", pragmas.excludeIdeData);
+args: [],
+source: "initialize\x0a\x0a\x09super initialize.\x0a\x09\x0a\x09self setupRouter",
+referencedClasses: [],
+//>>excludeEnd("ide");
+messageSends: ["initialize", "setupRouter"]
+}),
+$globals.App.klass);
+
+$core.addMethod(
+$core.method({
+selector: "initializeMain",
+protocol: 'initialization',
+fn: function (){
+var self=this;
+function $MainController(){return $globals.MainController||(typeof MainController=="undefined"?nil:MainController)}
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx1) {
+//>>excludeEnd("ctx");
+var $1;
+self["@main"]=$recv($MainController())._in_appendingTo_(nil,"#main-wrapper"._asJQuery());
+$1=self["@main"];
+return $1;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx1) {$ctx1.fill(self,"initializeMain",{},$globals.App.klass)});
+//>>excludeEnd("ctx");
+},
+//>>excludeStart("ide", pragmas.excludeIdeData);
+args: [],
+source: "initializeMain\x0a\x0a\x09^ main := MainController \x0a\x09\x09\x09\x09\x09in: nil\x0a\x09\x09\x09\x09\x09appendingTo: '#main-wrapper' asJQuery",
+referencedClasses: ["MainController"],
+//>>excludeEnd("ide");
+messageSends: ["in:appendingTo:", "asJQuery"]
+}),
+$globals.App.klass);
+
+$core.addMethod(
+$core.method({
+selector: "main",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx1) {
+//>>excludeEnd("ctx");
+var $2,$1,$receiver;
+$2=self["@main"];
+if(($receiver = $2) == null || $receiver.isNil){
+$1=self._initializeMain();
+} else {
+$1=$2;
+};
+return $1;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx1) {$ctx1.fill(self,"main",{},$globals.App.klass)});
+//>>excludeEnd("ctx");
+},
+//>>excludeStart("ide", pragmas.excludeIdeData);
+args: [],
+source: "main\x0a\x0a\x09^ main ifNil: [ self initializeMain ]",
+referencedClasses: [],
+//>>excludeEnd("ide");
+messageSends: ["ifNil:", "initializeMain"]
+}),
+$globals.App.klass);
+
+$core.addMethod(
+$core.method({
+selector: "saveVisitor",
+protocol: 'actions',
+fn: function (){
+var self=this;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx1) {
+//>>excludeEnd("ctx");
+$recv($recv($recv($recv(self._main())._session())._model())._visitor())._localSave();
+return self;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx1) {$ctx1.fill(self,"saveVisitor",{},$globals.App.klass)});
+//>>excludeEnd("ctx");
+},
+//>>excludeStart("ide", pragmas.excludeIdeData);
+args: [],
+source: "saveVisitor\x0a\x0a\x09self main session model visitor localSave",
+referencedClasses: [],
+//>>excludeEnd("ide");
+messageSends: ["localSave", "visitor", "model", "session", "main"]
+}),
+$globals.App.klass);
+
+$core.addMethod(
+$core.method({
+selector: "setupRouter",
+protocol: 'actions',
+fn: function (){
+var self=this;
+function $Router(){return $globals.Router||(typeof Router=="undefined"?nil:Router)}
+function $App(){return $globals.App||(typeof App=="undefined"?nil:App)}
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx1) {
+//>>excludeEnd("ctx");
+var $1,$2,$3,$4,$5,$9,$8,$7,$6,$10,$12,$11,$13;
+$1=$recv($Router())._rlite();
+$recv($1)._add_do_("",(function(r){
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx2) {
+//>>excludeEnd("ctx");
+return $recv($Router())._set_("#/home");
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx2.sendIdx["set:"]=1;
+//>>excludeEnd("ctx");
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx2) {$ctx2.fillBlock({r:r},$ctx1,1)});
+//>>excludeEnd("ctx");
+}));
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["add:do:"]=1;
+//>>excludeEnd("ctx");
+$recv($1)._add_do_("#",(function(r){
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx2) {
+//>>excludeEnd("ctx");
+return $recv($Router())._set_("#/home");
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx2.sendIdx["set:"]=2;
+//>>excludeEnd("ctx");
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx2) {$ctx2.fillBlock({r:r},$ctx1,2)});
+//>>excludeEnd("ctx");
+}));
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["add:do:"]=2;
+//>>excludeEnd("ctx");
+$recv($1)._add_do_("#/",(function(r){
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx2) {
+//>>excludeEnd("ctx");
+return $recv($Router())._set_("#/home");
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx2.sendIdx["set:"]=3;
+//>>excludeEnd("ctx");
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx2) {$ctx2.fillBlock({r:r},$ctx1,3)});
+//>>excludeEnd("ctx");
+}));
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["add:do:"]=3;
+//>>excludeEnd("ctx");
+$recv($1)._add_do_("/",(function(r){
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx2) {
+//>>excludeEnd("ctx");
+return $recv($Router())._set_("#/home");
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx2.sendIdx["set:"]=4;
+//>>excludeEnd("ctx");
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx2) {$ctx2.fillBlock({r:r},$ctx1,4)});
+//>>excludeEnd("ctx");
+}));
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["add:do:"]=4;
+//>>excludeEnd("ctx");
+$recv($1)._add_do_("home",(function(r){
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx2) {
+//>>excludeEnd("ctx");
+$2=$recv($App())._main();
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx2.sendIdx["main"]=1;
+//>>excludeEnd("ctx");
+return $recv($2)._reset();
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx2) {$ctx2.fillBlock({r:r},$ctx1,5)});
+//>>excludeEnd("ctx");
+}));
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["add:do:"]=5;
+//>>excludeEnd("ctx");
+$recv($1)._add_do_("orders",(function(r){
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx2) {
+//>>excludeEnd("ctx");
+$3=$recv($App())._main();
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx2.sendIdx["main"]=2;
+//>>excludeEnd("ctx");
+return $recv($3)._showOrders();
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx2) {$ctx2.fillBlock({r:r},$ctx1,6)});
+//>>excludeEnd("ctx");
+}));
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["add:do:"]=6;
+//>>excludeEnd("ctx");
+$recv($1)._add_do_("orders/new",(function(r){
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx2) {
+//>>excludeEnd("ctx");
+$4=$recv($App())._main();
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx2.sendIdx["main"]=3;
+//>>excludeEnd("ctx");
+return $recv($4)._showOrder();
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx2.sendIdx["showOrder"]=1;
+//>>excludeEnd("ctx");
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx2) {$ctx2.fillBlock({r:r},$ctx1,7)});
+//>>excludeEnd("ctx");
+}));
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["add:do:"]=7;
+//>>excludeEnd("ctx");
+$recv($1)._add_do_("orders/edit",(function(r){
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx2) {
+//>>excludeEnd("ctx");
+$5=$recv($App())._main();
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx2.sendIdx["main"]=4;
+//>>excludeEnd("ctx");
+return $recv($5)._showOrder();
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx2) {$ctx2.fillBlock({r:r},$ctx1,8)});
+//>>excludeEnd("ctx");
+}));
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["add:do:"]=8;
+//>>excludeEnd("ctx");
+$recv($1)._add_do_("orders/:id",(function(r){
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx2) {
+//>>excludeEnd("ctx");
+$9=$recv(r)._params();
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx2.sendIdx["params"]=1;
+//>>excludeEnd("ctx");
+$8=$recv($9)._id();
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx2.sendIdx["id"]=1;
+//>>excludeEnd("ctx");
+$7="#/orders/".__comma($8);
+$6=$recv($7).__comma("/view");
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx2.sendIdx[","]=1;
+//>>excludeEnd("ctx");
+return $recv($Router())._set_($6);
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx2) {$ctx2.fillBlock({r:r},$ctx1,9)});
+//>>excludeEnd("ctx");
+}));
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["add:do:"]=9;
+//>>excludeEnd("ctx");
+$recv($1)._add_do_("orders/:id/view",(function(r){
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx2) {
+//>>excludeEnd("ctx");
+$10=$recv($App())._main();
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx2.sendIdx["main"]=5;
+//>>excludeEnd("ctx");
+$12=$recv(r)._params();
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx2.sendIdx["params"]=2;
+//>>excludeEnd("ctx");
+$11=$recv($12)._id();
+return $recv($10)._showOrderId_($11);
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx2) {$ctx2.fillBlock({r:r},$ctx1,10)});
+//>>excludeEnd("ctx");
+}));
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["add:do:"]=10;
+//>>excludeEnd("ctx");
+$recv($1)._add_do_("search/:target",(function(r){
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx2) {
+//>>excludeEnd("ctx");
+return $recv($recv($App())._main())._showSearchResultsFor_($recv($recv(r)._params())._target());
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx2) {$ctx2.fillBlock({r:r},$ctx1,11)});
+//>>excludeEnd("ctx");
+}));
+$13=$recv($1)._yourself();
+return self;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx1) {$ctx1.fill(self,"setupRouter",{},$globals.App.klass)});
+//>>excludeEnd("ctx");
+},
+//>>excludeStart("ide", pragmas.excludeIdeData);
+args: [],
+source: "setupRouter\x0a\x0a\x09Router rlite\x0a\x09\x09add: '' do: [ :r | Router set: '#/home' ];\x0a\x09\x09add: '#' do: [ :r | Router set: '#/home' ];\x0a\x09\x09add: '#/' do: [ :r | Router set: '#/home' ];\x0a\x09\x09add: '/' do: [ :r | Router set: '#/home' ];\x0a\x09\x09\x0a\x09\x09add: 'home' do: [ :r | App main reset ];\x0a\x0a\x09\x09add: 'orders' do: [ :r | App main showOrders ];\x0a\x09\x09add: 'orders/new' do: [ :r | App main showOrder ];\x0a\x09\x09add: 'orders/edit' do: [ :r | App main showOrder ];\x0a\x09\x09add: 'orders/:id' do: [ :r | Router set: '#/orders/',r params id,'/view' ];\x09\x0a\x09\x09add: 'orders/:id/view' do: [ :r | App main showOrderId: r params id ];\x09\x0a\x0a\x09\x09add: 'search/:target' do: [ :r | App main showSearchResultsFor: r params target ];\x0a\x09\x09\x0a\x09\x09yourself",
+referencedClasses: ["Router", "App"],
+//>>excludeEnd("ide");
+messageSends: ["add:do:", "rlite", "set:", "reset", "main", "showOrders", "showOrder", ",", "id", "params", "showOrderId:", "showSearchResultsFor:", "target", "yourself"]
 }),
 $globals.App.klass);
 
@@ -128,12 +417,24 @@ function $Router(){return $globals.Router||(typeof Router=="undefined"?nil:Route
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx1) {
 //>>excludeEnd("ctx");
-var $1;
+var $1,$2;
 $recv($Flow())._app_(self);
 $1=$recv($Flow())._start();
-self._publishObjects();
-$recv($recv($Flow())._session())._shopVisitor_(self._shopVisitor());
-$recv($Router())._refresh();
+$recv(window)._at_put_("app",self);
+$2=self._main();
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["main"]=1;
+//>>excludeEnd("ctx");
+$recv($2)._model_(self._getSession());
+$recv($recv(self._main())._show())._done_((function(){
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx2) {
+//>>excludeEnd("ctx");
+return $recv($Router())._processHash();
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)});
+//>>excludeEnd("ctx");
+}));
 return self;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 }, function($ctx1) {$ctx1.fill(self,"start",{},$globals.App.klass)});
@@ -141,10 +442,10 @@ return self;
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: [],
-source: "start\x0a\x09\x22Starts the App app\x22\x0a\x09\x0a\x09Flow app: self; start.\x0a\x09\x0a\x09self publishObjects.\x0a\x09\x0a\x09Flow session shopVisitor: self shopVisitor.\x0a\x09\x0a\x09Router refresh",
+source: "start\x0a\x09\x22Starts the App app\x22\x0a\x0a\x09Flow app: self; start.\x0a\x09window at: #app put: self.\x0a\x09\x0a\x09self main model: self getSession.\x0a\x09self main show done: [ Router processHash ] ",
 referencedClasses: ["Flow", "Router"],
 //>>excludeEnd("ide");
-messageSends: ["app:", "start", "publishObjects", "shopVisitor:", "session", "shopVisitor", "refresh"]
+messageSends: ["app:", "start", "at:put:", "model:", "main", "getSession", "done:", "show", "processHash"]
 }),
 $globals.App.klass);
 
@@ -1287,6 +1588,9 @@ messageSends: ["onAfterModel", "imageUrl:", "model", ",", "image"]
 }),
 $globals.ProductThumbnailController);
 
+
+
+$core.addClass('ShopSession', $globals.Session, [], 'App');
 
 
 $core.addClass('ShopVisitor', $globals.Model, [], 'App');
