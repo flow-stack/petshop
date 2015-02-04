@@ -54,11 +54,11 @@ setupRouter
 		
 		add: 'home' do: [ :r | App main reset ];
 
-		add: 'orders' do: [ :r | App main showOrders ];
-		add: 'orders/new' do: [ :r | App main showOrder ];
-		add: 'orders/edit' do: [ :r | App main showOrder ];
-		add: 'orders/:id' do: [ :r | Router set: '#/orders/',r params id,'/view' ];	
-		add: 'orders/:id/view' do: [ :r | App main showOrderId: r params id ];	
+		add: 'cart' do: [ :r | App main showCart ];
+		add: 'catalog' do: [ :r | App main showCatalog ];
+		
+		add: 'product/:id' do: [ :r | Router set: '#/products/',r params id,'/view' ];	
+		add: 'product/:id/view' do: [ :r | App main showProductId: r params id ];	
 
 		add: 'search/:target' do: [ :r | App main showSearchResultsFor: r params target ];
 		
@@ -258,9 +258,21 @@ If you take a look into `onOpen` you'll see that:
 
 !MainController methodsFor: 'accessing'!
 
-session
+catalog
 
-	^ model
+	^ self ifAbsentAt: #catalog put: [
+			CatalogController 
+				on: Catalog new 
+				in: self 
+				appendingTo: '#catalog' asJQuery ]
+!
+
+footer
+
+	^ self ifAbsentAt: #footer put: [ 
+			FooterController 
+				in: self 
+				appendingTo: '#footer' asJQuery ]
 ! !
 
 !MainController methodsFor: 'actions'!
@@ -270,10 +282,22 @@ find
 	window alert: 'Implement find please!!'
 !
 
+reset
+	
+	self showCatalog
+!
+
 saveState
 
 	self model cart save.
 	self model save.
+!
+
+showCatalog
+	
+	self hideAllBut: #footer.
+	
+	self catalog show
 ! !
 
 !MainController methodsFor: 'initialization'!
@@ -281,6 +305,9 @@ saveState
 initialize
 
 	super initialize.
+	
+	self deferred done: [
+		self home ]
 ! !
 
 !MainController methodsFor: 'reactions'!
@@ -307,32 +334,6 @@ onTemplate: data
 
 	(self controllerAt: 'footer' ifAbsentPut:[ 
 		FooterController for: Footer new on: self appendingTo: '#footer' asJQuery ]) refresh.
-! !
-
-!MainController class methodsFor: 'actions'!
-
-defaultModel
-	"Answers the default model for this controller."
-	
-	^ Flow session shopVisitor
-!
-
-open
-	"The foundation is ready, time to start this app!!"
-
-	^ (self for: nil on: nil appendingTo: '#content' asJQuery) onOpen
-! !
-
-!MainController class methodsFor: 'testing'!
-
-isValidFor: anURI
-	"Answers true if this controller is the right route for anURI"
-	
-	"This is the home, so should answer true to anything that looks like it."
-	^ self isAbstract not and:[
-	anURI isEmpty or:[
-	anURI = '/' or:[
-	anURI = '/#/' ] ] ]
 ! !
 
 Model subclass: #Product
