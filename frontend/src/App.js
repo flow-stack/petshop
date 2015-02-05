@@ -181,7 +181,7 @@ var self=this;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx1) {
 //>>excludeEnd("ctx");
-$recv($recv($recv($recv(self._main())._session())._model())._visitor())._localSave();
+$recv($recv($recv($recv($recv(self._main())._session())._model())._visitor())._localSave())._save();
 return self;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 }, function($ctx1) {$ctx1.fill(self,"saveVisitor",{},$globals.App.klass)});
@@ -189,10 +189,10 @@ return self;
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: [],
-source: "saveVisitor\x0a\x0a\x09self main session model visitor localSave",
+source: "saveVisitor\x0a\x0a\x09\x22Save the visitor in the localStorage and the backend\x22\x0a\x09self main session model visitor localSave save",
 referencedClasses: [],
 //>>excludeEnd("ide");
-messageSends: ["localSave", "visitor", "model", "session", "main"]
+messageSends: ["save", "localSave", "visitor", "model", "session", "main"]
 }),
 $globals.App.klass);
 
@@ -1372,12 +1372,12 @@ selector: "addToCart",
 protocol: 'actions',
 fn: function (){
 var self=this;
-function $Flow(){return $globals.Flow||(typeof Flow=="undefined"?nil:Flow)}
+function $App(){return $globals.App||(typeof App=="undefined"?nil:App)}
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx1) {
 //>>excludeEnd("ctx");
 var $2,$1,$5,$4,$3,$6,$7,$8;
-$2=$recv($Flow())._session();
+$2=$recv($App())._session();
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 $ctx1.sendIdx["session"]=1;
 //>>excludeEnd("ctx");
@@ -1386,14 +1386,7 @@ $1=$recv($2)._shopVisitor();
 $ctx1.sendIdx["shopVisitor"]=1;
 //>>excludeEnd("ctx");
 $recv($1)._localSave();
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-$ctx1.sendIdx["localSave"]=1;
-//>>excludeEnd("ctx");
-$recv(self["@model"])._localSave();
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-$ctx1.sendIdx["localSave"]=2;
-//>>excludeEnd("ctx");
-$5=$recv($Flow())._session();
+$5=$recv($App())._session();
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 $ctx1.sendIdx["session"]=2;
 //>>excludeEnd("ctx");
@@ -1403,8 +1396,8 @@ $ctx1.sendIdx["shopVisitor"]=2;
 //>>excludeEnd("ctx");
 $3=$recv($4)._cart();
 $recv($3)._addProduct_(self["@model"]);
-$6=$recv($3)._localSave();
-$recv($recv($recv($Flow())._session())._shopVisitor())._updateCartSize();
+$6=$recv($3)._save();
+$recv($recv($recv($App())._session())._shopVisitor())._updateCartSize();
 $7="#alertsRoot"._asJQuery();
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 $ctx1.sendIdx["asJQuery"]=1;
@@ -1430,10 +1423,10 @@ return self;
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: [],
-source: "addToCart\x0a\x0a\x09Flow session shopVisitor localSave.\x0a\x09model localSave.\x0a\x09\x0a\x09Flow session shopVisitor cart addProduct: model; localSave.\x0a\x09Flow session shopVisitor updateCartSize.\x0a\x09\x0a\x09'#alertsRoot' asJQuery html: '<div class=\x22alert alert-success\x22 role=\x22alert\x22>Done. We''ve added one ',model description,' to your cart!</div>'.\x0a\x09['#alertsRoot' asJQuery empty ] valueWithTimeout: 2000.",
-referencedClasses: ["Flow"],
+source: "addToCart\x0a\x0a\x09App session shopVisitor localSave.\x0a\x09\x0a\x09App session shopVisitor cart addProduct: model; save.\x0a\x09App session shopVisitor updateCartSize.\x0a\x09\x0a\x09'#alertsRoot' asJQuery html: '<div class=\x22alert alert-success\x22 role=\x22alert\x22>Done. We''ve added one ',model description,' to your cart!</div>'.\x0a\x09['#alertsRoot' asJQuery empty ] valueWithTimeout: 2000.",
+referencedClasses: ["App"],
 //>>excludeEnd("ide");
-messageSends: ["localSave", "shopVisitor", "session", "addProduct:", "cart", "updateCartSize", "html:", "asJQuery", ",", "description", "valueWithTimeout:", "empty"]
+messageSends: ["localSave", "shopVisitor", "session", "addProduct:", "cart", "save", "updateCartSize", "html:", "asJQuery", ",", "description", "valueWithTimeout:", "empty"]
 }),
 $globals.ProductThumbnailController);
 
@@ -1535,8 +1528,8 @@ $globals.ProductThumbnailController);
 
 $core.addMethod(
 $core.method({
-selector: "onAfterModel",
-protocol: 'reactions',
+selector: "initialize",
+protocol: 'initialization',
 fn: function (){
 var self=this;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
@@ -1547,26 +1540,34 @@ var $1;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 $ctx1.supercall = true, 
 //>>excludeEnd("ctx");
-$globals.ProductThumbnailController.superclass.fn.prototype._onAfterModel.apply($recv(self), []));
+$globals.ProductThumbnailController.superclass.fn.prototype._initialize.apply($recv(self), []));
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 $ctx1.supercall = false;
 //>>excludeEnd("ctx");;
+self._when_do_("onAfterModel",(function(){
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx2) {
+//>>excludeEnd("ctx");
 $1=self._model();
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
-$ctx1.sendIdx["model"]=1;
+$ctx2.sendIdx["model"]=1;
 //>>excludeEnd("ctx");
-$recv($1)._imageUrl_("img/products/".__comma($recv(self._model())._image()));
+return $recv($1)._imageUrl_("img/products/".__comma($recv(self._model())._image()));
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)});
+//>>excludeEnd("ctx");
+}));
 return self;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
-}, function($ctx1) {$ctx1.fill(self,"onAfterModel",{},$globals.ProductThumbnailController)});
+}, function($ctx1) {$ctx1.fill(self,"initialize",{},$globals.ProductThumbnailController)});
 //>>excludeEnd("ctx");
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: [],
-source: "onAfterModel\x0a\x0a\x09super onAfterModel.\x0a\x09\x0a\x09self model imageUrl: 'img/products/', self model image",
+source: "initialize\x0a\x0a\x09super initialize.\x0a\x09\x0a\x09self when: #onAfterModel do: [ self model imageUrl: 'img/products/', self model image ]",
 referencedClasses: [],
 //>>excludeEnd("ide");
-messageSends: ["onAfterModel", "imageUrl:", "model", ",", "image"]
+messageSends: ["initialize", "when:do:", "imageUrl:", "model", ",", "image"]
 }),
 $globals.ProductThumbnailController);
 

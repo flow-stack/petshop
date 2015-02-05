@@ -51,7 +51,8 @@ getVisitor
 
 saveVisitor
 
-	self main session model visitor localSave
+	"Save the visitor in the localStorage and the backend"
+	self main session model visitor localSave save
 !
 
 setupRouter
@@ -384,11 +385,10 @@ BindingController subclass: #ProductThumbnailController
 
 addToCart
 
-	Flow session shopVisitor localSave.
-	model localSave.
+	App session shopVisitor localSave.
 	
-	Flow session shopVisitor cart addProduct: model; localSave.
-	Flow session shopVisitor updateCartSize.
+	App session shopVisitor cart addProduct: model; save.
+	App session shopVisitor updateCartSize.
 	
 	'#alertsRoot' asJQuery html: '<div class="alert alert-success" role="alert">Done. We''ve added one ',model description,' to your cart!!</div>'.
 	['#alertsRoot' asJQuery empty ] valueWithTimeout: 2000.
@@ -414,13 +414,13 @@ getModelAsArgument
 	^ model data
 ! !
 
-!ProductThumbnailController methodsFor: 'reactions'!
+!ProductThumbnailController methodsFor: 'initialization'!
 
-onAfterModel
+initialize
 
-	super onAfterModel.
+	super initialize.
 	
-	self model imageUrl: 'img/products/', self model image
+	self when: #onAfterModel do: [ self model imageUrl: 'img/products/', self model image ]
 ! !
 
 Session subclass: #ShopSession
