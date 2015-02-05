@@ -3,13 +3,23 @@ Object subclass: #App
 	instanceVariableNames: ''
 	package: 'App'!
 
-App class instanceVariableNames: 'main'!
+App class instanceVariableNames: 'main session'!
 
 !App class methodsFor: 'accessing'!
 
 main
 
 	^ main ifNil: [ self initializeMain ]
+!
+
+session
+
+	^ session
+!
+
+session: aSession
+
+	session := aSession
 ! !
 
 !App class methodsFor: 'actions'!
@@ -71,7 +81,7 @@ start
 	Flow app: self; start.
 	window at: #app put: self.
 	
-	self main model: self getSession.
+	session := self getSession.
 	self main show done: [ Router processHash ]
 ! !
 
@@ -99,7 +109,7 @@ Model subclass: #Cart
 
 products
 
-	super products ifNil:[
+	super products ifNil: [
 		self products: OrderedCollection new ].
 		
 	^ super products
@@ -109,7 +119,7 @@ products
 
 addProduct: aProduct
 
-	(self products includes: aProduct) ifFalse:[
+	(self products includes: aProduct) ifFalse: [
 		self products add: aProduct ].
 
 	self trigger: #added: with: aProduct.
@@ -121,7 +131,7 @@ removeProduct: aProduct
 
 	self products
 		remove: aProduct
-		ifAbsent:[ nil ].
+		ifAbsent: [ nil ].
 
 	self trigger: #removed: with: aProduct. 
 	
@@ -130,7 +140,7 @@ removeProduct: aProduct
 
 updateTotal
 
-	self total: (self products inject: 0 into:[ :sum :e | sum + e price ])
+	self total: (self products inject: 0 into: [ :sum :e | sum + e price ])
 ! !
 
 BindingController subclass: #CartController
@@ -139,11 +149,20 @@ BindingController subclass: #CartController
 
 !CartController methodsFor: 'actions'!
 
-observeProducts
+observeEvents
 
-	Flow session shopVisitor cart 
+	super observeEvents.
+	
+	self when: #onAfterModel do: [ self model updateTotal ].
+	
+	App session shopVisitor cart 
 		when: #removed: 
 		do:[ :evt :product | self onRemoved: product ].
+!
+
+update
+	
+	self model updateTotal
 ! !
 
 !CartController methodsFor: 'reactions'!
@@ -201,33 +220,38 @@ The `CatalogController` has the model with the list of `products`. It also has a
 
 This controller uses the timely `onTemplate:` reaction to load Products from the backend and, once the answer arrives, react again in `onProducts:` to lazily create the list controller of those fresh products!
 
-!CatalogController methodsFor: 'reactions'!
+!CatalogController methodsFor: 'accessing'!
 
-onProducts: someProducts
+products
 
-	'#loaderBar'asJQuery remove.
-	
-	model products: someProducts.
-	
-	(self ifAbsentAt: 'products' put: [
+	^ self ifAbsentAt: 'products' put: [
 		"Lazy creation of the list controller for the thumbnails"
 		(ListController 
-			for: model 
-			on: self 
-			appendingTo: '.products' asJQuery)
-				getItemsBlock: [:m| m products ];
+			in: self 
+			appendingTo: '#products-wrapper' asJQuery)
 				itemControllerClass: ProductThumbnailController;
-				yourself]) refresh "be sure to display resh stuff"
+				yourself ]
+! !
+
+!CatalogController methodsFor: 'actions'!
+
+show
+
+	^ super show done: [ self showProducts ]
 !
 
-onTemplate: data
-	"Receives the template's data after requirejs 
-	have received it from the server (or cache)."
+showProducts
 
-	super onTemplate: data.
+	Product findAllThen: [ :products | 
+		self showProducts: products ].
+!
 
-	Product findAllDo: [ :res | 
-		self onProducts: (Product onAfterReadAll: res) ].
+showProducts: someProducts
+
+
+	self products 
+		model: (ListModel on: someProducts);
+		show
 ! !
 
 Model subclass: #Footer
@@ -264,7 +288,7 @@ catalog
 			CatalogController 
 				on: Catalog new 
 				in: self 
-				appendingTo: '#catalog' asJQuery ]
+				appendingTo: '#catalog-wrapper' asJQuery ]
 !
 
 footer
@@ -272,7 +296,7 @@ footer
 	^ self ifAbsentAt: #footer put: [ 
 			FooterController 
 				in: self 
-				appendingTo: '#footer' asJQuery ]
+				appendingTo: '#footer-wrapper' asJQuery ]
 ! !
 
 !MainController methodsFor: 'actions'!
@@ -289,8 +313,8 @@ reset
 
 saveState
 
-	self model cart save.
-	self model save.
+	App session cart save.
+	App session save.
 !
 
 showCatalog
@@ -298,42 +322,12 @@ showCatalog
 	self hideAllBut: #footer.
 	
 	self catalog show
-! !
-
-!MainController methodsFor: 'initialization'!
-
-initialize
-
-	super initialize.
-	
-	self deferred done: [
-		self home ]
-! !
-
-!MainController methodsFor: 'reactions'!
-
-onAfterModel
-
-	super onAfterModel.
-	
-	self model updateCartSize.
-	self model updateWishListSize.
 !
 
-onTemplate: data
-	"Receives the template's data after requirejs 
-	have received it from the server (or cache)."
+update
 
-	super onTemplate: data.
-
-	"Lets make sure we load the catalog using the #catalog div as its root
-	and refresh if already there"
-	'#loaderBar'asJQuery show.
-	(self controllerAt: 'catalog' ifAbsentPut:[ 
-		CatalogController for: Catalog new on: self appendingTo: '#catalog' asJQuery ]) refresh.
-
-	(self controllerAt: 'footer' ifAbsentPut:[ 
-		FooterController for: Footer new on: self appendingTo: '#footer' asJQuery ]) refresh.
+	self model updateCartSize.
+	self model updateWishListSize.
 ! !
 
 Model subclass: #Product

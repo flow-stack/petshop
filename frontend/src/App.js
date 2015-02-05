@@ -6,7 +6,7 @@ $core.packages["App"].transport = {"type":"amd","amdNamespace":"flow-app"};
 
 $core.addClass('App', $globals.Object, [], 'App');
 
-$globals.App.klass.iVarNames = ['main'];
+$globals.App.klass.iVarNames = ['main','session'];
 $core.addMethod(
 $core.method({
 selector: "getSession",
@@ -193,6 +193,45 @@ source: "saveVisitor\x0a\x0a\x09self main session model visitor localSave",
 referencedClasses: [],
 //>>excludeEnd("ide");
 messageSends: ["localSave", "visitor", "model", "session", "main"]
+}),
+$globals.App.klass);
+
+$core.addMethod(
+$core.method({
+selector: "session",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+var $1;
+$1=self["@session"];
+return $1;
+
+},
+//>>excludeStart("ide", pragmas.excludeIdeData);
+args: [],
+source: "session\x0a\x0a\x09^ session",
+referencedClasses: [],
+//>>excludeEnd("ide");
+messageSends: []
+}),
+$globals.App.klass);
+
+$core.addMethod(
+$core.method({
+selector: "session:",
+protocol: 'accessing',
+fn: function (aSession){
+var self=this;
+self["@session"]=aSession;
+return self;
+
+},
+//>>excludeStart("ide", pragmas.excludeIdeData);
+args: ["aSession"],
+source: "session: aSession\x0a\x0a\x09session := aSession",
+referencedClasses: [],
+//>>excludeEnd("ide");
+messageSends: []
 }),
 $globals.App.klass);
 
@@ -398,15 +437,11 @@ function $Router(){return $globals.Router||(typeof Router=="undefined"?nil:Route
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx1) {
 //>>excludeEnd("ctx");
-var $1,$2;
+var $1;
 $recv($Flow())._app_(self);
 $1=$recv($Flow())._start();
 $recv(window)._at_put_("app",self);
-$2=self._main();
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-$ctx1.sendIdx["main"]=1;
-//>>excludeEnd("ctx");
-$recv($2)._model_(self._getSession());
+self["@session"]=self._getSession();
 $recv($recv(self._main())._show())._done_((function(){
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx2) {
@@ -423,10 +458,10 @@ return self;
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: [],
-source: "start\x0a\x09\x22Starts the App app\x22\x0a\x0a\x09Flow app: self; start.\x0a\x09window at: #app put: self.\x0a\x09\x0a\x09self main model: self getSession.\x0a\x09self main show done: [ Router processHash ] ",
+source: "start\x0a\x09\x22Starts the App app\x22\x0a\x0a\x09Flow app: self; start.\x0a\x09window at: #app put: self.\x0a\x09\x0a\x09session := self getSession.\x0a\x09self main show done: [ Router processHash ] ",
 referencedClasses: ["Flow", "Router"],
 //>>excludeEnd("ide");
-messageSends: ["app:", "start", "at:put:", "model:", "main", "getSession", "done:", "show", "processHash"]
+messageSends: ["app:", "start", "at:put:", "getSession", "done:", "show", "main", "processHash"]
 }),
 $globals.App.klass);
 
@@ -459,7 +494,7 @@ return self;
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: ["aProduct"],
-source: "addProduct: aProduct\x0a\x0a\x09(self products includes: aProduct) ifFalse:[\x0a\x09\x09self products add: aProduct ].\x0a\x0a\x09self trigger: #added: with: aProduct.\x0a\x09\x0a\x09self updateTotal.",
+source: "addProduct: aProduct\x0a\x0a\x09(self products includes: aProduct) ifFalse: [\x0a\x09\x09self products add: aProduct ].\x0a\x0a\x09self trigger: #added: with: aProduct.\x0a\x09\x0a\x09self updateTotal.",
 referencedClasses: [],
 //>>excludeEnd("ide");
 messageSends: ["ifFalse:", "includes:", "products", "add:", "trigger:with:", "updateTotal"]
@@ -508,7 +543,7 @@ return $2;
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: [],
-source: "products\x0a\x0a\x09super products ifNil:[\x0a\x09\x09self products: OrderedCollection new ].\x0a\x09\x09\x0a\x09^ super products",
+source: "products\x0a\x0a\x09super products ifNil: [\x0a\x09\x09self products: OrderedCollection new ].\x0a\x09\x09\x0a\x09^ super products",
 referencedClasses: ["OrderedCollection"],
 //>>excludeEnd("ide");
 messageSends: ["ifNil:", "products", "products:", "new"]
@@ -537,7 +572,7 @@ return self;
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: ["aProduct"],
-source: "removeProduct: aProduct\x0a\x0a\x09self products\x0a\x09\x09remove: aProduct\x0a\x09\x09ifAbsent:[ nil ].\x0a\x0a\x09self trigger: #removed: with: aProduct. \x0a\x09\x0a\x09self updateTotal",
+source: "removeProduct: aProduct\x0a\x0a\x09self products\x0a\x09\x09remove: aProduct\x0a\x09\x09ifAbsent: [ nil ].\x0a\x0a\x09self trigger: #removed: with: aProduct. \x0a\x09\x0a\x09self updateTotal",
 referencedClasses: [],
 //>>excludeEnd("ide");
 messageSends: ["remove:ifAbsent:", "products", "trigger:with:", "updateTotal"]
@@ -569,7 +604,7 @@ return self;
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: [],
-source: "updateTotal\x0a\x0a\x09self total: (self products inject: 0 into:[ :sum :e | sum + e price ])",
+source: "updateTotal\x0a\x0a\x09self total: (self products inject: 0 into: [ :sum :e | sum + e price ])",
 referencedClasses: [],
 //>>excludeEnd("ide");
 messageSends: ["total:", "inject:into:", "products", "+", "price"]
@@ -581,34 +616,54 @@ $globals.Cart);
 $core.addClass('CartController', $globals.BindingController, [], 'App');
 $core.addMethod(
 $core.method({
-selector: "observeProducts",
+selector: "observeEvents",
 protocol: 'actions',
 fn: function (){
 var self=this;
-function $Flow(){return $globals.Flow||(typeof Flow=="undefined"?nil:Flow)}
+function $App(){return $globals.App||(typeof App=="undefined"?nil:App)}
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx1) {
 //>>excludeEnd("ctx");
-$recv($recv($recv($recv($Flow())._session())._shopVisitor())._cart())._when_do_("removed:",(function(evt,product){
+(
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.supercall = true, 
+//>>excludeEnd("ctx");
+$globals.CartController.superclass.fn.prototype._observeEvents.apply($recv(self), []));
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.supercall = false;
+//>>excludeEnd("ctx");;
+self._when_do_("onAfterModel",(function(){
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx2) {
+//>>excludeEnd("ctx");
+return $recv(self._model())._updateTotal();
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)});
+//>>excludeEnd("ctx");
+}));
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["when:do:"]=1;
+//>>excludeEnd("ctx");
+$recv($recv($recv($recv($App())._session())._shopVisitor())._cart())._when_do_("removed:",(function(evt,product){
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx2) {
 //>>excludeEnd("ctx");
 return self._onRemoved_(product);
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
-}, function($ctx2) {$ctx2.fillBlock({evt:evt,product:product},$ctx1,1)});
+}, function($ctx2) {$ctx2.fillBlock({evt:evt,product:product},$ctx1,2)});
 //>>excludeEnd("ctx");
 }));
 return self;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
-}, function($ctx1) {$ctx1.fill(self,"observeProducts",{},$globals.CartController)});
+}, function($ctx1) {$ctx1.fill(self,"observeEvents",{},$globals.CartController)});
 //>>excludeEnd("ctx");
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: [],
-source: "observeProducts\x0a\x0a\x09Flow session shopVisitor cart \x0a\x09\x09when: #removed: \x0a\x09\x09do:[ :evt :product | self onRemoved: product ].",
-referencedClasses: ["Flow"],
+source: "observeEvents\x0a\x0a\x09super observeEvents.\x0a\x09\x0a\x09self when: #onAfterModel do: [ self model updateTotal ].\x0a\x09\x0a\x09App session shopVisitor cart \x0a\x09\x09when: #removed: \x0a\x09\x09do:[ :evt :product | self onRemoved: product ].",
+referencedClasses: ["App"],
 //>>excludeEnd("ide");
-messageSends: ["when:do:", "cart", "shopVisitor", "session", "onRemoved:"]
+messageSends: ["observeEvents", "when:do:", "updateTotal", "model", "cart", "shopVisitor", "session", "onRemoved:"]
 }),
 $globals.CartController);
 
@@ -736,6 +791,30 @@ messageSends: ["onTemplate:", "remove", "asJQuery", "refresh", "ifAbsentAt:put:a
 }),
 $globals.CartController);
 
+$core.addMethod(
+$core.method({
+selector: "update",
+protocol: 'actions',
+fn: function (){
+var self=this;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx1) {
+//>>excludeEnd("ctx");
+$recv(self._model())._updateTotal();
+return self;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx1) {$ctx1.fill(self,"update",{},$globals.CartController)});
+//>>excludeEnd("ctx");
+},
+//>>excludeStart("ide", pragmas.excludeIdeData);
+args: [],
+source: "update\x0a\x09\x0a\x09self model updateTotal",
+referencedClasses: [],
+//>>excludeEnd("ide");
+messageSends: ["updateTotal", "model"]
+}),
+$globals.CartController);
+
 
 $core.addMethod(
 $core.method({
@@ -773,95 +852,141 @@ $globals.CatalogController.comment="The `CatalogController` has the model with t
 //>>excludeEnd("ide");
 $core.addMethod(
 $core.method({
-selector: "onProducts:",
-protocol: 'reactions',
-fn: function (someProducts){
+selector: "products",
+protocol: 'accessing',
+fn: function (){
 var self=this;
 function $ListController(){return $globals.ListController||(typeof ListController=="undefined"?nil:ListController)}
 function $ProductThumbnailController(){return $globals.ProductThumbnailController||(typeof ProductThumbnailController=="undefined"?nil:ProductThumbnailController)}
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx1) {
 //>>excludeEnd("ctx");
-var $1,$2,$3;
-$1="#loaderBar"._asJQuery();
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-$ctx1.sendIdx["asJQuery"]=1;
-//>>excludeEnd("ctx");
-$recv($1)._remove();
-$recv(self["@model"])._products_(someProducts);
-$recv(self._ifAbsentAt_put_("products",(function(){
+var $2,$3,$1;
+$1=self._ifAbsentAt_put_("products",(function(){
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx2) {
 //>>excludeEnd("ctx");
-$2=$recv($ListController())._for_on_appendingTo_(self["@model"],self,".products"._asJQuery());
-$recv($2)._getItemsBlock_((function(m){
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-return $core.withContext(function($ctx3) {
-//>>excludeEnd("ctx");
-return $recv(m)._products();
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-}, function($ctx3) {$ctx3.fillBlock({m:m},$ctx2,2)});
-//>>excludeEnd("ctx");
-}));
+$2=$recv($ListController())._in_appendingTo_(self,"#products-wrapper"._asJQuery());
 $recv($2)._itemControllerClass_($ProductThumbnailController());
 $3=$recv($2)._yourself();
 return $3;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 }, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)});
 //>>excludeEnd("ctx");
-})))._refresh();
-return self;
+}));
+return $1;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
-}, function($ctx1) {$ctx1.fill(self,"onProducts:",{someProducts:someProducts},$globals.CatalogController)});
+}, function($ctx1) {$ctx1.fill(self,"products",{},$globals.CatalogController)});
 //>>excludeEnd("ctx");
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
-args: ["someProducts"],
-source: "onProducts: someProducts\x0a\x0a\x09'#loaderBar'asJQuery remove.\x0a\x09\x0a\x09model products: someProducts.\x0a\x09\x0a\x09(self ifAbsentAt: 'products' put: [\x0a\x09\x09\x22Lazy creation of the list controller for the thumbnails\x22\x0a\x09\x09(ListController \x0a\x09\x09\x09for: model \x0a\x09\x09\x09on: self \x0a\x09\x09\x09appendingTo: '.products' asJQuery)\x0a\x09\x09\x09\x09getItemsBlock: [:m| m products ];\x0a\x09\x09\x09\x09itemControllerClass: ProductThumbnailController;\x0a\x09\x09\x09\x09yourself]) refresh \x22be sure to display resh stuff\x22",
+args: [],
+source: "products\x0a\x0a\x09^ self ifAbsentAt: 'products' put: [\x0a\x09\x09\x22Lazy creation of the list controller for the thumbnails\x22\x0a\x09\x09(ListController \x0a\x09\x09\x09in: self \x0a\x09\x09\x09appendingTo: '#products-wrapper' asJQuery)\x0a\x09\x09\x09\x09itemControllerClass: ProductThumbnailController;\x0a\x09\x09\x09\x09yourself ]",
 referencedClasses: ["ListController", "ProductThumbnailController"],
 //>>excludeEnd("ide");
-messageSends: ["remove", "asJQuery", "products:", "refresh", "ifAbsentAt:put:", "getItemsBlock:", "for:on:appendingTo:", "products", "itemControllerClass:", "yourself"]
+messageSends: ["ifAbsentAt:put:", "itemControllerClass:", "in:appendingTo:", "asJQuery", "yourself"]
 }),
 $globals.CatalogController);
 
 $core.addMethod(
 $core.method({
-selector: "onTemplate:",
-protocol: 'reactions',
-fn: function (data){
+selector: "show",
+protocol: 'actions',
+fn: function (){
+var self=this;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx1) {
+//>>excludeEnd("ctx");
+var $2,$1;
+$2=(
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.supercall = true, 
+//>>excludeEnd("ctx");
+$globals.CatalogController.superclass.fn.prototype._show.apply($recv(self), []));
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.supercall = false;
+//>>excludeEnd("ctx");;
+$1=$recv($2)._done_((function(){
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx2) {
+//>>excludeEnd("ctx");
+return self._showProducts();
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)});
+//>>excludeEnd("ctx");
+}));
+return $1;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx1) {$ctx1.fill(self,"show",{},$globals.CatalogController)});
+//>>excludeEnd("ctx");
+},
+//>>excludeStart("ide", pragmas.excludeIdeData);
+args: [],
+source: "show\x0a\x0a\x09^ super show done: [ self showProducts ]",
+referencedClasses: [],
+//>>excludeEnd("ide");
+messageSends: ["done:", "show", "showProducts"]
+}),
+$globals.CatalogController);
+
+$core.addMethod(
+$core.method({
+selector: "showProducts",
+protocol: 'actions',
+fn: function (){
 var self=this;
 function $Product(){return $globals.Product||(typeof Product=="undefined"?nil:Product)}
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx1) {
 //>>excludeEnd("ctx");
-(
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-$ctx1.supercall = true, 
-//>>excludeEnd("ctx");
-$globals.CatalogController.superclass.fn.prototype._onTemplate_.apply($recv(self), [data]));
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-$ctx1.supercall = false;
-//>>excludeEnd("ctx");;
-$recv($Product())._findAllDo_((function(res){
+$recv($Product())._findAllThen_((function(products){
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx2) {
 //>>excludeEnd("ctx");
-return self._onProducts_($recv($Product())._onAfterReadAll_(res));
+return self._showProducts_(products);
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
-}, function($ctx2) {$ctx2.fillBlock({res:res},$ctx1,1)});
+}, function($ctx2) {$ctx2.fillBlock({products:products},$ctx1,1)});
 //>>excludeEnd("ctx");
 }));
 return self;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
-}, function($ctx1) {$ctx1.fill(self,"onTemplate:",{data:data},$globals.CatalogController)});
+}, function($ctx1) {$ctx1.fill(self,"showProducts",{},$globals.CatalogController)});
 //>>excludeEnd("ctx");
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
-args: ["data"],
-source: "onTemplate: data\x0a\x09\x22Receives the template's data after requirejs \x0a\x09have received it from the server (or cache).\x22\x0a\x0a\x09super onTemplate: data.\x0a\x0a\x09Product findAllDo: [ :res | \x0a\x09\x09self onProducts: (Product onAfterReadAll: res) ].",
+args: [],
+source: "showProducts\x0a\x0a\x09Product findAllThen: [ :products | \x0a\x09\x09self showProducts: products ].",
 referencedClasses: ["Product"],
 //>>excludeEnd("ide");
-messageSends: ["onTemplate:", "findAllDo:", "onProducts:", "onAfterReadAll:"]
+messageSends: ["findAllThen:", "showProducts:"]
+}),
+$globals.CatalogController);
+
+$core.addMethod(
+$core.method({
+selector: "showProducts:",
+protocol: 'actions',
+fn: function (someProducts){
+var self=this;
+function $ListModel(){return $globals.ListModel||(typeof ListModel=="undefined"?nil:ListModel)}
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx1) {
+//>>excludeEnd("ctx");
+var $1,$2;
+$1=self._products();
+$recv($1)._model_($recv($ListModel())._on_(someProducts));
+$2=$recv($1)._show();
+return self;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx1) {$ctx1.fill(self,"showProducts:",{someProducts:someProducts},$globals.CatalogController)});
+//>>excludeEnd("ctx");
+},
+//>>excludeStart("ide", pragmas.excludeIdeData);
+args: ["someProducts"],
+source: "showProducts: someProducts\x0a\x0a\x0a\x09self products \x0a\x09\x09model: (ListModel on: someProducts);\x0a\x09\x09show",
+referencedClasses: ["ListModel"],
+//>>excludeEnd("ide");
+messageSends: ["model:", "products", "on:", "show"]
 }),
 $globals.CatalogController);
 
@@ -893,7 +1018,7 @@ $1=self._ifAbsentAt_put_("catalog",(function(){
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx2) {
 //>>excludeEnd("ctx");
-return $recv($CatalogController())._on_in_appendingTo_($recv($Catalog())._new(),self,"#catalog"._asJQuery());
+return $recv($CatalogController())._on_in_appendingTo_($recv($Catalog())._new(),self,"#catalog-wrapper"._asJQuery());
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 }, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)});
 //>>excludeEnd("ctx");
@@ -905,7 +1030,7 @@ return $1;
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: [],
-source: "catalog\x0a\x0a\x09^ self ifAbsentAt: #catalog put: [\x0a\x09\x09\x09CatalogController \x0a\x09\x09\x09\x09on: Catalog new \x0a\x09\x09\x09\x09in: self \x0a\x09\x09\x09\x09appendingTo: '#catalog' asJQuery ]",
+source: "catalog\x0a\x0a\x09^ self ifAbsentAt: #catalog put: [\x0a\x09\x09\x09CatalogController \x0a\x09\x09\x09\x09on: Catalog new \x0a\x09\x09\x09\x09in: self \x0a\x09\x09\x09\x09appendingTo: '#catalog-wrapper' asJQuery ]",
 referencedClasses: ["CatalogController", "Catalog"],
 //>>excludeEnd("ide");
 messageSends: ["ifAbsentAt:put:", "on:in:appendingTo:", "new", "asJQuery"]
@@ -951,7 +1076,7 @@ $1=self._ifAbsentAt_put_("footer",(function(){
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx2) {
 //>>excludeEnd("ctx");
-return $recv($FooterController())._in_appendingTo_(self,"#footer"._asJQuery());
+return $recv($FooterController())._in_appendingTo_(self,"#footer-wrapper"._asJQuery());
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 }, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)});
 //>>excludeEnd("ctx");
@@ -963,165 +1088,10 @@ return $1;
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: [],
-source: "footer\x0a\x0a\x09^ self ifAbsentAt: #footer put: [ \x0a\x09\x09\x09FooterController \x0a\x09\x09\x09\x09in: self \x0a\x09\x09\x09\x09appendingTo: '#footer' asJQuery ]",
+source: "footer\x0a\x0a\x09^ self ifAbsentAt: #footer put: [ \x0a\x09\x09\x09FooterController \x0a\x09\x09\x09\x09in: self \x0a\x09\x09\x09\x09appendingTo: '#footer-wrapper' asJQuery ]",
 referencedClasses: ["FooterController"],
 //>>excludeEnd("ide");
 messageSends: ["ifAbsentAt:put:", "in:appendingTo:", "asJQuery"]
-}),
-$globals.MainController);
-
-$core.addMethod(
-$core.method({
-selector: "initialize",
-protocol: 'initialization',
-fn: function (){
-var self=this;
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-return $core.withContext(function($ctx1) {
-//>>excludeEnd("ctx");
-(
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-$ctx1.supercall = true, 
-//>>excludeEnd("ctx");
-$globals.MainController.superclass.fn.prototype._initialize.apply($recv(self), []));
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-$ctx1.supercall = false;
-//>>excludeEnd("ctx");;
-$recv(self._deferred())._done_((function(){
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-return $core.withContext(function($ctx2) {
-//>>excludeEnd("ctx");
-return self._home();
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-}, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)});
-//>>excludeEnd("ctx");
-}));
-return self;
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-}, function($ctx1) {$ctx1.fill(self,"initialize",{},$globals.MainController)});
-//>>excludeEnd("ctx");
-},
-//>>excludeStart("ide", pragmas.excludeIdeData);
-args: [],
-source: "initialize\x0a\x0a\x09super initialize.\x0a\x09\x0a\x09self deferred done: [\x0a\x09\x09self home ]",
-referencedClasses: [],
-//>>excludeEnd("ide");
-messageSends: ["initialize", "done:", "deferred", "home"]
-}),
-$globals.MainController);
-
-$core.addMethod(
-$core.method({
-selector: "onAfterModel",
-protocol: 'reactions',
-fn: function (){
-var self=this;
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-return $core.withContext(function($ctx1) {
-//>>excludeEnd("ctx");
-var $1;
-(
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-$ctx1.supercall = true, 
-//>>excludeEnd("ctx");
-$globals.MainController.superclass.fn.prototype._onAfterModel.apply($recv(self), []));
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-$ctx1.supercall = false;
-//>>excludeEnd("ctx");;
-$1=self._model();
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-$ctx1.sendIdx["model"]=1;
-//>>excludeEnd("ctx");
-$recv($1)._updateCartSize();
-$recv(self._model())._updateWishListSize();
-return self;
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-}, function($ctx1) {$ctx1.fill(self,"onAfterModel",{},$globals.MainController)});
-//>>excludeEnd("ctx");
-},
-//>>excludeStart("ide", pragmas.excludeIdeData);
-args: [],
-source: "onAfterModel\x0a\x0a\x09super onAfterModel.\x0a\x09\x0a\x09self model updateCartSize.\x0a\x09self model updateWishListSize.",
-referencedClasses: [],
-//>>excludeEnd("ide");
-messageSends: ["onAfterModel", "updateCartSize", "model", "updateWishListSize"]
-}),
-$globals.MainController);
-
-$core.addMethod(
-$core.method({
-selector: "onTemplate:",
-protocol: 'reactions',
-fn: function (data){
-var self=this;
-function $CatalogController(){return $globals.CatalogController||(typeof CatalogController=="undefined"?nil:CatalogController)}
-function $Catalog(){return $globals.Catalog||(typeof Catalog=="undefined"?nil:Catalog)}
-function $FooterController(){return $globals.FooterController||(typeof FooterController=="undefined"?nil:FooterController)}
-function $Footer(){return $globals.Footer||(typeof Footer=="undefined"?nil:Footer)}
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-return $core.withContext(function($ctx1) {
-//>>excludeEnd("ctx");
-var $1,$3,$4,$2;
-(
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-$ctx1.supercall = true, 
-//>>excludeEnd("ctx");
-$globals.MainController.superclass.fn.prototype._onTemplate_.apply($recv(self), [data]));
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-$ctx1.supercall = false;
-//>>excludeEnd("ctx");;
-$1="#loaderBar"._asJQuery();
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-$ctx1.sendIdx["asJQuery"]=1;
-//>>excludeEnd("ctx");
-$recv($1)._show();
-$2=self._controllerAt_ifAbsentPut_("catalog",(function(){
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-return $core.withContext(function($ctx2) {
-//>>excludeEnd("ctx");
-$3=$recv($Catalog())._new();
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-$ctx2.sendIdx["new"]=1;
-//>>excludeEnd("ctx");
-$4="#catalog"._asJQuery();
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-$ctx2.sendIdx["asJQuery"]=2;
-//>>excludeEnd("ctx");
-return $recv($CatalogController())._for_on_appendingTo_($3,self,$4);
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-$ctx2.sendIdx["for:on:appendingTo:"]=1;
-//>>excludeEnd("ctx");
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-}, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)});
-//>>excludeEnd("ctx");
-}));
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-$ctx1.sendIdx["controllerAt:ifAbsentPut:"]=1;
-//>>excludeEnd("ctx");
-$recv($2)._refresh();
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-$ctx1.sendIdx["refresh"]=1;
-//>>excludeEnd("ctx");
-$recv(self._controllerAt_ifAbsentPut_("footer",(function(){
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-return $core.withContext(function($ctx2) {
-//>>excludeEnd("ctx");
-return $recv($FooterController())._for_on_appendingTo_($recv($Footer())._new(),self,"#footer"._asJQuery());
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-}, function($ctx2) {$ctx2.fillBlock({},$ctx1,2)});
-//>>excludeEnd("ctx");
-})))._refresh();
-return self;
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-}, function($ctx1) {$ctx1.fill(self,"onTemplate:",{data:data},$globals.MainController)});
-//>>excludeEnd("ctx");
-},
-//>>excludeStart("ide", pragmas.excludeIdeData);
-args: ["data"],
-source: "onTemplate: data\x0a\x09\x22Receives the template's data after requirejs \x0a\x09have received it from the server (or cache).\x22\x0a\x0a\x09super onTemplate: data.\x0a\x0a\x09\x22Lets make sure we load the catalog using the #catalog div as its root\x0a\x09and refresh if already there\x22\x0a\x09'#loaderBar'asJQuery show.\x0a\x09(self controllerAt: 'catalog' ifAbsentPut:[ \x0a\x09\x09CatalogController for: Catalog new on: self appendingTo: '#catalog' asJQuery ]) refresh.\x0a\x0a\x09(self controllerAt: 'footer' ifAbsentPut:[ \x0a\x09\x09FooterController for: Footer new on: self appendingTo: '#footer' asJQuery ]) refresh.",
-referencedClasses: ["CatalogController", "Catalog", "FooterController", "Footer"],
-//>>excludeEnd("ide");
-messageSends: ["onTemplate:", "show", "asJQuery", "refresh", "controllerAt:ifAbsentPut:", "for:on:appendingTo:", "new"]
 }),
 $globals.MainController);
 
@@ -1155,20 +1125,21 @@ selector: "saveState",
 protocol: 'actions',
 fn: function (){
 var self=this;
+function $App(){return $globals.App||(typeof App=="undefined"?nil:App)}
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx1) {
 //>>excludeEnd("ctx");
 var $2,$1;
-$2=self._model();
+$2=$recv($App())._session();
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
-$ctx1.sendIdx["model"]=1;
+$ctx1.sendIdx["session"]=1;
 //>>excludeEnd("ctx");
 $1=$recv($2)._cart();
 $recv($1)._save();
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 $ctx1.sendIdx["save"]=1;
 //>>excludeEnd("ctx");
-$recv(self._model())._save();
+$recv($recv($App())._session())._save();
 return self;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 }, function($ctx1) {$ctx1.fill(self,"saveState",{},$globals.MainController)});
@@ -1176,10 +1147,10 @@ return self;
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: [],
-source: "saveState\x0a\x0a\x09self model cart save.\x0a\x09self model save.",
-referencedClasses: [],
+source: "saveState\x0a\x0a\x09App session cart save.\x0a\x09App session save.",
+referencedClasses: ["App"],
 //>>excludeEnd("ide");
-messageSends: ["save", "cart", "model"]
+messageSends: ["save", "cart", "session"]
 }),
 $globals.MainController);
 
@@ -1205,6 +1176,36 @@ source: "showCatalog\x0a\x09\x0a\x09self hideAllBut: #footer.\x0a\x09\x0a\x09sel
 referencedClasses: [],
 //>>excludeEnd("ide");
 messageSends: ["hideAllBut:", "show", "catalog"]
+}),
+$globals.MainController);
+
+$core.addMethod(
+$core.method({
+selector: "update",
+protocol: 'actions',
+fn: function (){
+var self=this;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx1) {
+//>>excludeEnd("ctx");
+var $1;
+$1=self._model();
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["model"]=1;
+//>>excludeEnd("ctx");
+$recv($1)._updateCartSize();
+$recv(self._model())._updateWishListSize();
+return self;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx1) {$ctx1.fill(self,"update",{},$globals.MainController)});
+//>>excludeEnd("ctx");
+},
+//>>excludeStart("ide", pragmas.excludeIdeData);
+args: [],
+source: "update\x0a\x0a\x09self model updateCartSize.\x0a\x09self model updateWishListSize.",
+referencedClasses: [],
+//>>excludeEnd("ide");
+messageSends: ["updateCartSize", "model", "updateWishListSize"]
 }),
 $globals.MainController);
 
