@@ -309,7 +309,9 @@ find
 
 reset
 	
-	self showCatalog
+	self hideAll.
+	self showCatalog.
+	self showFooter
 !
 
 saveState
@@ -320,9 +322,12 @@ saveState
 
 showCatalog
 	
-	self hideAllBut: #footer.
-	
 	self catalog show
+!
+
+showFooter
+	
+	self footer show
 !
 
 update
@@ -366,11 +371,11 @@ BindingController subclass: #ProductInWishListController
 
 removeFromCart
 
-	Flow session shopVisitor localSave.
+	App session shopVisitor localSave.
 	model localSave.
 	
-	Flow session shopVisitor wishList removeProduct: model; localSave.
-	Flow session shopVisitor updateWishListSize.
+	App session shopVisitor wishList removeProduct: model; localSave.
+	App session shopVisitor updateWishListSize.
 	
 	'#alertsRoot' asJQuery html: '<div class="alert alert-warning" role="alert">We''ve removed one ',model description,' from your wish list</div>'.
 
@@ -396,15 +401,14 @@ addToCart
 
 addToWishList
 
-	Flow session shopVisitor localSave.
-	model localSave.
+	App session shopVisitor localSave.
 	
-	Flow session shopVisitor wishList addProduct: model; localSave.
-	Flow session shopVisitor updateWishListSize.
+	App session shopVisitor wishList addProduct: model; localSave.
+	App session shopVisitor updateWishListSize.
 	
 	'#alertsRoot' asJQuery html: '<div class="alert alert-info" role="alert">We''ve added one ',model description,' to your wishlist. It got sooo whishable!!</div>'.
 
-	['#alertsRoot' asJQuery empty ] valueWithTimeout: 2000.
+	[ '#alertsRoot' asJQuery empty ] valueWithTimeout: 2000.
 !
 
 getModelAsArgument

@@ -1,11 +1,20 @@
-<div class="row">
+<div class="product-thumbnail">
   <div class="col-sm-6 col-md-4">
     <div class="thumbnail">
       <img rv-src="model.imageUrl" alt="...">
       <div class="caption">
-        <h3>Thumbnail label</h3>
-        <p>...</p>
-        <p><a href="#" class="btn btn-primary" role="button">Button</a> <a href="#" class="btn btn-default" role="button">Button</a></p>
+        <h3> { model.description } </h3>
+        <p> { model.price | currency '$' } </p>
+        <div>
+          <a 
+            class="btn btn-primary" 
+            role="button"
+            >Add to Cart</a> 
+          <a 
+            class="btn btn-default" 
+            role="button"
+            >Add to Wishlist</a>
+        </div>
       </div>
     </div>
   </div>

@@ -1104,7 +1104,9 @@ var self=this;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx1) {
 //>>excludeEnd("ctx");
+self._hideAll();
 self._showCatalog();
+self._showFooter();
 return self;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 }, function($ctx1) {$ctx1.fill(self,"reset",{},$globals.MainController)});
@@ -1112,10 +1114,10 @@ return self;
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: [],
-source: "reset\x0a\x09\x0a\x09self showCatalog",
+source: "reset\x0a\x09\x0a\x09self hideAll.\x0a\x09self showCatalog.\x0a\x09self showFooter",
 referencedClasses: [],
 //>>excludeEnd("ide");
-messageSends: ["showCatalog"]
+messageSends: ["hideAll", "showCatalog", "showFooter"]
 }),
 $globals.MainController);
 
@@ -1163,7 +1165,6 @@ var self=this;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx1) {
 //>>excludeEnd("ctx");
-self._hideAllBut_("footer");
 $recv(self._catalog())._show();
 return self;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
@@ -1172,10 +1173,34 @@ return self;
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: [],
-source: "showCatalog\x0a\x09\x0a\x09self hideAllBut: #footer.\x0a\x09\x0a\x09self catalog show",
+source: "showCatalog\x0a\x09\x0a\x09self catalog show",
 referencedClasses: [],
 //>>excludeEnd("ide");
-messageSends: ["hideAllBut:", "show", "catalog"]
+messageSends: ["show", "catalog"]
+}),
+$globals.MainController);
+
+$core.addMethod(
+$core.method({
+selector: "showFooter",
+protocol: 'actions',
+fn: function (){
+var self=this;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx1) {
+//>>excludeEnd("ctx");
+$recv(self._footer())._show();
+return self;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx1) {$ctx1.fill(self,"showFooter",{},$globals.MainController)});
+//>>excludeEnd("ctx");
+},
+//>>excludeStart("ide", pragmas.excludeIdeData);
+args: [],
+source: "showFooter\x0a\x09\x0a\x09self footer show",
+referencedClasses: [],
+//>>excludeEnd("ide");
+messageSends: ["show", "footer"]
 }),
 $globals.MainController);
 
@@ -1298,12 +1323,12 @@ selector: "removeFromCart",
 protocol: 'actions',
 fn: function (){
 var self=this;
-function $Flow(){return $globals.Flow||(typeof Flow=="undefined"?nil:Flow)}
+function $App(){return $globals.App||(typeof App=="undefined"?nil:App)}
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx1) {
 //>>excludeEnd("ctx");
 var $2,$1,$5,$4,$3,$6,$7,$8;
-$2=$recv($Flow())._session();
+$2=$recv($App())._session();
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 $ctx1.sendIdx["session"]=1;
 //>>excludeEnd("ctx");
@@ -1319,7 +1344,7 @@ $recv(self["@model"])._localSave();
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 $ctx1.sendIdx["localSave"]=2;
 //>>excludeEnd("ctx");
-$5=$recv($Flow())._session();
+$5=$recv($App())._session();
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 $ctx1.sendIdx["session"]=2;
 //>>excludeEnd("ctx");
@@ -1330,7 +1355,7 @@ $ctx1.sendIdx["shopVisitor"]=2;
 $3=$recv($4)._wishList();
 $recv($3)._removeProduct_(self["@model"]);
 $6=$recv($3)._localSave();
-$recv($recv($recv($Flow())._session())._shopVisitor())._updateWishListSize();
+$recv($recv($recv($App())._session())._shopVisitor())._updateWishListSize();
 $7="#alertsRoot"._asJQuery();
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 $ctx1.sendIdx["asJQuery"]=1;
@@ -1356,8 +1381,8 @@ return self;
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: [],
-source: "removeFromCart\x0a\x0a\x09Flow session shopVisitor localSave.\x0a\x09model localSave.\x0a\x09\x0a\x09Flow session shopVisitor wishList removeProduct: model; localSave.\x0a\x09Flow session shopVisitor updateWishListSize.\x0a\x09\x0a\x09'#alertsRoot' asJQuery html: '<div class=\x22alert alert-warning\x22 role=\x22alert\x22>We''ve removed one ',model description,' from your wish list</div>'.\x0a\x0a\x09['#alertsRoot' asJQuery empty ] valueWithTimeout: 2000.",
-referencedClasses: ["Flow"],
+source: "removeFromCart\x0a\x0a\x09App session shopVisitor localSave.\x0a\x09model localSave.\x0a\x09\x0a\x09App session shopVisitor wishList removeProduct: model; localSave.\x0a\x09App session shopVisitor updateWishListSize.\x0a\x09\x0a\x09'#alertsRoot' asJQuery html: '<div class=\x22alert alert-warning\x22 role=\x22alert\x22>We''ve removed one ',model description,' from your wish list</div>'.\x0a\x0a\x09['#alertsRoot' asJQuery empty ] valueWithTimeout: 2000.",
+referencedClasses: ["App"],
 //>>excludeEnd("ide");
 messageSends: ["localSave", "shopVisitor", "session", "removeProduct:", "wishList", "updateWishListSize", "html:", "asJQuery", ",", "description", "valueWithTimeout:", "empty"]
 }),
@@ -1436,12 +1461,12 @@ selector: "addToWishList",
 protocol: 'actions',
 fn: function (){
 var self=this;
-function $Flow(){return $globals.Flow||(typeof Flow=="undefined"?nil:Flow)}
+function $App(){return $globals.App||(typeof App=="undefined"?nil:App)}
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx1) {
 //>>excludeEnd("ctx");
 var $2,$1,$5,$4,$3,$6,$7,$8;
-$2=$recv($Flow())._session();
+$2=$recv($App())._session();
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 $ctx1.sendIdx["session"]=1;
 //>>excludeEnd("ctx");
@@ -1453,11 +1478,7 @@ $recv($1)._localSave();
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 $ctx1.sendIdx["localSave"]=1;
 //>>excludeEnd("ctx");
-$recv(self["@model"])._localSave();
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-$ctx1.sendIdx["localSave"]=2;
-//>>excludeEnd("ctx");
-$5=$recv($Flow())._session();
+$5=$recv($App())._session();
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 $ctx1.sendIdx["session"]=2;
 //>>excludeEnd("ctx");
@@ -1468,7 +1489,7 @@ $ctx1.sendIdx["shopVisitor"]=2;
 $3=$recv($4)._wishList();
 $recv($3)._addProduct_(self["@model"]);
 $6=$recv($3)._localSave();
-$recv($recv($recv($Flow())._session())._shopVisitor())._updateWishListSize();
+$recv($recv($recv($App())._session())._shopVisitor())._updateWishListSize();
 $7="#alertsRoot"._asJQuery();
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 $ctx1.sendIdx["asJQuery"]=1;
@@ -1494,8 +1515,8 @@ return self;
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: [],
-source: "addToWishList\x0a\x0a\x09Flow session shopVisitor localSave.\x0a\x09model localSave.\x0a\x09\x0a\x09Flow session shopVisitor wishList addProduct: model; localSave.\x0a\x09Flow session shopVisitor updateWishListSize.\x0a\x09\x0a\x09'#alertsRoot' asJQuery html: '<div class=\x22alert alert-info\x22 role=\x22alert\x22>We''ve added one ',model description,' to your wishlist. It got sooo whishable!</div>'.\x0a\x0a\x09['#alertsRoot' asJQuery empty ] valueWithTimeout: 2000.",
-referencedClasses: ["Flow"],
+source: "addToWishList\x0a\x0a\x09App session shopVisitor localSave.\x0a\x09\x0a\x09App session shopVisitor wishList addProduct: model; localSave.\x0a\x09App session shopVisitor updateWishListSize.\x0a\x09\x0a\x09'#alertsRoot' asJQuery html: '<div class=\x22alert alert-info\x22 role=\x22alert\x22>We''ve added one ',model description,' to your wishlist. It got sooo whishable!</div>'.\x0a\x0a\x09[ '#alertsRoot' asJQuery empty ] valueWithTimeout: 2000.",
+referencedClasses: ["App"],
 //>>excludeEnd("ide");
 messageSends: ["localSave", "shopVisitor", "session", "addProduct:", "wishList", "updateWishListSize", "html:", "asJQuery", ",", "description", "valueWithTimeout:", "empty"]
 }),
