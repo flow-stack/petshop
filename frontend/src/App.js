@@ -485,7 +485,7 @@ $1=$recv($2)._includes_(aProduct);
 if(!$core.assert($1)){
 $recv(self._products())._add_(aProduct);
 };
-self._trigger_with_("added:",aProduct);
+self._triggerEvent_with_("added:",aProduct);
 self._updateTotal();
 return self;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
@@ -494,10 +494,10 @@ return self;
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: ["aProduct"],
-source: "addProduct: aProduct\x0a\x0a\x09(self products includes: aProduct) ifFalse: [\x0a\x09\x09self products add: aProduct ].\x0a\x0a\x09self trigger: #added: with: aProduct.\x0a\x09\x0a\x09self updateTotal.",
+source: "addProduct: aProduct\x0a\x0a\x09(self products includes: aProduct) ifFalse: [\x0a\x09\x09self products add: aProduct ].\x0a\x0a\x09self triggerEvent: #added: with: aProduct.\x0a\x09\x0a\x09self updateTotal.",
 referencedClasses: [],
 //>>excludeEnd("ide");
-messageSends: ["ifFalse:", "includes:", "products", "add:", "trigger:with:", "updateTotal"]
+messageSends: ["ifFalse:", "includes:", "products", "add:", "triggerEvent:with:", "updateTotal"]
 }),
 $globals.Cart);
 
@@ -563,7 +563,7 @@ $recv(self._products())._remove_ifAbsent_(aProduct,(function(){
 return nil;
 
 }));
-self._trigger_with_("removed:",aProduct);
+self._triggerEvent_with_("removed:",aProduct);
 self._updateTotal();
 return self;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
@@ -572,10 +572,10 @@ return self;
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: ["aProduct"],
-source: "removeProduct: aProduct\x0a\x0a\x09self products\x0a\x09\x09remove: aProduct\x0a\x09\x09ifAbsent: [ nil ].\x0a\x0a\x09self trigger: #removed: with: aProduct. \x0a\x09\x0a\x09self updateTotal",
+source: "removeProduct: aProduct\x0a\x0a\x09self products\x0a\x09\x09remove: aProduct\x0a\x09\x09ifAbsent: [ nil ].\x0a\x0a\x09self triggerEvent: #removed: with: aProduct. \x0a\x09\x0a\x09self updateTotal",
 referencedClasses: [],
 //>>excludeEnd("ide");
-messageSends: ["remove:ifAbsent:", "products", "trigger:with:", "updateTotal"]
+messageSends: ["remove:ifAbsent:", "products", "triggerEvent:with:", "updateTotal"]
 }),
 $globals.Cart);
 
@@ -1406,23 +1406,23 @@ $2=$recv($App())._session();
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 $ctx1.sendIdx["session"]=1;
 //>>excludeEnd("ctx");
-$1=$recv($2)._shopVisitor();
+$1=$recv($2)._visitor();
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
-$ctx1.sendIdx["shopVisitor"]=1;
+$ctx1.sendIdx["visitor"]=1;
 //>>excludeEnd("ctx");
 $recv($1)._localSave();
 $5=$recv($App())._session();
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 $ctx1.sendIdx["session"]=2;
 //>>excludeEnd("ctx");
-$4=$recv($5)._shopVisitor();
+$4=$recv($5)._visitor();
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
-$ctx1.sendIdx["shopVisitor"]=2;
+$ctx1.sendIdx["visitor"]=2;
 //>>excludeEnd("ctx");
 $3=$recv($4)._cart();
 $recv($3)._addProduct_(self["@model"]);
 $6=$recv($3)._save();
-$recv($recv($recv($App())._session())._shopVisitor())._updateCartSize();
+$recv($recv($recv($App())._session())._visitor())._updateCartSize();
 $7="#alertsRoot"._asJQuery();
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 $ctx1.sendIdx["asJQuery"]=1;
@@ -1448,10 +1448,10 @@ return self;
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: [],
-source: "addToCart\x0a\x0a\x09App session shopVisitor localSave.\x0a\x09\x0a\x09App session shopVisitor cart addProduct: model; save.\x0a\x09App session shopVisitor updateCartSize.\x0a\x09\x0a\x09'#alertsRoot' asJQuery html: '<div class=\x22alert alert-success\x22 role=\x22alert\x22>Done. We''ve added one ',model description,' to your cart!</div>'.\x0a\x09['#alertsRoot' asJQuery empty ] valueWithTimeout: 2000.",
+source: "addToCart\x0a\x0a\x09App session visitor localSave.\x0a\x09\x0a\x09App session visitor cart addProduct: model; save.\x0a\x09App session visitor updateCartSize.\x0a\x09\x0a\x09'#alertsRoot' asJQuery html: '<div class=\x22alert alert-success\x22 role=\x22alert\x22>Done. We''ve added one ',model description,' to your cart!</div>'.\x0a\x09['#alertsRoot' asJQuery empty ] valueWithTimeout: 2000.",
 referencedClasses: ["App"],
 //>>excludeEnd("ide");
-messageSends: ["localSave", "shopVisitor", "session", "addProduct:", "cart", "save", "updateCartSize", "html:", "asJQuery", ",", "description", "valueWithTimeout:", "empty"]
+messageSends: ["localSave", "visitor", "session", "addProduct:", "cart", "save", "updateCartSize", "html:", "asJQuery", ",", "description", "valueWithTimeout:", "empty"]
 }),
 $globals.ProductThumbnailController);
 
@@ -1470,9 +1470,9 @@ $2=$recv($App())._session();
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 $ctx1.sendIdx["session"]=1;
 //>>excludeEnd("ctx");
-$1=$recv($2)._shopVisitor();
+$1=$recv($2)._visitor();
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
-$ctx1.sendIdx["shopVisitor"]=1;
+$ctx1.sendIdx["visitor"]=1;
 //>>excludeEnd("ctx");
 $recv($1)._localSave();
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
@@ -1482,14 +1482,14 @@ $5=$recv($App())._session();
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 $ctx1.sendIdx["session"]=2;
 //>>excludeEnd("ctx");
-$4=$recv($5)._shopVisitor();
+$4=$recv($5)._visitor();
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
-$ctx1.sendIdx["shopVisitor"]=2;
+$ctx1.sendIdx["visitor"]=2;
 //>>excludeEnd("ctx");
 $3=$recv($4)._wishList();
 $recv($3)._addProduct_(self["@model"]);
 $6=$recv($3)._localSave();
-$recv($recv($recv($App())._session())._shopVisitor())._updateWishListSize();
+$recv($recv($recv($App())._session())._visitor())._updateWishListSize();
 $7="#alertsRoot"._asJQuery();
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 $ctx1.sendIdx["asJQuery"]=1;
@@ -1515,10 +1515,10 @@ return self;
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: [],
-source: "addToWishList\x0a\x0a\x09App session shopVisitor localSave.\x0a\x09\x0a\x09App session shopVisitor wishList addProduct: model; localSave.\x0a\x09App session shopVisitor updateWishListSize.\x0a\x09\x0a\x09'#alertsRoot' asJQuery html: '<div class=\x22alert alert-info\x22 role=\x22alert\x22>We''ve added one ',model description,' to your wishlist. It got sooo whishable!</div>'.\x0a\x0a\x09[ '#alertsRoot' asJQuery empty ] valueWithTimeout: 2000.",
+source: "addToWishList\x0a\x0a\x09App session visitor localSave.\x0a\x09\x0a\x09App session visitor wishList addProduct: model; localSave.\x0a\x09App session visitor updateWishListSize.\x0a\x09\x0a\x09'#alertsRoot' asJQuery html: '<div class=\x22alert alert-info\x22 role=\x22alert\x22>We''ve added one ',model description,' to your wishlist. It got sooo whishable!</div>'.\x0a\x0a\x09[ '#alertsRoot' asJQuery empty ] valueWithTimeout: 2000.",
 referencedClasses: ["App"],
 //>>excludeEnd("ide");
-messageSends: ["localSave", "shopVisitor", "session", "addProduct:", "wishList", "updateWishListSize", "html:", "asJQuery", ",", "description", "valueWithTimeout:", "empty"]
+messageSends: ["localSave", "visitor", "session", "addProduct:", "wishList", "updateWishListSize", "html:", "asJQuery", ",", "description", "valueWithTimeout:", "empty"]
 }),
 $globals.ProductThumbnailController);
 

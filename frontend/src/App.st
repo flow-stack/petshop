@@ -123,7 +123,7 @@ addProduct: aProduct
 	(self products includes: aProduct) ifFalse: [
 		self products add: aProduct ].
 
-	self trigger: #added: with: aProduct.
+	self triggerEvent: #added: with: aProduct.
 	
 	self updateTotal.
 !
@@ -134,7 +134,7 @@ removeProduct: aProduct
 		remove: aProduct
 		ifAbsent: [ nil ].
 
-	self trigger: #removed: with: aProduct. 
+	self triggerEvent: #removed: with: aProduct. 
 	
 	self updateTotal
 !
@@ -390,10 +390,10 @@ BindingController subclass: #ProductThumbnailController
 
 addToCart
 
-	App session shopVisitor localSave.
+	App session visitor localSave.
 	
-	App session shopVisitor cart addProduct: model; save.
-	App session shopVisitor updateCartSize.
+	App session visitor cart addProduct: model; save.
+	App session visitor updateCartSize.
 	
 	'#alertsRoot' asJQuery html: '<div class="alert alert-success" role="alert">Done. We''ve added one ',model description,' to your cart!!</div>'.
 	['#alertsRoot' asJQuery empty ] valueWithTimeout: 2000.
@@ -401,10 +401,10 @@ addToCart
 
 addToWishList
 
-	App session shopVisitor localSave.
+	App session visitor localSave.
 	
-	App session shopVisitor wishList addProduct: model; localSave.
-	App session shopVisitor updateWishListSize.
+	App session visitor wishList addProduct: model; localSave.
+	App session visitor updateWishListSize.
 	
 	'#alertsRoot' asJQuery html: '<div class="alert alert-info" role="alert">We''ve added one ',model description,' to your wishlist. It got sooo whishable!!</div>'.
 
