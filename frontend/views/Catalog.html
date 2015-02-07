@@ -23,12 +23,12 @@
 				type="button" 
 				class="btn btn-success btn-lg"
 				href="#/cart">
-				<span class="glyphicon glyphicon-shopping-cart"></span> Cart { model.cartSize }</a>
+				<span class="glyphicon glyphicon-shopping-cart"></span> Cart ({ model.cartSize | asNumber })</a>
 			<a 
 				type="button" 
 				class="btn btn-default btn-lg"
 				href="#/wishlist">
-				<span class="glyphicon glyphicon-shopping-cart"></span> Wishlist { model.wishlistSize }</a>
+				<span class="glyphicon glyphicon-shopping-cart"></span> Wishlist ({ model.wishlistSize | asNumber })</a>
 
 		</div>
 	</div>

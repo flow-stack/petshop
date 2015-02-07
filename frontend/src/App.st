@@ -52,11 +52,8 @@ getVisitor
 	shopVisitor := ShopVisitor localFindCid: (window localStorage getItem: 'visitor').
 	
 	^ shopVisitor isNil
-		ifTrue:[ ShopVisitor new
-					cart: Cart new;
-					wishlist: Wishlist new;
-					yourself ]
-		ifFalse:[ shopVisitor ]
+		ifTrue: [ ShopVisitor new ]
+		ifFalse: [ shopVisitor ]
 !
 
 on: anAnnouncement do: aReactionBlock
@@ -69,6 +66,15 @@ saveVisitor
 	"Saves the visitor in the localStorage and the backend"
 	window localStorage setItem: 'visitor' put: App session visitor cid.
 	App session visitor localSave
+!
+
+setupFormatters
+
+	RivetsJS  
+		addFormatter: [ :object | 
+			object ifNil: [ 0 ] ifNotNil: [ object asNumber ] ] 
+		at: #asNumber;
+		yourself
 !
 
 setupRouter
@@ -115,7 +121,8 @@ initialize
 
 	super initialize.
 	
-	self setupRouter
+	self setupRouter.
+	self setupFormatters
 !
 
 initializeMain
@@ -172,40 +179,57 @@ Model subclass: #Cart
 
 !Cart methodsFor: 'accessing'!
 
-products
+orderedProducts
 
-	super products ifNil: [
-		self products: OrderedCollection new ].
+	super orderedProducts ifNil: [
+		self orderedProducts: OrderedCollection new ].
 		
-	^ super products
+	^ super orderedProducts
 ! !
 
 !Cart methodsFor: 'actions'!
 
 addProduct: aProduct
+	"Adds aProduct to the cart.
+	Each product is added to the cart wrapped into an OrderedProduct
+	so it remembers price and quantity at the time of the act of adding."
+	
+	| ordered |
 
-	(self products includes: aProduct) ifFalse: [
-		self products add: aProduct ].
+	ordered := self orderedProducts 
+						detect: [ :each | each product = aProduct ]
+						ifNone: [ self orderedProducts add: (OrderedProduct on: aProduct) ].
 
-	self triggerEvent: #added: with: aProduct.
+	ordered addOne.
+	
+	self triggerEvent: #added: with: ordered.
 	
 	self updateTotal.
 !
 
 removeProduct: aProduct
+	"Removes aProduct from the cart.
+	Each product is removed from the cart subtracting 1 unit of the OrderedProduct wrapper.
+	It removes that wrapper if quantity gets to zero."
+	
+	| ordered |
 
-	self products
-		remove: aProduct
-		ifAbsent: [ nil ].
+	ordered := self orderedProducts 
+						detect: [ :each | each product = aProduct ]
+						ifNone: [ nil ].
 
-	self triggerEvent: #removed: with: aProduct. 
+	ordered ifNotNil: [
+		ordered removeOne.
+		ordered quantity isZero ifTrue: [ self orderedProducts remove: ordered ifNone: [ nil ] ]].
+
+ 	self triggerEvent: #removed: with: aProduct. 
 	
 	self updateTotal
 !
 
 updateTotal
 
-	self total: (self products inject: 0 into: [ :sum :e | sum + e price ])
+	self total: (self orderedProducts inject: 0 into: [ :sum :e | sum + e total ])
 ! !
 
 BindingController subclass: #CartController
@@ -280,9 +304,9 @@ Model subclass: #Catalog
 !Catalog methodsFor: 'actions'!
 
 update
-	
-	self cartSize: '(', App session visitor cartSize asString, ')'.
-	self wishlistSize: '(', App session visitor wishlistSize asString, ')'.
+
+	self cartSize: App session visitor cartSize.
+	self wishlistSize: App session visitor wishlistSize.
 ! !
 
 !Catalog methodsFor: 'initialization'!
@@ -334,6 +358,11 @@ showProducts: someProducts
 	self products 
 		model: (ListModel on: someProducts);
 		show
+!
+
+update
+
+	model update
 ! !
 
 Model subclass: #Footer
@@ -392,7 +421,8 @@ observeEvents
 
 	super observeEvents.
 	
-	App on: AddToCart do: [ :ann | self onProductAdded: ann subject ]
+	App on: AddToCart do: [ :ann | self onAddedToCart: ann subject ].
+	App on: AddToWishlist do: [ :ann | self onAddedToWishlist: ann subject ].
 !
 
 reset
@@ -426,14 +456,77 @@ update
 
 !MainController methodsFor: 'reactions'!
 
-onProductAdded: aProduct
+onAddedToCart: aProduct
 
 	App session visitor localSave.
 	
-	App session visitor cart addProduct: aProduct; save.
+	App session visitor cart addProduct: aProduct.
 	App session visitor updateCartSize.
+	App saveVisitor.
 
-	self catalog model update
+	self catalog update
+!
+
+onAddedToWishlist: aProduct
+
+	App session visitor localSave.
+	
+	App session visitor wishlist addProduct: aProduct.
+	App session visitor updateWishlistSize.
+	App saveVisitor.
+
+	self catalog update
+! !
+
+Model subclass: #OrderedProduct
+	instanceVariableNames: ''
+	package: 'App'!
+
+!OrderedProduct methodsFor: 'accessing'!
+
+price
+
+	super price ifNil: [
+		self price: 0 ].
+		
+	^ super price
+!
+
+quantity
+
+	super quantity ifNil: [
+		self quantity: 0 ].
+		
+	^ super quantity
+!
+
+total
+
+	^ self quantity * self price
+! !
+
+!OrderedProduct methodsFor: 'actions'!
+
+addOne
+
+	self quantity: self quantity + 1
+!
+
+removeOne
+
+	self quantity > 0 ifTrue: [
+		self quantity: self quantity - 1 ]
+! !
+
+!OrderedProduct class methodsFor: 'actions'!
+
+on: aProduct
+
+	^ self new
+		product: aProduct;
+		quantity: 0;
+		price: aProduct price;
+		yourself
 ! !
 
 Model subclass: #Product
@@ -505,10 +598,7 @@ addToCart
 
 addToWishlist
 
-	App session visitor localSave.
-	
-	App session visitor wishlist addProduct: model; localSave.
-	App session visitor updateWishlistSize.
+	App announce: (AddToWishlist on: model).
 	
 	'#alertsRoot' asJQuery html: '<div class="alert alert-info" role="alert">We''ve added one ',model description,' to your wishlist. It got sooo whishable!!</div>'.
 
@@ -534,14 +624,20 @@ Model subclass: #ShopVisitor
 
 !ShopVisitor methodsFor: 'actions'!
 
+update
+
+	self updateCartSize.
+	self updateWishlist.
+!
+
 updateCartSize
 
-	self cartSize: self cart products size
+	self cartSize: (self cart orderedProducts inject: 0 into: [ :sum :e | sum + e quantity ])
 !
 
 updateWishlistSize
 
-	self wishlistSize: self wishlist products size
+	self wishlistSize: (self wishlist wishedProducts inject: 0 into: [ :sum :e | sum + e quantity ])
 ! !
 
 !ShopVisitor methodsFor: 'initialization'!
@@ -551,6 +647,9 @@ initialize
 	super initialize.
 	
 	self searchText: ''.
+	self cart: Cart new.
+	self wishlist: Wishlist new.
+	self update
 ! !
 
 Model subclass: #Wishlist
@@ -559,30 +658,56 @@ Model subclass: #Wishlist
 
 !Wishlist methodsFor: 'accessing'!
 
-products
+wishedProducts
 
-	super products ifNil:[
-		self products: OrderedCollection new ].
+	super wishedProducts ifNil:[
+		self wishedProducts: OrderedCollection new ].
 		
-	^ super products
+	^ super wishedProducts
 ! !
 
 !Wishlist methodsFor: 'actions'!
 
 addProduct: aProduct
+	"Adds aProduct to the cart.
+	Each product is added to the cart wrapped into an OrderedProduct
+	so it remembers price and quantity at the time of the act of adding."
+	
+	| ordered |
 
-	(self products includes: aProduct) ifFalse:[
-		self products add: aProduct ].
-		
-	self trigger: #added: with: aProduct
+	ordered := self wishedProducts 
+						detect: [ :each | each product = aProduct ]
+						ifNone: [ self wishedProducts add: (OrderedProduct on: aProduct) ].
+
+	ordered addOne.
+	
+	self triggerEvent: #added: with: ordered.
+	
+	self updateTotal.
 !
 
 removeProduct: aProduct
+	"Removes aProduct from the wishlist.
+	Each product is removed from the wishlist subtracting 1 unit of the OrderedProduct wrapper.
+	It removes that wrapper if quantity gets to zero."
+	
+	| ordered |
 
-	self products 
-		remove: aProduct
-		ifAbsent:[ nil ].
-		
-	self trigger: #removed: with: aProduct
+	ordered := self wishedProducts 
+						detect: [ :each | each product = aProduct ]
+						ifNone: [ nil ].
+
+	ordered ifNotNil: [
+		ordered removeOne.
+		ordered quantity isZero ifTrue: [ self wishedProducts remove: ordered ifNone: [ nil ] ]].
+
+ 	self triggerEvent: #removed: with: aProduct. 
+	
+	self updateTotal
+!
+
+updateTotal
+
+	self total: (self wishedProducts inject: 0 into: [ :sum :e | sum + e total ])
 ! !
 
