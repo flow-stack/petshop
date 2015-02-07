@@ -1,0 +1,14 @@
+{
+	"category" : "App",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		 ],
+	"name" : "ShopVisitor",
+	"pools" : [
+		 ],
+	"super" : "Mapless",
+	"type" : "normal" }

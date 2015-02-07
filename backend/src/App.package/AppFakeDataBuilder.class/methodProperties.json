@@ -1,9 +1,11 @@
 {
 	"class" : {
-		"build" : "sebastiansastre 7/6/2014 19:33",
-		"clean" : "sebastiansastre 7/6/2014 19:28",
-		"createRelationships" : "sebastiansastre 7/7/2014 09:34",
+		"build" : "sebastiansastre 2/7/2015 16:09",
+		"clean" : "sebastiansastre 2/7/2015 15:42",
+		"createRelationships" : "sebastiansastre 2/7/2015 16:02",
+		"getProducts" : "sebastiansastre 2/7/2015 14:46",
 		"putSomeThingsLikeThis" : "sebastiansastre 7/7/2014 09:34",
-		"saveThings" : "sebastiansastre 7/7/2014 09:34" },
+		"rawData" : "sebastiansastre 2/7/2015 15:19",
+		"saveThings" : "sebastiansastre 2/7/2015 15:45" },
 	"instance" : {
 		 } }

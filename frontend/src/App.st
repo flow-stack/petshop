@@ -3,9 +3,14 @@ Object subclass: #App
 	instanceVariableNames: ''
 	package: 'App'!
 
-App class instanceVariableNames: 'main session'!
+App class instanceVariableNames: 'main session announcer'!
 
 !App class methodsFor: 'accessing'!
+
+announcer
+
+	^ announcer ifNil: [ announcer := Announcer new ]
+!
 
 main
 
@@ -23,6 +28,11 @@ session: aSession
 ! !
 
 !App class methodsFor: 'actions'!
+
+announce: anAnnouncement
+
+	^ self announcer announce: anAnnouncement
+!
 
 getSession
 
@@ -44,15 +54,21 @@ getVisitor
 	^ shopVisitor isNil
 		ifTrue:[ ShopVisitor new
 					cart: Cart new;
-					wishList: WishList new;
+					wishlist: Wishlist new;
 					yourself ]
 		ifFalse:[ shopVisitor ]
 !
 
+on: anAnnouncement do: aReactionBlock
+
+	^ self announcer on: anAnnouncement do: aReactionBlock
+!
+
 saveVisitor
 
-	"Save the visitor in the localStorage and the backend"
-	self main session model visitor localSave save
+	"Saves the visitor in the localStorage and the backend"
+	window localStorage setItem: 'visitor' put: App session visitor cid.
+	App session visitor localSave
 !
 
 setupRouter
@@ -83,7 +99,14 @@ start
 	window at: #app put: self.
 	
 	session := self getSession.
-	self main show done: [ Router processHash ]
+	self saveVisitor.
+
+	self main show done: [ Router processHash ].
+!
+
+unsubscribe: aReceiver
+
+	^ self announcer unsubscribe: aReceiver
 ! !
 
 !App class methodsFor: 'initialization'!
@@ -101,6 +124,47 @@ initializeMain
 					in: nil
 					appendingTo: '#main-wrapper' asJQuery
 ! !
+
+Object subclass: #AppAnnouncements
+	instanceVariableNames: 'subject'
+	package: 'App'!
+
+!AppAnnouncements methodsFor: 'accessing'!
+
+subject
+
+	^ subject
+!
+
+subject: anObject
+
+	subject := anObject
+! !
+
+!AppAnnouncements class methodsFor: 'actions'!
+
+on: anObject
+
+	^ self new
+		subject: anObject;
+		yourself
+! !
+
+AppAnnouncements subclass: #AddToCart
+	instanceVariableNames: ''
+	package: 'App'!
+
+AppAnnouncements subclass: #AddToWishlist
+	instanceVariableNames: ''
+	package: 'App'!
+
+AppAnnouncements subclass: #RemoveFromCart
+	instanceVariableNames: ''
+	package: 'App'!
+
+AppAnnouncements subclass: #RemoveFromWishlist
+	instanceVariableNames: ''
+	package: 'App'!
 
 Model subclass: #Cart
 	instanceVariableNames: ''
@@ -213,6 +277,23 @@ Model subclass: #Catalog
 	instanceVariableNames: ''
 	package: 'App'!
 
+!Catalog methodsFor: 'actions'!
+
+update
+	
+	self cartSize: '(', App session visitor cartSize asString, ')'.
+	self wishlistSize: '(', App session visitor wishlistSize asString, ')'.
+! !
+
+!Catalog methodsFor: 'initialization'!
+
+initialize
+
+	super initialize.
+	
+	self update
+! !
+
 BindingController subclass: #CatalogController
 	instanceVariableNames: ''
 	package: 'App'!
@@ -307,6 +388,13 @@ find
 	window alert: 'Implement find please!!'
 !
 
+observeEvents
+
+	super observeEvents.
+	
+	App on: AddToCart do: [ :ann | self onProductAdded: ann subject ]
+!
+
 reset
 	
 	self hideAll.
@@ -333,12 +421,31 @@ showFooter
 update
 
 	self model updateCartSize.
-	self model updateWishListSize.
+	self model updateWishlistSize.
+! !
+
+!MainController methodsFor: 'reactions'!
+
+onProductAdded: aProduct
+
+	App session visitor localSave.
+	
+	App session visitor cart addProduct: aProduct; save.
+	App session visitor updateCartSize.
+
+	self catalog model update
 ! !
 
 Model subclass: #Product
 	instanceVariableNames: ''
 	package: 'App'!
+
+!Product methodsFor: 'actions'!
+
+updateImageUrl
+
+	self imageUrl: 'img/products/', self image
+! !
 
 BindingController subclass: #ProductController
 	instanceVariableNames: ''
@@ -374,8 +481,8 @@ removeFromCart
 	App session shopVisitor localSave.
 	model localSave.
 	
-	App session shopVisitor wishList removeProduct: model; localSave.
-	App session shopVisitor updateWishListSize.
+	App session shopVisitor wishlist removeProduct: model; localSave.
+	App session shopVisitor updateWishlistSize.
 	
 	'#alertsRoot' asJQuery html: '<div class="alert alert-warning" role="alert">We''ve removed one ',model description,' from your wish list</div>'.
 
@@ -390,32 +497,22 @@ BindingController subclass: #ProductThumbnailController
 
 addToCart
 
-	App session visitor localSave.
-	
-	App session visitor cart addProduct: model; save.
-	App session visitor updateCartSize.
+	App announce: (AddToCart on: model).
 	
 	'#alertsRoot' asJQuery html: '<div class="alert alert-success" role="alert">Done. We''ve added one ',model description,' to your cart!!</div>'.
 	['#alertsRoot' asJQuery empty ] valueWithTimeout: 2000.
 !
 
-addToWishList
+addToWishlist
 
 	App session visitor localSave.
 	
-	App session visitor wishList addProduct: model; localSave.
-	App session visitor updateWishListSize.
+	App session visitor wishlist addProduct: model; localSave.
+	App session visitor updateWishlistSize.
 	
 	'#alertsRoot' asJQuery html: '<div class="alert alert-info" role="alert">We''ve added one ',model description,' to your wishlist. It got sooo whishable!!</div>'.
 
 	[ '#alertsRoot' asJQuery empty ] valueWithTimeout: 2000.
-!
-
-getModelAsArgument
-	"Returns the model in a way that is appropiate for binding (usable by rivets).
-	By default BindingController assumes you are using mapless as controllers model
-	so we send their data but subclasses might differ if they please."	
-	^ model data
 ! !
 
 !ProductThumbnailController methodsFor: 'initialization'!
@@ -424,7 +521,7 @@ initialize
 
 	super initialize.
 	
-	self when: #onAfterModel do: [ self model imageUrl: 'img/products/', self model image ]
+	self when: #onAfterModel do: [ self model updateImageUrl ]
 ! !
 
 Session subclass: #ShopSession
@@ -442,9 +539,9 @@ updateCartSize
 	self cartSize: self cart products size
 !
 
-updateWishListSize
+updateWishlistSize
 
-	self wishListSize: self wishList products size
+	self wishlistSize: self wishlist products size
 ! !
 
 !ShopVisitor methodsFor: 'initialization'!
@@ -456,11 +553,11 @@ initialize
 	self searchText: ''.
 ! !
 
-Model subclass: #WishList
+Model subclass: #Wishlist
 	instanceVariableNames: ''
 	package: 'App'!
 
-!WishList methodsFor: 'accessing'!
+!Wishlist methodsFor: 'accessing'!
 
 products
 
@@ -470,7 +567,7 @@ products
 	^ super products
 ! !
 
-!WishList methodsFor: 'actions'!
+!Wishlist methodsFor: 'actions'!
 
 addProduct: aProduct
 
