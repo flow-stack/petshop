@@ -1,0 +1,20 @@
+<li class="list-group-item">
+  <span>{model.description}</span>
+  <span>{model.quantity | asNumber}</span>
+  <span>{model.price | currency '$'}</span>
+  <a 
+    class="btn btn-default glyphicon glyphicon-plus-sign" 
+    role="button"></a> 
+  <a 
+    class="btn btn-default glyphicon glyphicon-minus-sign" 
+    role="button"
+    rv-on-click="controller._addOne"></a>
+  <a 
+    class="btn btn-default glyphicon glyphicon-minus-sign" 
+    role="button"
+    rv-on-click="controller._removeOne"></a>
+  <a 
+    class="btn btn-warning glyphicon glyphicon-trash" 
+    role="button"
+    rv-on-click="controller._removeOrderedProduct"></a>
+</li>

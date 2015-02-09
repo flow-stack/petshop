@@ -207,6 +207,22 @@ addProduct: aProduct
 	self updateTotal.
 !
 
+removeOrderedProductWith: aProduct
+	"Removes aProduct from the cart.
+	Each product is removed from the cart subtracting 1 unit of the OrderedProduct wrapper.
+	It removes that wrapper if quantity gets to zero."
+	
+	| ordered |
+
+	ordered := self orderedProducts 
+						detect: [ :each | each product = aProduct ]
+						ifNone: [ nil ].
+
+	ordered ifNotNil: [ self orderedProducts remove: ordered ifAbsent: [ nil ] ].
+	
+	self updateTotal
+!
+
 removeProduct: aProduct
 	"Removes aProduct from the cart.
 	Each product is removed from the cart subtracting 1 unit of the OrderedProduct wrapper.
@@ -236,7 +252,27 @@ BindingController subclass: #CartController
 	instanceVariableNames: ''
 	package: 'App'!
 
+!CartController methodsFor: 'accessing'!
+
+orderedProducts
+
+	^ self ifAbsentAt: #orderedProducts put: [
+			(ListController 
+				for: (ListModel on: model orderedProducts)
+				on: self 
+				appendingTo: '#ordered-products-wrapper' asJQuery)
+					newItemControllerBlock: [ :m | self newProductInCartControllerFor: m ];
+					yourself ]
+! !
+
 !CartController methodsFor: 'actions'!
+
+newProductInCartControllerFor: anOrderedProduct
+
+	^ OrderedProductController
+		on: anOrderedProduct
+		in: self
+!
 
 observeEvents
 
@@ -244,9 +280,9 @@ observeEvents
 	
 	self when: #onAfterModel do: [ self model updateTotal ].
 	
-	App session shopVisitor cart 
-		when: #removed: 
-		do:[ :evt :product | self onRemoved: product ].
+	App session visitor cart
+		when: #removedOne: 
+		do:[ :evt :product | self onRemovedOne: product ].
 !
 
 update
@@ -256,37 +292,9 @@ update
 
 !CartController methodsFor: 'reactions'!
 
-onAfterModel
+show
 
-	super onAfterModel.
-	
-	self model updateTotal
-!
-
-onRemoved: aProduct
-
-	(self controllerAt: 'products') refresh
-!
-
-onTemplate: data
-	"Receives the template's data after requirejs 
-	have received it from the server (or cache)."
-
-	super onTemplate: data.
-
-	'#loaderBar'asJQuery remove.
-		
-	(self ifAbsentAt: 'products' 
-		put: [
-			"Lazy creation of the list controller for the thumbnails"
-			(ListController 
-				for: model 
-				on: self 
-				appendingTo: '.products' asJQuery)
-					getItemsBlock: [:m| m products ];
-					itemControllerClass: ProductInCartController;
-					yourself]
-		andDo:[ :lc | self observeProducts ]) refresh "be sure to display resh stuff"
+	super show done: [ self orderedProducts show ]
 ! !
 
 !CartController class methodsFor: 'actions'!
@@ -393,6 +401,15 @@ If you take a look into `onOpen` you'll see that:
 
 !MainController methodsFor: 'accessing'!
 
+cart
+
+	^ self ifAbsentAt: #cart put: [
+			CartController 
+				on: App session visitor cart
+				in: self 
+				appendingTo: '#cart-wrapper' asJQuery ]
+!
+
 catalog
 
 	^ self ifAbsentAt: #catalog put: [
@@ -436,6 +453,11 @@ saveState
 
 	App session cart save.
 	App session save.
+!
+
+showCart
+	
+	self cart show
 !
 
 showCatalog
@@ -529,6 +551,32 @@ on: aProduct
 		yourself
 ! !
 
+BindingController subclass: #OrderedProductController
+	instanceVariableNames: ''
+	package: 'App'!
+
+!OrderedProductController methodsFor: 'actions'!
+
+addOne
+
+	App session visitor cart addProduct: model.
+	App saveVisitor.
+	App session visitor updateCartSize
+!
+
+removeOne
+
+	App session visitor cart removeProduct: model.
+	App saveVisitor.
+	App session visitor updateCartSize
+!
+
+removeOrderedProduct
+
+	App session visitor cart removeOrderedProductWith: model.
+	App saveVisitor
+! !
+
 Model subclass: #Product
 	instanceVariableNames: ''
 	package: 'App'!
@@ -543,25 +591,6 @@ updateImageUrl
 BindingController subclass: #ProductController
 	instanceVariableNames: ''
 	package: 'App'!
-
-BindingController subclass: #ProductInCartController
-	instanceVariableNames: ''
-	package: 'App'!
-
-!ProductInCartController methodsFor: 'actions'!
-
-removeFromCart
-
-	Flow session shopVisitor localSave.
-	model localSave.
-	
-	Flow session shopVisitor cart removeProduct: model; localSave.
-	Flow session shopVisitor updateCartSize.
-	
-	'#alertsRoot' asJQuery html: '<div class="alert alert-warning" role="alert">We''ve removed one ',model description,' from your cart</div>'.
-
-	['#alertsRoot' asJQuery empty ] valueWithTimeout: 2000.
-! !
 
 BindingController subclass: #ProductInWishListController
 	instanceVariableNames: ''
