@@ -34,7 +34,7 @@
     "amber-flow": "^0.3.27"
   },
   "devDependencies": {
-    "amber-attic": "^0.1.3",
-    "helios": "^0.3.4"
+    "amber-minimal-ide": "^0.1.0",
+   "helios": "^0.3.4"    
   }
 }

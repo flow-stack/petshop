@@ -3,7 +3,7 @@ define([
     './deploy',
     // --- packages used only during development begin here ---
     'domevents/DOMEvents-Tests',
-    'amber-attic/IDE',
+    'amber-minimal-ide/MinimalIDE',
     'minimapless/MiniMapless-Tests',
     'amber-flow/Flow-Scaffolding',
     'amber-flow/Flow-Tests',

@@ -580,7 +580,7 @@ return self;
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: [],
-source: "start\x0a\x09\x22Starts the App app\x22\x0a\x0a\x09Flow app: self; start.\x0a\x09window at: #app put: self.\x0a\x09\x0a\x09session := self getSession.\x0a\x09self saveVisitor.\x0a\x0a\x09self main show done: [ Router processHash ].\x0a\x09",
+source: "start\x0a\x09\x22Starts the App app\x22\x0a\x0a\x09Flow app: self; start.\x0a\x09window at: #app put: self.\x0a\x09\x0a\x09session := self getSession.\x0a\x09self saveVisitor.\x0a\x0a\x09self main show done: [ Router processHash ].",
 referencedClasses: ["Flow", "Router"],
 //>>excludeEnd("ide");
 messageSends: ["app:", "start", "at:put:", "getSession", "saveVisitor", "done:", "show", "main", "processHash"]
@@ -948,7 +948,7 @@ function $OrderedProductController(){return $globals.OrderedProductController||(
 return $core.withContext(function($ctx1) {
 //>>excludeEnd("ctx");
 var $1;
-$1=$recv($OrderedProductController())._on_in_(anOrderedProduct,self);
+$1=$recv($OrderedProductController())._on_in_appendingTo_(anOrderedProduct,self,"#ordered-products-wrapper"._asJQuery());
 return $1;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 }, function($ctx1) {$ctx1.fill(self,"newProductInCartControllerFor:",{anOrderedProduct:anOrderedProduct},$globals.CartController)});
@@ -956,10 +956,10 @@ return $1;
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: ["anOrderedProduct"],
-source: "newProductInCartControllerFor: anOrderedProduct\x0a\x0a\x09^ OrderedProductController\x0a\x09\x09on: anOrderedProduct\x0a\x09\x09in: self",
+source: "newProductInCartControllerFor: anOrderedProduct\x0a\x0a\x09^ OrderedProductController\x0a\x09\x09on: anOrderedProduct\x09\x09\x09\x09\x0a\x09\x09in: self\x0a\x09\x09appendingTo: '#ordered-products-wrapper' asJQuery",
 referencedClasses: ["OrderedProductController"],
 //>>excludeEnd("ide");
-messageSends: ["on:in:"]
+messageSends: ["on:in:appendingTo:", "asJQuery"]
 }),
 $globals.CartController);
 
@@ -1220,7 +1220,7 @@ return self;
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: [],
-source: "update\x0a\x0a\x09self cartSize: App session visitor cartSize.\x0a\x09self wishlistSize: App session visitor wishlistSize.\x0a\x09",
+source: "update\x0a\x0a\x09self cartSize: App session visitor cartSize.\x0a\x09self wishlistSize: App session visitor wishlistSize.",
 referencedClasses: ["App"],
 //>>excludeEnd("ide");
 messageSends: ["cartSize:", "cartSize", "visitor", "session", "wishlistSize:", "wishlistSize"]
@@ -1590,7 +1590,7 @@ return self;
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: [],
-source: "observeEvents\x0a\x0a\x09super observeEvents.\x0a\x09\x0a\x09App on: AddToCart do: [ :ann | self onAddedToCart: ann subject ].\x0a\x09App on: AddToWishlist do: [ :ann | self onAddedToWishlist: ann subject ].\x0a\x09",
+source: "observeEvents\x0a\x0a\x09super observeEvents.\x0a\x09\x0a\x09App on: AddToCart do: [ :ann | self onAddedToCart: ann subject ].\x0a\x09App on: AddToWishlist do: [ :ann | self onAddedToWishlist: ann subject ].",
 referencedClasses: ["App", "AddToCart", "AddToWishlist"],
 //>>excludeEnd("ide");
 messageSends: ["observeEvents", "on:do:", "onAddedToCart:", "subject", "onAddedToWishlist:"]
@@ -1700,9 +1700,7 @@ var self=this;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx1) {
 //>>excludeEnd("ctx");
-self._hideAll();
 self._showCatalog();
-self._showFooter();
 return self;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 }, function($ctx1) {$ctx1.fill(self,"reset",{},$globals.MainController)});
@@ -1710,10 +1708,10 @@ return self;
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: [],
-source: "reset\x0a\x09\x0a\x09self hideAll.\x0a\x09self showCatalog.\x0a\x09self showFooter",
+source: "reset\x0a\x09\x0a\x09self showCatalog",
 referencedClasses: [],
 //>>excludeEnd("ide");
-messageSends: ["hideAll", "showCatalog", "showFooter"]
+messageSends: ["showCatalog"]
 }),
 $globals.MainController);
 
@@ -1761,6 +1759,7 @@ var self=this;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx1) {
 //>>excludeEnd("ctx");
+self._hideAll();
 $recv(self._cart())._show();
 return self;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
@@ -1769,10 +1768,10 @@ return self;
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: [],
-source: "showCart\x0a\x09\x0a\x09self cart show",
+source: "showCart\x0a\x09\x0a\x09self hideAll.\x0a\x09self cart show",
 referencedClasses: [],
 //>>excludeEnd("ide");
-messageSends: ["show", "cart"]
+messageSends: ["hideAll", "show", "cart"]
 }),
 $globals.MainController);
 
@@ -1785,7 +1784,9 @@ var self=this;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx1) {
 //>>excludeEnd("ctx");
+self._hideAll();
 $recv(self._catalog())._show();
+self._showFooter();
 return self;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 }, function($ctx1) {$ctx1.fill(self,"showCatalog",{},$globals.MainController)});
@@ -1793,10 +1794,10 @@ return self;
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: [],
-source: "showCatalog\x0a\x09\x0a\x09self catalog show",
+source: "showCatalog\x0a\x09\x0a\x09self hideAll.\x09\x0a\x09self catalog show.\x0a\x09self showFooter",
 referencedClasses: [],
 //>>excludeEnd("ide");
-messageSends: ["show", "catalog"]
+messageSends: ["hideAll", "show", "catalog", "showFooter"]
 }),
 $globals.MainController);
 
@@ -2470,7 +2471,7 @@ return self;
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: [],
-source: "update\x0a\x0a\x09self updateCartSize.\x0a\x09self updateWishlist.\x0a\x09",
+source: "update\x0a\x0a\x09self updateCartSize.\x0a\x09self updateWishlist.",
 referencedClasses: [],
 //>>excludeEnd("ide");
 messageSends: ["updateCartSize", "updateWishlist"]
@@ -2731,5 +2732,30 @@ messageSends: ["ifNil:", "wishedProducts", "wishedProducts:", "new"]
 }),
 $globals.Wishlist);
 
+
+$core.addMethod(
+$core.method({
+selector: "getBindableModel",
+protocol: '*App',
+fn: function (){
+var self=this;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx1) {
+//>>excludeEnd("ctx");
+var $1;
+$1=$recv(self["@model"])._asJSON();
+return $1;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx1) {$ctx1.fill(self,"getBindableModel",{},$globals.BindingController)});
+//>>excludeEnd("ctx");
+},
+//>>excludeStart("ide", pragmas.excludeIdeData);
+args: [],
+source: "getBindableModel\x0a\x09\x22Returns the model in a way that is appropiate for binding (usable by rivets).\x0a\x09By default BindingController assumes you are using a plain javascript object as model\x0a\x09but subclasses might differ if they please to do so.\x22\x0a\x0a\x09\x22We are assuming here that you are working with aMapless as model so you\x0a\x09can use regular Amber objects as models in your application.\x0a\x09Mapless are implemented using a plain JavaScript object at its core so \x0a\x09you'll have a single source of truth for your models and enjoy the \x0a\x09two-way data binding an other RivetJS features simultaneously.\x22\x0a\x09^ model asJSON",
+referencedClasses: [],
+//>>excludeEnd("ide");
+messageSends: ["asJSON"]
+}),
+$globals.BindingController);
 
 });

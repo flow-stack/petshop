@@ -2,4 +2,4 @@ testing
 hasProducts
 
 	^ self products notNil and: [
-	self product notEmpty ]
+	self products notEmpty ]
